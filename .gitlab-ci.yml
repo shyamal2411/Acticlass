@@ -17,7 +17,7 @@ build_fronted:
   stage: build
   image: $NODE_IMAGE
   script:
-    - cd Acticlass
+    - cd Acticlass-App
     - npm install           
 
 build_backend:
@@ -31,7 +31,7 @@ test_frontend:
   stage: test
   image: $NODE_IMAGE
   script:
-    - cd Acticlass
+    - cd Acticlass-App
     - npm install
     - npm test
 
