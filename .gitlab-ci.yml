@@ -1,24 +1,23 @@
-stages:          # List of stages for jobs, and their order of execution
+stages: # List of stages for jobs, and their order of execution
   - build
   - test
 #   - deploy
 
 variables:
-  NODE_IMAGE: "node:16.15.1"  
-
+  NODE_IMAGE: 'node:16.15.1'
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
-  paths:    
-    - Acticlass/node_modules/
+  paths:
+    - Acticlass-App/node_modules/
     - Acticlass-API/node_modules/
 
 build_fronted:
   stage: build
   image: $NODE_IMAGE
   script:
-    - cd Acticlass
-    - npm install           
+    - cd Acticlass-App
+    - npm install
 
 build_backend:
   stage: build
@@ -31,7 +30,7 @@ test_frontend:
   stage: test
   image: $NODE_IMAGE
   script:
-    - cd Acticlass
+    - cd Acticlass-App
     - npm install
     - npm test
 
@@ -42,4 +41,3 @@ test_backend:
     - cd Acticlass-API
     - npm install
     - npm test
-
