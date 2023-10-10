@@ -30,14 +30,12 @@ test_frontend:
   stage: test
   image: $NODE_IMAGE
   script:
-    - cd Acticlass-App
-    - npm install
+    - cd Acticlass-App    
     - npm test
 
 test_backend:
   stage: test
   image: $NODE_IMAGE
   script:
-    - cd Acticlass-API
-    - npm install
+    - cd Acticlass-API    
     - npm test
