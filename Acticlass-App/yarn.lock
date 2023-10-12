@@ -5709,6 +5709,11 @@
     "ws" "^6.2.2"
     "yargs" "^17.6.2"
 
+"react-navigation@^5.0.0":
+  "integrity" "sha512-ACTzjc4L1ik7rJ092ZhIELBJ/pnoLgRIqWHSKcYcaBASxyjJCgBEDIV5s585HBj55tw25YwNdlj3+d4B4MYWDg=="
+  "resolved" "https://registry.npmjs.org/react-navigation/-/react-navigation-5.0.0.tgz"
+  "version" "5.0.0"
+
 "react-refresh@^0.4.0":
   "integrity" "sha512-Hwln1VNuGl/6bVwnd0Xdn1e84gT/8T9aYNL+HAKDArLCS7LWjwr7StE30IEYbIkx0Vi3vs+coQxe+SQDbGbbpA=="
   "resolved" "https://registry.npmjs.org/react-refresh/-/react-refresh-0.4.3.tgz"
