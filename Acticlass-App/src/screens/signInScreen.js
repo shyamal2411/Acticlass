@@ -4,12 +4,12 @@ import { colors } from '../common/colors';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-    const handleSignIn = () => {
+    const handleSignIn = ({ navigation }) => {
         // handle sign in logic here
     };
 
@@ -19,13 +19,14 @@ const SignInScreen = () => {
 
     const moveToSignUp = () => {
         // handle sign up logic here
+        navigation.navigate('SignUp1');
     };
 
     return (
         <View style={styles.container}>
             <Text style={styles.appName}>Acticlass</Text>
             <ScrollView style={{
-                marginTop:32,
+                marginTop: 32,
                 backgroundColor: colors.secondary,
                 width: '100%',
                 borderTopLeftRadius: 50,
