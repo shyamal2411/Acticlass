@@ -3,11 +3,11 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import { colors } from '../common/colors';
 
 const SplashScreen = ({ navigation }) => {
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         navigation.replace('AuthStack');
-    //     }, 1000);
-    // }, [navigation]);
+    useEffect(() => {
+        setTimeout(() => {
+            navigation.replace('AuthStack');
+        }, 1000);
+    }, [navigation]);
 
     return (
         <View style={styles.container}>
