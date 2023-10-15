@@ -7,33 +7,31 @@ import {
   StyleSheet,
 } from 'react-native';
 import {colors} from '../common/colors';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import {ScrollView} from 'react-native-gesture-handler';
 import validationServices from '../utils/validationServices';
 
-const SignInScreen = ({navigation}) => {
+const SignUpScreen_1 = ({navigation}) => {
   const [email, setEmail] = useState('');
-  const [pass, setPassword] = useState('');
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [phone, setPhone] = useState('');
   const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
+  const [phoneError, setPhoneError] = useState(false);
 
-  const handleSignIn = () => {
+  const handleSignUp1 = () => {
     const isEmailValid = validationServices.validateEmail(email);
-    const isPasswordValid = validationServices.validatePassword(pass);
+    const isPhoneValid = validationServices.validatePhone(phone);
+
     setEmailError(!isEmailValid);
-    setPasswordError(!isPasswordValid);
-    if (!isEmailValid || !isPasswordValid) {
+    setPhoneError(!isPhoneValid);
+
+    if (!isEmailValid || !isPhoneValid) {
       return false;
     }
+
+    navigation.navigate('SignUp2');
   };
 
-  const moveToForgotPassword = () => {
-    // handle forgot password logic here
-  };
-
-  const moveToSignUp = () => {
-    navigation.navigate('SignUp1');
+  const moveToSignIn = () => {
+    navigation.navigate('SignIn');
   };
 
   return (
@@ -48,7 +46,7 @@ const SignInScreen = ({navigation}) => {
           borderTopRightRadius: 50,
         }}>
         <View>
-          <Text style={styles.title}>Sign In</Text>
+          <Text style={styles.title}>Sign Up</Text>
           <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
             <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
               Email
@@ -56,7 +54,7 @@ const SignInScreen = ({navigation}) => {
             <TextInput
               style={styles.input}
               placeholderTextColor={colors.placeholder}
-              placeholder="Email"
+              placeholder="Enter your email"
               onChangeText={setEmail}
             />
             {emailError ? (
@@ -67,38 +65,23 @@ const SignInScreen = ({navigation}) => {
           </View>
           <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
             <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
-              Password
+              Contact Number
             </Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.password}
-                secureTextEntry={!isPasswordVisible}
-                placeholderTextColor={colors.placeholder}
-                placeholder="Password"
-                onChangeText={setPassword}
-              />
-              <IonIcon
-                name={isPasswordVisible ? 'eye-off' : 'eye'}
-                size={24}
-                color={colors.placeholder}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              />
-            </View>
-            {passwordError ? (
-              <Text style={styles.errorText}>Please set the password</Text>
-            ) : null}
-            <TouchableOpacity
-              style={{alignSelf: 'flex', marginTop: 10}}
-              onPress={moveToForgotPassword}>
-              <Text
-                style={{fontSize: 14, color: colors.primary, marginLeft: 10}}>
-                Forgot Password?
+            <TextInput
+              style={styles.input}
+              placeholderTextColor={colors.placeholder}
+              placeholder="Enter your phone number"
+              onChangeText={setPhone}
+            />
+            {phoneError ? (
+              <Text style={styles.errorText}>
+                Please enter valid contact number
               </Text>
-            </TouchableOpacity>
+            ) : null}
           </View>
           <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-              <Text style={styles.buttonText}>Sign In</Text>
+            <TouchableOpacity style={styles.button} onPress={handleSignUp1}>
+              <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
           </View>
           <View
@@ -132,14 +115,14 @@ const SignInScreen = ({navigation}) => {
               paddingHorizontal: 40,
             }}>
             <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
-              Don't have a account?
+              Already have a account?
             </Text>
             <TouchableOpacity
               style={{alignSelf: 'flex'}}
-              onPress={moveToSignUp}>
+              onPress={moveToSignIn}>
               <Text style={{fontSize: 16, color: colors.primary}}>
                 {' '}
-                Sign Up
+                Sign In
               </Text>
             </TouchableOpacity>
           </View>
@@ -148,6 +131,7 @@ const SignInScreen = ({navigation}) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -159,8 +143,8 @@ const styles = StyleSheet.create({
     marginVertical: 52,
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
     textShadowOffset: {width: -10, height: 10},
-    textShadowRadius: 10,
     fontSize: 72,
+    textShadowRadius: 10,
     fontWeight: 'bold',
     color: '#CAC1C1',
   },
@@ -169,7 +153,7 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     color: 'black',
     fontSize: 34,
-    fontWeight: 'semibold',
+    fontWeight: '500',
   },
   input: {
     backgroundColor: 'white',
@@ -220,4 +204,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default SignUpScreen_1;

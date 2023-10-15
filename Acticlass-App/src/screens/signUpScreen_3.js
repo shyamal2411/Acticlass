@@ -11,29 +11,30 @@ import IonIcon from 'react-native-vector-icons/Ionicons';
 import {ScrollView} from 'react-native-gesture-handler';
 import validationServices from '../utils/validationServices';
 
-const SignInScreen = ({navigation}) => {
-  const [email, setEmail] = useState('');
+const SignUpScreen_3 = ({navigation}) => {
   const [pass, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [emailError, setEmailError] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
-  const handleSignIn = () => {
-    const isEmailValid = validationServices.validateEmail(email);
+  const handleSignUp3 = () => {
     const isPasswordValid = validationServices.validatePassword(pass);
-    setEmailError(!isEmailValid);
+    const isConfirmPasswordValid = pass === confirmPassword;
+
     setPasswordError(!isPasswordValid);
-    if (!isEmailValid || !isPasswordValid) {
+    setConfirmPasswordError(!isConfirmPasswordValid);
+
+    if (!isPasswordValid || !isConfirmPasswordValid) {
       return false;
     }
   };
 
-  const moveToForgotPassword = () => {
-    // handle forgot password logic here
-  };
-
-  const moveToSignUp = () => {
-    navigation.navigate('SignUp1');
+  const moveToSignIn = () => {
+    // handle sign up logic here
+    navigation.navigate('SignIn');
   };
 
   return (
@@ -48,23 +49,7 @@ const SignInScreen = ({navigation}) => {
           borderTopRightRadius: 50,
         }}>
         <View>
-          <Text style={styles.title}>Sign In</Text>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
-              Email
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Email"
-              onChangeText={setEmail}
-            />
-            {emailError ? (
-              <Text style={styles.errorText}>
-                Please enter valid email address
-              </Text>
-            ) : null}
-          </View>
+          <Text style={styles.title}>Sign Up</Text>
           <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
             <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
               Password
@@ -74,7 +59,7 @@ const SignInScreen = ({navigation}) => {
                 style={styles.password}
                 secureTextEntry={!isPasswordVisible}
                 placeholderTextColor={colors.placeholder}
-                placeholder="Password"
+                placeholder="Enter your password"
                 onChangeText={setPassword}
               />
               <IonIcon
@@ -87,18 +72,35 @@ const SignInScreen = ({navigation}) => {
             {passwordError ? (
               <Text style={styles.errorText}>Please set the password</Text>
             ) : null}
-            <TouchableOpacity
-              style={{alignSelf: 'flex', marginTop: 10}}
-              onPress={moveToForgotPassword}>
-              <Text
-                style={{fontSize: 14, color: colors.primary, marginLeft: 10}}>
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
           </View>
           <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-              <Text style={styles.buttonText}>Sign In</Text>
+            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+              Confirm Password
+            </Text>
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.password}
+                secureTextEntry={!isConfirmPasswordVisible}
+                placeholderTextColor={colors.placeholder}
+                placeholder="Re-enter your password"
+                onChangeText={setConfirmPassword}
+              />
+              <IonIcon
+                name={isConfirmPasswordVisible ? 'eye-off' : 'eye'}
+                size={24}
+                color={colors.placeholder}
+                onPress={() =>
+                  setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+                }
+              />
+            </View>
+            {confirmPasswordError ? (
+              <Text style={styles.errorText}>Passwords doesn't match</Text>
+            ) : null}
+          </View>
+          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+            <TouchableOpacity style={styles.button} onPress={handleSignUp3}>
+              <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
           </View>
           <View
@@ -132,14 +134,14 @@ const SignInScreen = ({navigation}) => {
               paddingHorizontal: 40,
             }}>
             <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
-              Don't have a account?
+              Already have a account?
             </Text>
             <TouchableOpacity
               style={{alignSelf: 'flex'}}
-              onPress={moveToSignUp}>
+              onPress={moveToSignIn}>
               <Text style={{fontSize: 16, color: colors.primary}}>
                 {' '}
-                Sign Up
+                Sign In
               </Text>
             </TouchableOpacity>
           </View>
@@ -148,6 +150,7 @@ const SignInScreen = ({navigation}) => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -169,7 +172,7 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     color: 'black',
     fontSize: 34,
-    fontWeight: 'semibold',
+    fontWeight: '500',
   },
   input: {
     backgroundColor: 'white',
@@ -220,4 +223,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SignInScreen;
+export default SignUpScreen_3;
