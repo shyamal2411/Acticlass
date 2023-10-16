@@ -1,7 +1,7 @@
-stages: # List of stages for jobs, and their order of execution
+stages:
   - build
   - test
-#   - deploy
+  - deploy
 
 variables:
   NODE_IMAGE: "node:16.15.1"
@@ -49,3 +49,13 @@ test_backend:
     - cd Acticlass-API
     - npm install
     - npm test
+
+deploy:
+  stage: deploy
+  script:
+    - echo "$ID_RSA" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan <$SERVER_IP> >> ~/.ssh/known_hosts
+    - scp -r * user@<$SERVER_IP>:~/app  # Copy your application files to the VM
+    - ssh user@<$SERVER_IP> "cd ~/app && npm install && npm start"  # SSH into VM, install dependencies, and start the application  
+  
