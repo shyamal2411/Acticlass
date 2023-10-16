@@ -1,11 +1,11 @@
 stages:
   # - build
   # - test
+  - publish
   - deploy
 
 variables:
-  NODE_IMAGE: "node:16.15.1"
-  DOCKER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  NODE_IMAGE: 'node:16.15.1'
 
 # cache:
 #   key: ${CI_COMMIT_REF_SLUG}
@@ -52,10 +52,21 @@ variables:
 #     - npm test
 
 publish:
-  stage: deploy
+  image: docker:latest
+  stage: publish
   tags:
     - acticlass-runner
+  variables:
+    # these values may need to be different if using TLS, k8s, etc.
+    # You can alternatively set defaults in your runner config
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: 'tcp://docker:2375'
+  services:
+    - docker:dind
   script:
-    - echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
-    - docker build -t $DOCKER_IMAGE .
-    - docker push $DOCKER_IMAGE
+    - pwd
+    - echo $SERVER_IP
+    - docker --version
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
+    - docker build -t docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA .
+    - docker push docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA
