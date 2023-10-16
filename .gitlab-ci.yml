@@ -56,6 +56,6 @@ publish:
   tags:
     - acticlass-runner
   script:
-    - docker login -u $DOCKERHUB_USERNAME --password-stdin < config.json
+    - cat $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
     - docker build -t $DOCKER_IMAGE .
     - docker push $DOCKER_IMAGE
