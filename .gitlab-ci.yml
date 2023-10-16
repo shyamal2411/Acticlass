@@ -58,6 +58,8 @@ deploy:
     - mkdir -p ~/.ssh  # Create the .ssh directory if it doesn't exist
     - echo "$ID_RSA" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
+    - apt-get update -qy  # Update package list and install openssh-client
+    - apt-get install openssh-client -qy
     - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
     - scp -r * $SERVER_USER@$SERVER_IP:~/app  # Copy your application files to the VM
     - ssh $SERVER_USER@$SERVER_IP "cd ~/app && npm install && npm start"  # SSH into VM, install dependencies, and start the application
