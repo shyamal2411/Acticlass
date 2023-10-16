@@ -55,9 +55,9 @@ deploy:
   tags:
     - acticlass-runner
   script:
-    - echo "$ID_RSA" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - ssh-keyscan <$SERVER_IP> >> ~/.ssh/known_hosts
-    - scp -r * user@<$SERVER_IP>:~/app  # Copy your application files to the VM
-    - ssh user@<$SERVER_IP> "cd ~/app && npm install && npm start"  # SSH into VM, install dependencies, and start the application  
+    - echo "$ID_RSA" | tr -d '\r' > ~/deployer/.ssh/id_rsa
+    - chmod 600 ~/deployer/.ssh/id_rsa
+    - ssh-keyscan <$SERVER_IP> >> ~/deployer/.ssh/known_hosts
+    - scp -r * deployer@<$SERVER_IP>:~/deployer/app  # Copy your application files to the VM
+    - ssh deployer@<$SERVER_IP> "cd ~/deployer/app && npm install && npm start"  # SSH into VM, install dependencies, and start the application  
   
