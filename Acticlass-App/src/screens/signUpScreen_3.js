@@ -21,7 +21,7 @@ const SignUpScreen_3 = ({navigation}) => {
   const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   const handleSignUp3 = () => {
-    const isPasswordValid = validationServices.validatePassword(pass);
+    const isPasswordValid = validationServices.validatePassword(pass.trim());
     const isConfirmPasswordValid = pass === confirmPassword;
 
     setPasswordError(!isPasswordValid);
