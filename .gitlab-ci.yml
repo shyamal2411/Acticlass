@@ -56,6 +56,7 @@ publish:
   tags:
     - acticlass-runner
   script:
+    - ls
     - cp ./config.json $CI_PROJECT_DIR/config.json  # Copy the Docker config into the project directory
     - docker login -u $DOCKERHUB_USERNAME --password-stdin < config.json
     - docker build -t $DOCKER_IMAGE .
