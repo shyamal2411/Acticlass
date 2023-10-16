@@ -55,6 +55,7 @@ deploy:
   tags:
     - acticlass-runner
   script:
+    - mkdir -p ~/.ssh
     - echo "$ID_RSA" | tr -d '\r' > ~/.ssh/id_rsa
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
