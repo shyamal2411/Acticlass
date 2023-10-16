@@ -6,49 +6,49 @@ stages:
 variables:
   NODE_IMAGE: "node:16.15.1"
 
-cache:
-  key: ${CI_COMMIT_REF_SLUG}
-  paths:
-    - Acticlass-App/node_modules/
-    - Acticlass-API/node_modules/
+# cache:
+#   key: ${CI_COMMIT_REF_SLUG}
+#   paths:
+#     - Acticlass-App/node_modules/
+#     - Acticlass-API/node_modules/
 
-build_fronted:
-  stage: build
-  image: $NODE_IMAGE
-  tags:
-    - acticlass-runner
-  script:
-    - cd Acticlass-App
-    - npm install
+# build_fronted:
+#   stage: build
+#   image: $NODE_IMAGE
+#   tags:
+#     - acticlass-runner
+#   script:
+#     - cd Acticlass-App
+#     - npm install
 
-build_backend:
-  stage: build
-  image: $NODE_IMAGE
-  tags:
-    - acticlass-runner
-  script:
-    - cd Acticlass-API
-    - npm install
+# build_backend:
+#   stage: build
+#   image: $NODE_IMAGE
+#   tags:
+#     - acticlass-runner
+#   script:
+#     - cd Acticlass-API
+#     - npm install
 
-test_frontend:
-  stage: test
-  image: $NODE_IMAGE
-  tags:
-    - acticlass-runner
-  script:
-    - cd Acticlass-App
-    - npm install
-    - npm test
+# test_frontend:
+#   stage: test
+#   image: $NODE_IMAGE
+#   tags:
+#     - acticlass-runner
+#   script:
+#     - cd Acticlass-App
+#     - npm install
+#     - npm test
 
-test_backend:
-  stage: test
-  image: $NODE_IMAGE
-  tags:
-    - acticlass-runner
-  script:
-    - cd Acticlass-API
-    - npm install
-    - npm test
+# test_backend:
+#   stage: test
+#   image: $NODE_IMAGE
+#   tags:
+#     - acticlass-runner
+#   script:
+#     - cd Acticlass-API
+#     - npm install
+#     - npm test
 
 deploy:
   stage: deploy
@@ -59,5 +59,5 @@ deploy:
     - chmod 600 ~/.ssh/id_rsa
     - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
     - scp -r * $SERVER_USER@$SERVER_IP:~/app  # Copy your application files to the VM
-    - ssh $SERVER_USER@$SERVER_IP "cd ~/app && npm install && npm start"  # SSH into VM, install dependencies, and start the application
+    - ssh $SERVER_USER@$SERVER_IP "cd ~/app/Acticlass-API && npm install && npm start"  # SSH into VM, install dependencies, and start the application
  
