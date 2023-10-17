@@ -17,8 +17,8 @@ const SignUpScreen_1 = ({ navigation }) => {
   const [phoneError, setPhoneError] = useState(false);
 
   const handleSignUp1 = () => {
-    const isEmailValid = validationServices.validateEmail(email);
-    const isPhoneValid = validationServices.validatePhone(phone);
+    const isEmailValid = validationServices.validateEmail(email.trim());
+    const isPhoneValid = validationServices.validatePhone(phone.trim());
 
     setEmailError(!isEmailValid);
     setPhoneError(!isPhoneValid);

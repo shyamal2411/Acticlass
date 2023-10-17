@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState, useCallback} from 'react';
 import {
   View,
   Text,
@@ -18,9 +18,18 @@ const SignInScreen = ({ navigation }) => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+  useFocusEffect(
+    useCallback(() => {
+      setEmail('');
+      setPassword('');
+      setEmailError(false);
+      setPasswordError(false);
+    }, []),
+  );
+
   const handleSignIn = () => {
-    const isEmailValid = validationServices.validateEmail(email);
-    const isPasswordValid = validationServices.validatePassword(pass);
+    const isEmailValid = validationServices.validateEmail(email.trim());
+    const isPasswordValid = validationServices.validatePassword(pass.trim());
     setEmailError(!isEmailValid);
     setPasswordError(!isPasswordValid);
     if (!isEmailValid || !isPasswordValid) {

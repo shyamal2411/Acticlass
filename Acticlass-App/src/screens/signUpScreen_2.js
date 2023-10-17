@@ -10,13 +10,13 @@ import { colors } from '../common/colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import RadioButtonRN from 'radio-buttons-react-native';
 import validationServices from '../utils/validationServices';
+// import {isStudentOrTeacher, ROLES} from '../utils/constants';
 
 const SignUpScreen_2 = ({ navigation }) => {
   const [institute, setInstitute] = useState('');
   const [role, setRole] = useState('');
   const [instituteError, setInstituteError] = useState(false);
   const [roleError, setRoleError] = useState(false);
-  const [isChecked, setIsChecked] = useState(true);
 
   const data = [
     {
@@ -28,8 +28,10 @@ const SignUpScreen_2 = ({ navigation }) => {
   ];
 
   const handleSignUp2 = () => {
-    const validateInstituteName =
-      validationServices.validateInstituteName(institute);
+    // const trimmedInstitute = institute.trim();
+    const validateInstituteName = validationServices.validateInstituteName(
+      institute.trim(),
+    );
     const isRoleValid = validationServices.validateRole(role);
     setInstituteError(!validateInstituteName);
     setRoleError(!isRoleValid);
@@ -79,7 +81,6 @@ const SignUpScreen_2 = ({ navigation }) => {
             <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Role
             </Text>
-
             <RadioButtonRN
               data={data}
               selectedBtn={value => setRole(value.label)}

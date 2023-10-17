@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,11 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { colors } from '../common/colors';
+import {colors} from '../common/colors';
 // import IonIcon from 'react-native-vector-icons/Ionicons';
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 
-const ForgotPasswordScreen = ({ navigation }) => {
+const ForgotPasswordScreen = ({navigation}) => {
   const [email, Email] = useState('');
 
   const handleSendCode = () => {
@@ -37,8 +37,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
         }}>
         <View>
           <Text style={styles.title}>Forgot Password</Text>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
               Email
             </Text>
             <TextInput
@@ -49,7 +49,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             />
           </View>
 
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
             <TouchableOpacity style={styles.button} onPress={handleSendCode}>
               <Text style={styles.buttonText}>Send Code</Text>
             </TouchableOpacity>
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   appName: {
     marginVertical: 52,
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: { width: -10, height: 10 },
+    textShadowOffset: {width: -10, height: 10},
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',
