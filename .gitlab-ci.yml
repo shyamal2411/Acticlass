@@ -1,55 +1,55 @@
 stages:
-  # - build
-  # - test
+  - build
+  - test
   - publish
   - deploy
 
 variables:
   NODE_IMAGE: 'node:16.15.1'
 
-# cache:
-#   key: ${CI_COMMIT_REF_SLUG}
-#   paths:
-#     - Acticlass-App/node_modules/
-#     - Acticlass-API/node_modules/
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - Acticlass-App/node_modules/
+    - Acticlass-API/node_modules/
 
-# build_fronted:
-#   stage: build
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-App
-#     - npm install
+build_fronted:
+  stage: build
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-App
+    - npm install
 
-# build_backend:
-#   stage: build
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-API
-#     - npm install
+build_backend:
+  stage: build
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-API
+    - npm install
 
-# test_frontend:
-#   stage: test
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-App
-#     - npm install
-#     - npm test
+test_frontend:
+  stage: test
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-App
+    - npm install
+    - npm test
 
-# test_backend:
-#   stage: test
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-API
-#     - npm install
-#     - npm test
+test_backend:
+  stage: test
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-API
+    - npm install
+    - npm test
 
 publish:
   image: docker:latest
@@ -70,6 +70,9 @@ publish:
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
     - docker build -t docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA .
     - docker push docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA
+  only:
+    - master
+    - developer
 
 deploy:
   image: alpine:latest
@@ -86,3 +89,6 @@ deploy:
   environment:
     name: production
     url: http://172.17.2.145:8073
+    only:
+      - master
+      - development
