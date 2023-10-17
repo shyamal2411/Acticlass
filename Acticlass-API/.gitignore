@@ -12,3 +12,7 @@ package-lock.json
 # ENV files
 .env
 .env.*
+.env*
+.flaskenv*
+!.env.project
+!.env.vault

@@ -1,65 +1,94 @@
 stages:
-  # - build
-  # - test
+  - build
+  - test
+  - publish
   - deploy
 
 variables:
-  NODE_IMAGE: "node:16.15.1"
+  NODE_IMAGE: 'node:16.15.1'
 
-# cache:
-#   key: ${CI_COMMIT_REF_SLUG}
-#   paths:
-#     - Acticlass-App/node_modules/
-#     - Acticlass-API/node_modules/
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - Acticlass-App/node_modules/
+    - Acticlass-API/node_modules/
 
-# build_fronted:
-#   stage: build
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-App
-#     - npm install
+build_fronted:
+  stage: build
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-App
+    - npm install
 
-# build_backend:
-#   stage: build
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-API
-#     - npm install
+build_backend:
+  stage: build
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-API
+    - npm install
 
-# test_frontend:
-#   stage: test
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-App
-#     - npm install
-#     - npm test
+test_frontend:
+  stage: test
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-App
+    - npm install
+    - npm test
 
-# test_backend:
-#   stage: test
-#   image: $NODE_IMAGE
-#   tags:
-#     - acticlass-runner
-#   script:
-#     - cd Acticlass-API
-#     - npm install
-#     - npm test
+test_backend:
+  stage: test
+  image: $NODE_IMAGE
+  tags:
+    - acticlass-runner
+  script:
+    - cd Acticlass-API
+    - npm install
+    - npm test
+
+publish:
+  image: docker:latest
+  stage: publish
+  tags:
+    - acticlass-runner
+  variables:
+    # these values may need to be different if using TLS, k8s, etc.
+    # You can alternatively set defaults in your runner config
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: 'tcp://docker:2375'
+  services:
+    - docker:dind
+  script:
+    - pwd
+    - echo $SERVER_IP
+    - docker --version
+    - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io
+    - docker build -t docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA .
+    - docker push docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA
+  only:
+    - master
+    - developer
 
 deploy:
+  image: alpine:latest
   stage: deploy
   tags:
     - acticlass-runner
   script:
-    - mkdir -p ~/.ssh  # Create the .ssh directory if it doesn't exist
-    - echo "$ID_RSA" | tr -d '\r' > ~/.ssh/id_rsa
-    - chmod 600 ~/.ssh/id_rsa
-    - yum install -y openssh-clients  # Install openssh-clients package using yum
-    - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
-    - scp -r * $SERVER_USER@$SERVER_IP:~/app  # Copy your application files to the VM
-    - ssh $SERVER_USER@$SERVER_IP "cd ~/app && npm install && npm start"  # SSH into VM, install dependencies, and start the application
-  
+    - chmod og= $ID_RSA
+    - apk update && apk add openssh-client
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f my-app || true"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -e DOTENV_KEY='dotenv://:key_55777f98fc7d810d692ed4e8cf8a72e1e3911fed6d1efcbe8fc90cf465c3dab0@dotenv.org/vault/.env.vault?environment=production' -d -p 8073:3000 --name my-app docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA"
+  environment:
+    name: production
+    url: http://172.17.2.145:8073
+  only:
+    - master
+    - development
