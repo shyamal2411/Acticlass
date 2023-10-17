@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {colors} from '../common/colors';
+import { colors } from '../common/colors';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import validationServices from '../utils/validationServices';
 
-const SignUpScreen_3 = ({navigation}) => {
+const SignUpScreen_3 = ({ navigation }) => {
   const [pass, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -50,8 +50,8 @@ const SignUpScreen_3 = ({navigation}) => {
         }}>
         <View>
           <Text style={styles.title}>Sign Up</Text>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Password
             </Text>
             <View style={styles.passwordContainer}>
@@ -73,8 +73,8 @@ const SignUpScreen_3 = ({navigation}) => {
               <Text style={styles.errorText}>Please set the password</Text>
             ) : null}
           </View>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Confirm Password
             </Text>
             <View style={styles.passwordContainer}>
@@ -98,7 +98,7 @@ const SignUpScreen_3 = ({navigation}) => {
               <Text style={styles.errorText}>Passwords doesn't match</Text>
             ) : null}
           </View>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
             <TouchableOpacity style={styles.button} onPress={handleSignUp3}>
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
@@ -110,7 +110,7 @@ const SignUpScreen_3 = ({navigation}) => {
               alignItems: 'center',
             }}>
             <View
-              style={{flex: 1, height: 1, backgroundColor: colors.placeholder}}
+              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
             />
             <View>
               <Text
@@ -123,7 +123,7 @@ const SignUpScreen_3 = ({navigation}) => {
               </Text>
             </View>
             <View
-              style={{flex: 1, height: 1, backgroundColor: colors.placeholder}}
+              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
             />
           </View>
           <View
@@ -133,13 +133,13 @@ const SignUpScreen_3 = ({navigation}) => {
               paddingVertical: 16,
               paddingHorizontal: 40,
             }}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Already have a account?
             </Text>
             <TouchableOpacity
-              style={{alignSelf: 'flex'}}
+              style={{ alignSelf: 'flex' }}
               onPress={moveToSignIn}>
-              <Text style={{fontSize: 16, color: colors.primary}}>
+              <Text style={{ fontSize: 16, color: colors.primary }}>
                 {' '}
                 Sign In
               </Text>
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   appName: {
     marginVertical: 52,
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: {width: -10, height: 10},
+    textShadowOffset: { width: -10, height: 10 },
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',

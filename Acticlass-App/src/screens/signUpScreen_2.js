@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,13 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {colors} from '../common/colors';
-import {ScrollView} from 'react-native-gesture-handler';
+import { colors } from '../common/colors';
+import { ScrollView } from 'react-native-gesture-handler';
 import RadioButtonRN from 'radio-buttons-react-native';
 import validationServices from '../utils/validationServices';
 // import {isStudentOrTeacher, ROLES} from '../utils/constants';
 
-const SignUpScreen_2 = ({navigation}) => {
+const SignUpScreen_2 = ({ navigation }) => {
   const [institute, setInstitute] = useState('');
   const [role, setRole] = useState('');
   const [instituteError, setInstituteError] = useState(false);
@@ -61,8 +61,8 @@ const SignUpScreen_2 = ({navigation}) => {
         }}>
         <View>
           <Text style={styles.title}>Sign Up</Text>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Institute Name
             </Text>
             <TextInput
@@ -77,15 +77,15 @@ const SignUpScreen_2 = ({navigation}) => {
               </Text>
             )}
           </View>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Role
             </Text>
             <RadioButtonRN
               data={data}
               selectedBtn={value => setRole(value.label)}
-              boxStyle={{borderColor: '#ccc'}}
-              textStyle={{color: colors.black}}
+              boxStyle={{ borderColor: '#ccc' }}
+              textStyle={{ color: colors.black }}
               activeColor={colors.primary}
               boxActiveBgColor={colors.white}
             />
@@ -93,7 +93,7 @@ const SignUpScreen_2 = ({navigation}) => {
               <Text style={styles.errorText}>Please select a role</Text>
             )}
           </View>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
             <TouchableOpacity style={styles.button} onPress={handleSignUp2}>
               <Text style={styles.buttonText}>Next</Text>
             </TouchableOpacity>
@@ -105,7 +105,7 @@ const SignUpScreen_2 = ({navigation}) => {
               alignItems: 'center',
             }}>
             <View
-              style={{flex: 1, height: 1, backgroundColor: colors.placeholder}}
+              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
             />
             <View>
               <Text
@@ -118,7 +118,7 @@ const SignUpScreen_2 = ({navigation}) => {
               </Text>
             </View>
             <View
-              style={{flex: 1, height: 1, backgroundColor: colors.placeholder}}
+              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
             />
           </View>
           <View
@@ -128,13 +128,13 @@ const SignUpScreen_2 = ({navigation}) => {
               paddingVertical: 16,
               paddingHorizontal: 40,
             }}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Already have a account?
             </Text>
             <TouchableOpacity
-              style={{alignSelf: 'flex'}}
+              style={{ alignSelf: 'flex' }}
               onPress={moveToSignIn}>
-              <Text style={{fontSize: 16, color: colors.primary}}>
+              <Text style={{ fontSize: 16, color: colors.primary }}>
                 {' '}
                 Sign In
               </Text>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   appName: {
     marginVertical: 52,
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: {width: -10, height: 10},
+    textShadowOffset: { width: -10, height: 10 },
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',

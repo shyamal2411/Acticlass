@@ -6,12 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {colors} from '../common/colors';
+import { colors } from '../common/colors';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import validationServices from '../utils/validationServices';
 
-const SignInScreen = ({navigation}) => {
+const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [pass, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -38,7 +38,7 @@ const SignInScreen = ({navigation}) => {
   };
 
   const moveToForgotPassword = () => {
-    // handle forgot password logic here
+    navigation.navigate('ForgotPassword');
   };
 
   const moveToSignUp = () => {
@@ -58,8 +58,8 @@ const SignInScreen = ({navigation}) => {
         }}>
         <View>
           <Text style={styles.title}>Sign In</Text>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Email
             </Text>
             <TextInput
@@ -74,8 +74,8 @@ const SignInScreen = ({navigation}) => {
               </Text>
             ) : null}
           </View>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Password
             </Text>
             <View style={styles.passwordContainer}>
@@ -97,15 +97,15 @@ const SignInScreen = ({navigation}) => {
               <Text style={styles.errorText}>Please set the password</Text>
             ) : null}
             <TouchableOpacity
-              style={{alignSelf: 'flex', marginTop: 10}}
+              style={{ alignSelf: 'flex', marginTop: 10 }}
               onPress={moveToForgotPassword}>
               <Text
-                style={{fontSize: 14, color: colors.primary, marginLeft: 10}}>
+                style={{ fontSize: 14, color: colors.primary, marginLeft: 10 }}>
                 Forgot Password?
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
             <TouchableOpacity style={styles.button} onPress={handleSignIn}>
               <Text style={styles.buttonText}>Sign In</Text>
             </TouchableOpacity>
@@ -117,7 +117,7 @@ const SignInScreen = ({navigation}) => {
               alignItems: 'center',
             }}>
             <View
-              style={{flex: 1, height: 1, backgroundColor: colors.placeholder}}
+              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
             />
             <View>
               <Text
@@ -130,7 +130,7 @@ const SignInScreen = ({navigation}) => {
               </Text>
             </View>
             <View
-              style={{flex: 1, height: 1, backgroundColor: colors.placeholder}}
+              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
             />
           </View>
           <View
@@ -140,13 +140,13 @@ const SignInScreen = ({navigation}) => {
               paddingVertical: 16,
               paddingHorizontal: 40,
             }}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
               Don't have a account?
             </Text>
             <TouchableOpacity
-              style={{alignSelf: 'flex'}}
+              style={{ alignSelf: 'flex' }}
               onPress={moveToSignUp}>
-              <Text style={{fontSize: 16, color: colors.primary}}>
+              <Text style={{ fontSize: 16, color: colors.primary }}>
                 {' '}
                 Sign Up
               </Text>
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   appName: {
     marginVertical: 52,
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: {width: -10, height: 10},
+    textShadowOffset: { width: -10, height: 10 },
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     color: 'black',
     fontSize: 34,
-    fontWeight: 'semibold',
+    fontWeight: '500',
   },
   input: {
     backgroundColor: 'white',
