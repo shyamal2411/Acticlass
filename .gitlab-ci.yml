@@ -89,6 +89,6 @@ deploy:
   environment:
     name: production
     url: http://172.17.2.145:8073
-    only:
-      - master
-      - development
+  only:
+    - master
+    - development
