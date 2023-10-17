@@ -82,7 +82,7 @@ deploy:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD docker.io"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f my-app || true"
-    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 8073:3000 --name my-app docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA"
+    - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -e DOTENV_KEY='dotenv://:key_55777f98fc7d810d692ed4e8cf8a72e1e3911fed6d1efcbe8fc90cf465c3dab0@dotenv.org/vault/.env.vault?environment=production' -d -p 8073:3000 --name my-app docker.io/acticlass/acticlass:$CI_COMMIT_SHORT_SHA"
   environment:
     name: production
     url: http://172.17.2.145:8073
