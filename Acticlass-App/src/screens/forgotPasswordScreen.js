@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,21 +7,18 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import {colors} from '../common/colors';
+import { colors } from '../common/colors';
 // import IonIcon from 'react-native-vector-icons/Ionicons';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
+import { Formik } from 'formik';
+import { forgotPasswordSchema } from '../common/validationSchemas';
 
-const ForgotPasswordScreen = ({navigation}) => {
+const ForgotPasswordScreen = ({ navigation }) => {
   const [email, Email] = useState('');
 
-  const handleSendCode = () => {
-    Alert.alert('Code sent to your registered mail!');
-
+  const handleSendCode = (values) => {
+    console.log(values);
     // handle sign in logic here
-  };
-
-  const moveToSignUp = () => {
-    // handle sign up logic here
   };
 
   return (
@@ -35,32 +32,41 @@ const ForgotPasswordScreen = ({navigation}) => {
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}>
-        <View>
-          <Text style={styles.title}>Forgot Password</Text>
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
-              Email
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Email"
-              onChangeText={Email}
-            />
-          </View>
-
-          <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-            <TouchableOpacity style={styles.button} onPress={handleSendCode}>
-              <Text style={styles.buttonText}>Send Code</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}></View>
-        </View>
+        <Formik initialValues={{ email: '' }} validationSchema={forgotPasswordSchema} onSubmit={handleSendCode}>
+          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+            <View>
+              <Text style={styles.title}>Forgot Password</Text>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Email
+                </Text>
+                <TextInput
+                  value={values.email}
+                  style={styles.input}
+                  placeholderTextColor={colors.placeholder}
+                  placeholder="Email"
+                  onChangeText={handleChange('email')}
+                />
+                {errors.email ? (
+                  <Text style={styles.errorText}>
+                    {errors.email}
+                  </Text>
+                ) : null}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <TouchableOpacity style={styles.button} onPress={handleSendCode}>
+                  <Text style={styles.buttonText}>Send Code</Text>
+                </TouchableOpacity>
+              </View>
+              <View
+                style={{
+                  paddingVertical: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}></View>
+            </View>
+          )}
+        </Formik>
       </ScrollView>
     </View>
   );
@@ -75,7 +81,7 @@ const styles = StyleSheet.create({
   appName: {
     marginVertical: 52,
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: {width: -10, height: 10},
+    textShadowOffset: { width: -10, height: 10 },
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',
@@ -130,6 +136,10 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    marginLeft: 5,
   },
 });
 
