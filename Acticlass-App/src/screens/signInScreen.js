@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -9,32 +9,30 @@ import {
 import { colors } from '../common/colors';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
-import validationServices from '../utils/validationServices';
+import authService from '../services/authService';
+import { Formik } from 'formik';
+import { signInValidation } from '../common/validationSchemas';
+import Snackbar from 'react-native-snackbar';
+import { mmkv } from '../utils/MMKV';
+import { AUTH_TOKEN } from '../common/constants';
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [pass, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
 
-  useFocusEffect(
-    useCallback(() => {
-      setEmail('');
-      setPassword('');
-      setEmailError(false);
-      setPasswordError(false);
-    }, []),
-  );
 
-  const handleSignIn = () => {
-    const isEmailValid = validationServices.validateEmail(email.trim());
-    const isPasswordValid = validationServices.validatePassword(pass.trim());
-    setEmailError(!isEmailValid);
-    setPasswordError(!isPasswordValid);
-    if (!isEmailValid || !isPasswordValid) {
-      return false;
-    }
+  const handleSignIn = (values) => {
+    authService.signIn(values, (err, res) => {
+      if (err) {
+        Snackbar.show({
+          text: err.msg,
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
+        });
+        return;
+      }
+      mmkv.set(AUTH_TOKEN, res.token);
+      navigation.replace("AppStack");
+    });
   };
 
   const moveToForgotPassword = () => {
@@ -56,103 +54,116 @@ const SignInScreen = ({ navigation }) => {
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}>
-        <View>
-          <Text style={styles.title}>Sign In</Text>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Email
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Email"
-              onChangeText={setEmail}
-            />
-            {emailError ? (
-              <Text style={styles.errorText}>
-                Please enter valid email address
-              </Text>
-            ) : null}
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Password
-            </Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.password}
-                secureTextEntry={!isPasswordVisible}
-                placeholderTextColor={colors.placeholder}
-                placeholder="Password"
-                onChangeText={setPassword}
-              />
-              <IonIcon
-                name={isPasswordVisible ? 'eye-off' : 'eye'}
-                size={24}
-                color={colors.placeholder}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              />
-            </View>
-            {passwordError ? (
-              <Text style={styles.errorText}>Please set the password</Text>
-            ) : null}
-            <TouchableOpacity
-              style={{ alignSelf: 'flex', marginTop: 10 }}
-              onPress={moveToForgotPassword}>
-              <Text
-                style={{ fontSize: 14, color: colors.primary, marginLeft: 10 }}>
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-              <Text style={styles.buttonText}>Sign In</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
+        <Formik initialValues={
+          {
+            email: '',
+            password: ''
+          }
+        }
+          onSubmit={handleSignIn}
+          validationSchema={signInValidation}>
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <View>
-              <Text
+              <Text style={styles.title}>Sign In</Text>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Email
+                </Text>
+                <TextInput
+                  style={styles.input}
+                  value={values.email}
+                  placeholderTextColor={colors.placeholder}
+                  placeholder="Email"
+                  onChangeText={handleChange('email')}
+                />
+                {errors.email ? (
+                  <Text style={styles.errorText}>
+                    {errors.email}
+                  </Text>
+                ) : null}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Password
+                </Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    value={values.password}
+                    style={styles.password}
+                    secureTextEntry={!isPasswordVisible}
+                    placeholderTextColor={colors.placeholder}
+                    placeholder="Password"
+                    onChangeText={handleChange('password')}
+                  />
+                  <IonIcon
+                    name={isPasswordVisible ? 'eye-off' : 'eye'}
+                    size={24}
+                    color={colors.placeholder}
+                    onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                  />
+                </View>
+                {errors.password ? (
+                  <Text style={styles.errorText}>{errors.password}</Text>
+                ) : null}
+                <TouchableOpacity
+                  style={{ alignSelf: 'flex', marginTop: 10 }}
+                  onPress={moveToForgotPassword}>
+                  <Text
+                    style={{ fontSize: 14, color: colors.primary, marginLeft: 10 }}>
+                    Forgot Password?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                  <Text style={styles.buttonText}>Sign In</Text>
+                </TouchableOpacity>
+              </View>
+              <View
                 style={{
-                  width: 50,
-                  textAlign: 'center',
-                  color: colors.placeholder,
+                  paddingVertical: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}>
-                Or
-              </Text>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      width: 50,
+                      textAlign: 'center',
+                      color: colors.placeholder,
+                    }}>
+                    Or
+                  </Text>
+                </View>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+              </View>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  paddingVertical: 16,
+                  paddingHorizontal: 40,
+                }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Don't have a account?
+                </Text>
+                <TouchableOpacity
+                  style={{ alignSelf: 'flex' }}
+                  onPress={moveToSignUp}>
+                  <Text style={{ fontSize: 16, color: colors.primary }}>
+                    {' '}
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
-          </View>
-          <View
-            style={{
-              alignSelf: 'center',
-              flexDirection: 'row',
-              paddingVertical: 16,
-              paddingHorizontal: 40,
-            }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Don't have a account?
-            </Text>
-            <TouchableOpacity
-              style={{ alignSelf: 'flex' }}
-              onPress={moveToSignUp}>
-              <Text style={{ fontSize: 16, color: colors.primary }}>
-                {' '}
-                Sign Up
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          )}
+        </Formik>
       </ScrollView>
     </View>
   );

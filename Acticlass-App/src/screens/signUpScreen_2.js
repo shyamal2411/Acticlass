@@ -10,38 +10,24 @@ import { colors } from '../common/colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import RadioButtonRN from 'radio-buttons-react-native';
 import validationServices from '../utils/validationServices';
-// import {isStudentOrTeacher, ROLES} from '../utils/constants';
+import { ROLES } from '../common/constants';
+import authService from '../services/authService';
+import { Form, Formik } from 'formik';
+import { signUpValidation2 } from '../common/validationSchemas';
 
 const SignUpScreen_2 = ({ navigation }) => {
-  const [institute, setInstitute] = useState('');
-  const [role, setRole] = useState('');
-  const [instituteError, setInstituteError] = useState(false);
-  const [roleError, setRoleError] = useState(false);
-
   const data = [
     {
-      label: 'Student',
+      label: ROLES.STUDENT,
     },
     {
-      label: 'Teacher',
+      label: ROLES.TEACHER,
     },
   ];
 
-  const handleSignUp2 = () => {
-    // const trimmedInstitute = institute.trim();
-    const validateInstituteName = validationServices.validateInstituteName(
-      institute.trim(),
-    );
-    const isRoleValid = validationServices.validateRole(role);
-    setInstituteError(!validateInstituteName);
-    setRoleError(!isRoleValid);
-
-    if (!validateInstituteName || !isRoleValid) {
-      // console.log('institute', institute);
-      return false;
-    } else {
-      navigation.navigate('SignUp3');
-    }
+  const handleSignUp2 = (values) => {
+    authService.updateSignUpData({ institute: values.institute, role: values.role });
+    navigation.navigate('SignUp3');
   };
 
   const moveToSignIn = () => {
@@ -59,88 +45,100 @@ const SignUpScreen_2 = ({ navigation }) => {
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}>
-        <View>
-          <Text style={styles.title}>Sign Up</Text>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Institute Name
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Enter your institute name"
-              onChangeText={setInstitute}
-            />
-            {instituteError && (
-              <Text style={styles.errorText}>
-                Please enter valid Institute name
-              </Text>
-            )}
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Role
-            </Text>
-            <RadioButtonRN
-              data={data}
-              selectedBtn={value => setRole(value.label)}
-              boxStyle={{ borderColor: '#ccc' }}
-              textStyle={{ color: colors.black }}
-              activeColor={colors.primary}
-              boxActiveBgColor={colors.white}
-            />
-            {roleError && (
-              <Text style={styles.errorText}>Please select a role</Text>
-            )}
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <TouchableOpacity style={styles.button} onPress={handleSignUp2}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
+        <Formik initialValues={
+          {
+            institute: '',
+            role: '',
+          }
+        } validationSchema={signUpValidation2}
+          onSubmit={handleSignUp2}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
             <View>
-              <Text
+              <Text style={styles.title}>Sign Up</Text>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Institute Name
+                </Text>
+                <TextInput
+                  value={values.institute}
+                  style={styles.input}
+                  placeholderTextColor={colors.placeholder}
+                  placeholder="Enter your institute name"
+                  onChangeText={handleChange('institute')}
+                />
+                {errors.institute && (
+                  <Text style={styles.errorText}>
+                    {errors.institute}
+                  </Text>
+                )}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Role
+                </Text>
+                <RadioButtonRN
+                  data={data}
+                  selectedBtn={value => handleChange('role')(value.label)}
+                  boxStyle={{ borderColor: '#ccc' }}
+                  textStyle={{ color: colors.black }}
+                  activeColor={colors.primary}
+                  boxActiveBgColor={colors.white}
+                />
+                {errors.role && (
+                  <Text style={styles.errorText}>{errors.role}</Text>
+                )}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                  <Text style={styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+              <View
                 style={{
-                  width: 50,
-                  textAlign: 'center',
-                  color: colors.placeholder,
+                  paddingVertical: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}>
-                Or
-              </Text>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      width: 50,
+                      textAlign: 'center',
+                      color: colors.placeholder,
+                    }}>
+                    Or
+                  </Text>
+                </View>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+              </View>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  paddingVertical: 16,
+                  paddingHorizontal: 40,
+                }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Already have a account?
+                </Text>
+                <TouchableOpacity
+                  style={{ alignSelf: 'flex' }}
+                  onPress={moveToSignIn}>
+                  <Text style={{ fontSize: 16, color: colors.primary }}>
+                    {' '}
+                    Sign In
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
-          </View>
-          <View
-            style={{
-              alignSelf: 'center',
-              flexDirection: 'row',
-              paddingVertical: 16,
-              paddingHorizontal: 40,
-            }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Already have a account?
-            </Text>
-            <TouchableOpacity
-              style={{ alignSelf: 'flex' }}
-              onPress={moveToSignIn}>
-              <Text style={{ fontSize: 16, color: colors.primary }}>
-                {' '}
-                Sign In
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          )}
+        </Formik>
       </ScrollView>
     </View>
   );

@@ -1,11 +1,19 @@
 import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { colors } from '../common/colors';
+import { AUTH_TOKEN } from '../common/constants';
+import { mmkv } from '../utils/MMKV';
 
 const SplashScreen = ({ navigation }) => {
     useEffect(() => {
+        //TODO: check if user is logged in
         setTimeout(() => {
-            navigation.replace('AuthStack');
+            const token = mmkv.getString(AUTH_TOKEN);
+            if (token) {
+                navigation.replace('AppStack');
+            } else {
+                navigation.replace('AuthStack');
+            }
         }, 1000);
     }, [navigation]);
 

@@ -9,31 +9,35 @@ import {
 import { colors } from '../common/colors';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
-import validationServices from '../utils/validationServices';
+
+import authService from '../services/authService';
+import { Formik } from 'formik';
+import { signUpValidation3 } from '../common/validationSchemas';
+import Snackbar from 'react-native-snackbar';
+import { mmkv } from '../utils/MMKV';
+import { AUTH_TOKEN } from '../common/constants';
 
 const SignUpScreen_3 = ({ navigation }) => {
-  const [pass, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
-    useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
-  const handleSignUp3 = () => {
-    const isPasswordValid = validationServices.validatePassword(pass.trim());
-    const isConfirmPasswordValid = pass === confirmPassword;
-
-    setPasswordError(!isPasswordValid);
-    setConfirmPasswordError(!isConfirmPasswordValid);
-
-    if (!isPasswordValid || !isConfirmPasswordValid) {
-      return false;
-    }
+  const handleSignUp3 = (values) => {
+    authService.updateSignUpData({ password: values.password });
+    authService.signUp((err, res) => {
+      if (err) {
+        Snackbar.show({
+          text: err.msg,
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
+        });
+        return;
+      }
+      mmkv.set(AUTH_TOKEN, res.token);
+      navigation.replace("AppStack");
+    });
   };
 
   const moveToSignIn = () => {
-    // handle sign up logic here
     navigation.navigate('SignIn');
   };
 
@@ -48,104 +52,119 @@ const SignUpScreen_3 = ({ navigation }) => {
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}>
-        <View>
-          <Text style={styles.title}>Sign Up</Text>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Password
-            </Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.password}
-                secureTextEntry={!isPasswordVisible}
-                placeholderTextColor={colors.placeholder}
-                placeholder="Enter your password"
-                onChangeText={setPassword}
-              />
-              <IonIcon
-                name={isPasswordVisible ? 'eye-off' : 'eye'}
-                size={24}
-                color={colors.placeholder}
-                onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-              />
-            </View>
-            {passwordError ? (
-              <Text style={styles.errorText}>Please set the password</Text>
-            ) : null}
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Confirm Password
-            </Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.password}
-                secureTextEntry={!isConfirmPasswordVisible}
-                placeholderTextColor={colors.placeholder}
-                placeholder="Re-enter your password"
-                onChangeText={setConfirmPassword}
-              />
-              <IonIcon
-                name={isConfirmPasswordVisible ? 'eye-off' : 'eye'}
-                size={24}
-                color={colors.placeholder}
-                onPress={() =>
-                  setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
-                }
-              />
-            </View>
-            {confirmPasswordError ? (
-              <Text style={styles.errorText}>Passwords doesn't match</Text>
-            ) : null}
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <TouchableOpacity style={styles.button} onPress={handleSignUp3}>
-              <Text style={styles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
+        <Formik initialValues={
+          {
+            password: '',
+            confirmPassword: ''
+          }
+        }
+          onSubmit={handleSignUp3}
+          validationSchema={signUpValidation3}
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
             <View>
-              <Text
+              <Text style={styles.title}>Sign Up</Text>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Password
+                </Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    value={values.password}
+                    style={styles.password}
+                    secureTextEntry={!isPasswordVisible}
+                    placeholderTextColor={colors.placeholder}
+                    placeholder="Enter your password"
+                    onChangeText={handleChange('password')}
+                  />
+                  <IonIcon
+                    name={isPasswordVisible ? 'eye-off' : 'eye'}
+                    size={24}
+                    color={colors.placeholder}
+                    onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                  />
+                </View>
+                {errors.password ? (
+                  <Text style={styles.errorText}>{errors.password}</Text>
+                ) : null}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Confirm Password
+                </Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    value={values.confirmPassword}
+                    style={styles.password}
+                    secureTextEntry={!isConfirmPasswordVisible}
+                    placeholderTextColor={colors.placeholder}
+                    placeholder="Re-enter your password"
+                    onChangeText={handleChange('confirmPassword')}
+                  />
+                  <IonIcon
+                    name={isConfirmPasswordVisible ? 'eye-off' : 'eye'}
+                    size={24}
+                    color={colors.placeholder}
+                    onPress={() =>
+                      setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+                    }
+                  />
+                </View>
+                {errors.confirmPassword ? (
+                  <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+                ) : null}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                  <Text style={styles.buttonText}>Sign Up</Text>
+                </TouchableOpacity>
+              </View>
+              <View
                 style={{
-                  width: 50,
-                  textAlign: 'center',
-                  color: colors.placeholder,
+                  paddingVertical: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}>
-                Or
-              </Text>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      width: 50,
+                      textAlign: 'center',
+                      color: colors.placeholder,
+                    }}>
+                    Or
+                  </Text>
+                </View>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+              </View>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  paddingVertical: 16,
+                  paddingHorizontal: 40,
+                }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Already have a account?
+                </Text>
+                <TouchableOpacity
+                  style={{ alignSelf: 'flex' }}
+                  onPress={moveToSignIn}>
+                  <Text style={{ fontSize: 16, color: colors.primary }}>
+                    {' '}
+                    Sign In
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
-          </View>
-          <View
-            style={{
-              alignSelf: 'center',
-              flexDirection: 'row',
-              paddingVertical: 16,
-              paddingHorizontal: 40,
-            }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Already have a account?
-            </Text>
-            <TouchableOpacity
-              style={{ alignSelf: 'flex' }}
-              onPress={moveToSignIn}>
-              <Text style={{ fontSize: 16, color: colors.primary }}>
-                {' '}
-                Sign In
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          )}
+        </Formik>
+
       </ScrollView>
     </View>
   );

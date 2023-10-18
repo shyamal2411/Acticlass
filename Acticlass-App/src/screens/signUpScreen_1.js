@@ -8,25 +8,14 @@ import {
 } from 'react-native';
 import { colors } from '../common/colors';
 import { ScrollView } from 'react-native-gesture-handler';
-import validationServices from '../utils/validationServices';
+import { Formik } from 'formik';
+import { signUpValidation1 } from '../common/validationSchemas';
+import authService from '../services/authService';
 
 const SignUpScreen_1 = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
 
-  const handleSignUp1 = () => {
-    const isEmailValid = validationServices.validateEmail(email.trim());
-    const isPhoneValid = validationServices.validatePhone(phone.trim());
-
-    setEmailError(!isEmailValid);
-    setPhoneError(!isPhoneValid);
-
-    if (!isEmailValid || !isPhoneValid) {
-      return false;
-    }
-
+  const handleSignUp1 = (values) => {
+    authService.updateSignUpData({ email: values.email, name: values.name });
     navigation.navigate('SignUp2');
   };
 
@@ -45,88 +34,102 @@ const SignUpScreen_1 = ({ navigation }) => {
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}>
-        <View>
-          <Text style={styles.title}>Sign Up</Text>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Email
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Enter your email"
-              onChangeText={setEmail}
-            />
-            {emailError ? (
-              <Text style={styles.errorText}>
-                Please enter valid email address
-              </Text>
-            ) : null}
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Contact Number
-            </Text>
-            <TextInput
-              style={styles.input}
-              placeholderTextColor={colors.placeholder}
-              placeholder="Enter your phone number"
-              onChangeText={setPhone}
-            />
-            {phoneError ? (
-              <Text style={styles.errorText}>
-                Please enter valid contact number
-              </Text>
-            ) : null}
-          </View>
-          <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-            <TouchableOpacity style={styles.button} onPress={handleSignUp1}>
-              <Text style={styles.buttonText}>Next</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              paddingVertical: 16,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
+        <Formik initialValues={
+          {
+            email: '',
+            name: '',
+          }
+        }
+          validationSchema={signUpValidation1}
+          onSubmit={handleSignUp1}>
+          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
             <View>
-              <Text
+              <Text style={styles.title}>Sign Up</Text>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Email
+                </Text>
+                <TextInput
+                  value={values.email}
+                  style={styles.input}
+                  placeholderTextColor={colors.placeholder}
+                  placeholder="Enter your email"
+                  onChangeText={handleChange('email')}
+                />
+                {errors.email ? (
+                  <Text style={styles.errorText}>
+                    {errors.email}
+                  </Text>
+                ) : null}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Name
+                </Text>
+                <TextInput
+                  value={values.name}
+                  style={styles.input}
+                  placeholderTextColor={colors.placeholder}
+                  placeholder="Enter your Name"
+                  onChangeText={handleChange('name')}
+                />
+                {errors.name ? (
+                  <Text style={styles.errorText}>
+                    {errors.name}
+                  </Text>
+                ) : null}
+              </View>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                  <Text style={styles.buttonText}>Next</Text>
+                </TouchableOpacity>
+              </View>
+              <View
                 style={{
-                  width: 50,
-                  textAlign: 'center',
-                  color: colors.placeholder,
+                  paddingVertical: 16,
+                  flexDirection: 'row',
+                  alignItems: 'center',
                 }}>
-                Or
-              </Text>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+                <View>
+                  <Text
+                    style={{
+                      width: 50,
+                      textAlign: 'center',
+                      color: colors.placeholder,
+                    }}>
+                    Or
+                  </Text>
+                </View>
+                <View
+                  style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
+                />
+              </View>
+              <View
+                style={{
+                  alignSelf: 'center',
+                  flexDirection: 'row',
+                  paddingVertical: 16,
+                  paddingHorizontal: 40,
+                }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                  Already have a account?
+                </Text>
+                <TouchableOpacity
+                  style={{ alignSelf: 'flex' }}
+                  onPress={moveToSignIn}>
+                  <Text style={{ fontSize: 16, color: colors.primary }}>
+                    {' '}
+                    Sign In
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View
-              style={{ flex: 1, height: 1, backgroundColor: colors.placeholder }}
-            />
-          </View>
-          <View
-            style={{
-              alignSelf: 'center',
-              flexDirection: 'row',
-              paddingVertical: 16,
-              paddingHorizontal: 40,
-            }}>
-            <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-              Already have a account?
-            </Text>
-            <TouchableOpacity
-              style={{ alignSelf: 'flex' }}
-              onPress={moveToSignIn}>
-              <Text style={{ fontSize: 16, color: colors.primary }}>
-                {' '}
-                Sign In
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+          )}
+        </Formik>
+
       </ScrollView>
     </View>
   );
