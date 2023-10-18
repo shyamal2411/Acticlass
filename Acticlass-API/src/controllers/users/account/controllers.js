@@ -71,14 +71,25 @@ const login = async (req, res) => {
 // Function to send a code to reset password to a user's email
 const forgotPassword = async (req, res) => {
     const { email } = req.body;
-    const code = Math.floor(100000 + Math.random() * 900000);
-    sendMail(email, 'Reset Password', `Your reset password code is ${code}`, (err) => {
-        if (err) {
-            return res.status(500).json({ msg: 'Internal server error' });
+    if (!email) {
+        return res.status(400).json({ msg: 'Email is required!' });
+    }
+    UserSchema.findOne({ email }).then((user) => {
+        if (!user) {
+            return res.status(400).json({ msg: 'User does not exist' });
         }
-        storeResetPasswordCode(email, code);
-        return res.status(200).json({ msg: 'Code sent successfully' });
+        else {
+            const code = Math.floor(100000 + Math.random() * 900000);
+            sendMail(email, 'Reset Password', `Your reset password code is ${code}`, (err) => {
+                if (err) {
+                    return res.status(500).json({ msg: 'Internal server error' });
+                }
+                storeResetPasswordCode(email, code);
+                return res.status(200).json({ msg: 'Code sent successfully' });
+            });
+        }
     });
+
 }
 
 // Function to verify reset password code from cache
