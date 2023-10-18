@@ -31,3 +31,9 @@ export const signUpValidation3 = Yup.object().shape({
 export const forgotPasswordSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Required'),
 });
+
+// Reset password validation schema
+export const resetCodeSchema = Yup.object().shape({
+    code: Yup.string().matches(/^[0-9]{6}$/, "Must be 6 digit code").required('Required')
+});
+

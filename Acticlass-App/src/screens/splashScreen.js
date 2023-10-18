@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { colors } from '../common/colors';
-import { AUTH_TOKEN } from '../common/constants';
+import { AUTH_TOKEN, IS_FROM_RESET } from '../common/constants';
 import { mmkv } from '../utils/MMKV';
 
 const SplashScreen = ({ navigation }) => {
@@ -9,9 +9,14 @@ const SplashScreen = ({ navigation }) => {
         //TODO: check if user is logged in
         setTimeout(() => {
             const token = mmkv.getString(AUTH_TOKEN);
-            if (token) {
+            const isFromResetPW = mmkv.getBoolean(IS_FROM_RESET) || false;
+            if (token && !isFromResetPW) {
                 navigation.replace('AppStack');
             } else {
+                if (isFromResetPW) {
+                    mmkv.remove(IS_FROM_RESET);
+                    mmkv.remove(AUTH_TOKEN);
+                }
                 navigation.replace('AuthStack');
             }
         }, 1000);

@@ -80,7 +80,7 @@ const forgotPassword = async (req, res) => {
         }
         else {
             const code = Math.floor(100000 + Math.random() * 900000);
-            sendMail(email, 'Reset Password', `Your reset password code is ${code}`, (err) => {
+            sendMail(email, 'Reset Password', `Your reset password code is ${code}. It is valid for 5 mins only.`, (err) => {
                 if (err) {
                     return res.status(500).json({ msg: 'Internal server error' });
                 }
@@ -108,6 +108,7 @@ const verifyResetPasswordCode = async (req, res) => {
                 institute: user.institute,
             }
             const token = jwt.sign({ data }, process.env.JWT_SECRET, { expiresIn: "7d" });
+            cache.del(email); // Delete the code from cache
             return res.status(200).json({ token, msg: 'Code verified successfully' });
         });
     } else {

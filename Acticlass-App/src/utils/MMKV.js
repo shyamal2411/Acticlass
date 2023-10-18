@@ -91,7 +91,7 @@ class MMKVManager {
      * @param {String} key 
      * @returns {void}
      */
-    removeKey(key) {
+    remove(key) {
         return this.storage.delete(key);
     }
 

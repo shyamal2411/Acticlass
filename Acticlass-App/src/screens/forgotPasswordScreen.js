@@ -11,14 +11,79 @@ import { colors } from '../common/colors';
 // import IonIcon from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Formik } from 'formik';
-import { forgotPasswordSchema } from '../common/validationSchemas';
+import { forgotPasswordSchema, resetCodeSchema, signUpValidation3 } from '../common/validationSchemas';
+import authService from '../services/authService';
+import Snackbar from 'react-native-snackbar';
+import { toInteger } from 'lodash';
+import { mmkv } from '../utils/MMKV';
+import { AUTH_TOKEN, IS_FROM_RESET } from '../common/constants';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 
 const ForgotPasswordScreen = ({ navigation }) => {
-  const [email, Email] = useState('');
+  const [isCodeSend, setIsCodeSend] = useState();
+  const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
 
   const handleSendCode = (values) => {
-    console.log(values);
-    // handle sign in logic here
+    authService.sendResetCode(values.email, (err, res) => {
+      if (err) {
+        Snackbar.show({
+          text: err.msg,
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
+        });
+        return;
+      }
+      Snackbar.show({
+        text: res.msg,
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: colors.success,
+      });
+      setIsCodeSend(values.email);
+    });
+  };
+
+  const handleVerifyCode = (values) => {
+    authService.verifyResetCode({ code: toInteger(values.code), email: isCodeSend }, (err, res) => {
+      if (err) {
+        Snackbar.show({
+          text: err.msg,
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
+        });
+        return;
+      }
+      Snackbar.show({
+        text: res.msg,
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: colors.success,
+      });
+      mmkv.set(IS_FROM_RESET, true);
+      mmkv.set(AUTH_TOKEN, res.token);
+      setIsCodeVerified(true);
+    });
+  };
+
+  const handleResetPassword = (values) => {
+    authService.resetPassword({ email: values.email, password: values.password }, (err, res) => {
+      if (err) {
+        Snackbar.show({
+          text: err.msg,
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
+        });
+        return;
+      }
+      Snackbar.show({
+        text: res.msg,
+        duration: Snackbar.LENGTH_SHORT,
+        backgroundColor: colors.success,
+      });
+      mmkv.remove(IS_FROM_RESET);
+      mmkv.remove(AUTH_TOKEN);
+      navigation.navigate('SignIn');
+    });
   };
 
   return (
@@ -32,45 +97,155 @@ const ForgotPasswordScreen = ({ navigation }) => {
           borderTopLeftRadius: 50,
           borderTopRightRadius: 50,
         }}>
-        <Formik initialValues={{ email: '' }} validationSchema={forgotPasswordSchema} onSubmit={handleSendCode}>
-          {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
-            <View>
-              <Text style={styles.title}>Forgot Password</Text>
-              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
-                  Email
-                </Text>
-                <TextInput
-                  value={values.email}
-                  style={styles.input}
-                  placeholderTextColor={colors.placeholder}
-                  placeholder="Email"
-                  onChangeText={handleChange('email')}
-                />
-                {errors.email ? (
-                  <Text style={styles.errorText}>
-                    {errors.email}
+        {isCodeVerified ? (
+          <Formik initialValues={
+            {
+              password: '',
+              confirmPassword: ''
+            }
+          }
+            onSubmit={handleResetPassword}
+            validationSchema={signUpValidation3}
+          >
+            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+              <View>
+                <Text style={styles.title}>Forgot Password</Text>
+                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                    New Password
                   </Text>
-                ) : null}
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      value={values.password}
+                      style={styles.password}
+                      secureTextEntry={!isPasswordVisible}
+                      placeholderTextColor={colors.placeholder}
+                      placeholder="Enter new password"
+                      onChangeText={handleChange('password')}
+                    />
+                    <IonIcon
+                      name={isPasswordVisible ? 'eye-off' : 'eye'}
+                      size={24}
+                      color={colors.placeholder}
+                      onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                    />
+                  </View>
+                  {errors.password ? (
+                    <Text style={styles.errorText}>{errors.password}</Text>
+                  ) : null}
+                </View>
+                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                    Confirm Password
+                  </Text>
+                  <View style={styles.passwordContainer}>
+                    <TextInput
+                      value={values.confirmPassword}
+                      style={styles.password}
+                      secureTextEntry={!isConfirmPasswordVisible}
+                      placeholderTextColor={colors.placeholder}
+                      placeholder="Re-enter password"
+                      onChangeText={handleChange('confirmPassword')}
+                    />
+                    <IonIcon
+                      name={isConfirmPasswordVisible ? 'eye-off' : 'eye'}
+                      size={24}
+                      color={colors.placeholder}
+                      onPress={() =>
+                        setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+                      }
+                    />
+                  </View>
+                  {errors.confirmPassword ? (
+                    <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+                  ) : null}
+                </View>
+                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Reset</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                <TouchableOpacity style={styles.button} onPress={handleSendCode}>
-                  <Text style={styles.buttonText}>Send Code</Text>
-                </TouchableOpacity>
+            )}
+          </Formik>
+        ) : !isCodeSend ? (
+          <Formik initialValues={{ email: '' }} validationSchema={forgotPasswordSchema} onSubmit={handleSendCode}>
+            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+              <View>
+                <Text style={styles.title}>Forgot Password</Text>
+                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                    Email
+                  </Text>
+                  <TextInput
+                    value={values.email}
+                    style={styles.input}
+                    placeholderTextColor={colors.placeholder}
+                    placeholder="Enter your Email"
+                    onChangeText={handleChange('email')}
+                  />
+                  {errors.email ? (
+                    <Text style={styles.errorText}>
+                      {errors.email}
+                    </Text>
+                  ) : null}
+                </View>
+                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Send Code</Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    paddingVertical: 16,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}></View>
               </View>
-              <View
-                style={{
-                  paddingVertical: 16,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}></View>
-            </View>
-          )}
-        </Formik>
+            )}
+          </Formik>) : (
+          <Formik initialValues={{ code: '' }} validationSchema={resetCodeSchema} onSubmit={handleVerifyCode}>
+            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+              <View>
+                <Text style={styles.title}>Forgot Password</Text>
+                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                    Code
+                  </Text>
+                  <TextInput
+                    value={values.code}
+                    style={styles.input}
+                    keyboardType='numeric'
+                    placeholderTextColor={colors.placeholder}
+                    placeholder="Enter your Code"
+                    onChangeText={handleChange('code')}
+                  />
+                  {errors.code ? (
+                    <Text style={styles.errorText}>
+                      {errors.code}
+                    </Text>
+                  ) : null}
+                </View>
+                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Verify</Text>
+                  </TouchableOpacity>
+                </View>
+                <View
+                  style={{
+                    paddingVertical: 16,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                  }}></View>
+              </View>
+            )}
+          </Formik>
+        )}
       </ScrollView>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
