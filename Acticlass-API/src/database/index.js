@@ -1,6 +1,6 @@
 // add all schemas here
 module.exports.UserSchema = require('./schema/user');
-
+module.exports.GroupSchema = require('./schema/group');
 
 
 // connect to the database
