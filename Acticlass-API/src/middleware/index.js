@@ -21,8 +21,8 @@ function authMiddleware(req, res, next) {
             if (!user) {
                 return res.status(400).json({ msg: 'User does not exist' });
             } else {
-                // Add user from payload
-                req.user = decoded.data;
+                // Add user from payload                
+                req.user = user;
                 next();
             }
         });

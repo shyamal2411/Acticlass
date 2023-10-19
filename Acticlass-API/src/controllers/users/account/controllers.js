@@ -4,19 +4,46 @@ const { hash, compare } = require('../../../services/bcrypt');
 const { sendMail } = require('../../../services/nodeMailer');
 
 const NodeCache = require('node-cache');
+const { isEmpty } = require('lodash');
+const { Roles, JWT_EXPIRATION_TIME } = require('../../../common/constants');
 const cache = new NodeCache();
 
 function storeResetPasswordCode(email, code) {
     cache.set(email, code, 300);
 }
 
+const generateToken = (user) => {
+    const data = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        institute: user.institute,
+    }
+    const token = jwt.sign({ data }, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
+    return token;
+}
+
+
 
 // Function to create a new user account
 const register = async (req, res) => {
     const { name, email, institute, role, password } = req.body;
 
-    if (!name || !email || !password || !role || !institute) {
-        return res.status(400).json({ msg: 'Please enter all fields' });
+    if (!name || isEmpty(name)) {
+        return res.status(400).json({ msg: 'Name is required!' });
+    }
+    if (!email || isEmpty(email)) {
+        return res.status(400).json({ msg: 'Email is required!' });
+    }
+    if (!institute || isEmpty(institute)) {
+        return res.status(400).json({ msg: 'Institute is required!' });
+    }
+    if (!role || isEmpty(role) || !Object.values(Roles).includes(role)) {
+        return res.status(400).json({ msg: 'Role is required!' });
+    }
+    if (!password || isEmpty(password)) {
+        return res.status(400).json({ msg: 'Password is required!' });
     }
 
     const u = await UserSchema.findOne({ email });
@@ -34,8 +61,9 @@ const register = async (req, res) => {
         }
         const user = new UserSchema(data);
         await user.save();
+        data.id = user._id;
         delete data.password;
-        const token = jwt.sign({ user: { data } }, process.env.JWT_SECRET, { expiresIn: "7d" });
+        const token = generateToken(user);
         return res.status(201).json({ user: data, token });
     });
 }
@@ -44,8 +72,11 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     // Implementation logic here
     const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ msg: 'Please enter all fields' });
+    if (!email || isEmpty(email)) {
+        return res.status(400).json({ msg: 'Email is required!' });
+    }
+    if (!password || isEmpty(password)) {
+        return res.status(400).json({ msg: 'Password is required!' });
     }
 
     UserSchema.findOne({ email }).then((user) => {
@@ -55,12 +86,13 @@ const login = async (req, res) => {
         compare(password, user.password).then((match) => {
             if (match) {
                 const data = {
+                    id: user._id,
                     name: user.name,
                     email: user.email,
                     role: user.role,
                     institute: user.institute,
                 }
-                const token = jwt.sign({ data }, process.env.JWT_SECRET, { expiresIn: "7d" });
+                const token = generateToken(user);
                 return res.status(200).json({ user: data, token });
             }
             return res.status(400).json({ msg: 'Invalid credentials' });
@@ -95,6 +127,13 @@ const forgotPassword = async (req, res) => {
 // Function to verify reset password code from cache
 const verifyResetPasswordCode = async (req, res) => {
     const { email, code } = req.body;
+    if (!email || isEmpty(email)) {
+        return res.status(400).json({ msg: 'Email is required!' });
+    }
+    if (!code || isNaN(code)) {
+        return res.status(400).json({ msg: 'Code is required!' });
+    }
+
     const cachedCode = cache.get(email);
     if (cachedCode === code) {
         UserSchema.findOne({ email }).then((user) => {
@@ -102,12 +141,13 @@ const verifyResetPasswordCode = async (req, res) => {
                 return res.status(400).json({ msg: 'User does not exist' });
             }
             const data = {
+                id: user._id,
                 name: user.name,
                 email: user.email,
                 role: user.role,
                 institute: user.institute,
             }
-            const token = jwt.sign({ data }, process.env.JWT_SECRET, { expiresIn: "7d" });
+            const token = generateToken(user);
             cache.del(email); // Delete the code from cache
             return res.status(200).json({ token, msg: 'Code verified successfully' });
         });
@@ -119,6 +159,12 @@ const verifyResetPasswordCode = async (req, res) => {
 // Function to change a user's password
 const changePassword = async (req, res) => {
     const { email, password } = req.body;
+    if (!email || isEmpty(email)) {
+        return res.status(400).json({ msg: 'Email is required!' });
+    }
+    if (!password || isEmpty(password)) {
+        return res.status(400).json({ msg: 'Password is required!' });
+    }
     UserSchema.findOne({ email }).then((user) => {
         if (!user) {
             return res.status(400).json({ msg: 'User does not exist' });
