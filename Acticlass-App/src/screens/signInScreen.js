@@ -7,9 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import {colors} from '../common/colors';
-//import IonIcon from 'react-native-vector-icons/Ionicons';
-//import AntDesignIcon from 'react-native-vector-icons/AntDesign';
-import EntypoIcon from 'react-native-vector-icons/Entypo';
+import IonIcon from 'react-native-vector-icons/Ionicons';
 import {ScrollView} from 'react-native-gesture-handler';
 import authService from '../services/authService';
 import {Formik} from 'formik';
@@ -100,8 +98,8 @@ const SignInScreen = ({navigation}) => {
                     placeholder="Password"
                     onChangeText={handleChange('password')}
                   />
-                  <EntypoIcon
-                    name={isPasswordVisible ? 'eye-with-line' : 'eye'}
+                  <IonIcon
+                    name={isPasswordVisible ? 'eye-off' : 'eye'}
                     size={24}
                     color={colors.placeholder}
                     onPress={() => setIsPasswordVisible(!isPasswordVisible)}
