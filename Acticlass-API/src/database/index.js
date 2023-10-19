@@ -13,14 +13,10 @@ try {
     }).then(({ connection }) => {
         console.log(`Service [Mongoose]: Connected Database \x1b[32m\x1b[1m${connection?.name}\x1b[0m`);
     }, (error) => {
-        console.error(error)
-        // logger.error('Service [Mongoose]: ' + error)
         console.error('Service [Mongoose]: ' + error)
         process.exit(1)
     })
 } catch (error) {
-    console.error(error)
-    // logger.error('Service [Mongoose]: ' + error)
     console.error('Service [Mongoose]: ' + error)
     process.exit(1);
 }
