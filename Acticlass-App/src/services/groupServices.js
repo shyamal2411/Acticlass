@@ -37,6 +37,23 @@ class groupService {
     }
 
 
+    /**
+     * Gell All the group members by group ID
+     * @param {Function} cb
+     */
+    getAll() {
+        api({ url: endpoints.getAll, method: "GET" }).then(res => {
+            console.log(this.tag, "[getAll]", "Groups retrieved successfully! ✅");
+            if (cb != null) {
+                cb(null, res);
+            }
+        }).catch(err => {
+            console.error(this.tag, "[getAll]", err);
+            if (cb != null) {
+                cb(err, null);
+            }
+        })
+    }
 
     /**
      * 
@@ -58,7 +75,44 @@ class groupService {
         })
     }
 
+    /**
+     * 
+     * Get ID of the group
+     * @param {Function} cb
+     */
+    getId(data) {
+        api({ url: endpoints.getId, method: "GET" }).then(res => {
+            console.log(this.tag, "[getId]", "Group ID retrieved successfully! ✅");
+            if (cb != null) {
+                cb(null, res);
+            }
+        }).catch(err => {
+            console.error(this.tag, "[getId]", err);
+            if (cb != null) {
+                cb(err, null);
+            }
+        })
+    }
 
+    /**
+     * Get members by group ID
+     * @param {String} groupId 
+     * @param {Function} cb 
+     */
+    getMembers(groupId, cb) {
+        api({
+            url: `${endpoints.getMembers}/${groupId}`,method: "GET"}).then(res => {
+            console.log(this.tag, "[getMembers]", "Members retrieved successfully! ✅");
+            if (cb != null) {
+                cb(null, res);
+            }
+        }).catch(err => {
+            console.error(this.tag, "[getMembers]", err);
+            if (cb != null) {
+                cb(err, null);
+            }
+        })
+    }
 
     /**
      * 
@@ -135,6 +189,22 @@ class groupService {
         })
     }
     
-
+    /**
+     * @param {String} groupId 
+     * 
+     */
+    deleteGroup({groupId}, cb) {
+        api({ url: `${endpoints.deleteGroup}/${groupId}`, method: "DELETE" }).then(res => {
+            console.log(this.tag, "[deleteGroup]", "Group deleted successfully! ✅");
+            if (cb != null) {
+                cb(null, res);
+            }
+        }).catch(err => {
+            console.error(this.tag, "[deleteGroup]", err);
+            if (cb != null) {
+                cb(err, null);
+            }
+        })
+    }
 }
 export default instance = new groupService();
