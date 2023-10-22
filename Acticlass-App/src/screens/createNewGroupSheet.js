@@ -103,20 +103,6 @@ const CreateNewGroup = ({ cb }) => {
                                         listMode="SCROLLVIEW"
                                         items={frameDropdownItems}
                                     />
-
-                                    {/* <View style={{ padding: 20 }}>
-                                <Picker
-                                selectedValue={selectedValue}
-                                onValueChange={(itemValue, itemIndex) => setSelectedValue(itemValue)}
-                                placeholder = "Select Frequency"
-                                >
-                                <Pic
-                                <Picker.Ite label="Option 1" value={'0'} />
-                                <Picker.Item label="Option 2" value={'15'} />
-                                <Picker.Item label="Option 3" value={'30'} />
-                                <Picker.Item label="Option 4" value={'60'} />
-                                </Picker>
-                            </View> */}
                                 </View>
                             </View>
                             <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
@@ -139,7 +125,7 @@ const CreateNewGroup = ({ cb }) => {
                                     style={styles.input}
                                     placeholder="Enter penalty points"
                                     placeholderTextColor="#9e9292"
-                                    value={values.falseRequstPenalty}
+                                    value={values.falseRequestPenalty}
                                     onChangeText={handleChange('falseRequestPenalty')}
                                 />
                             </View>
