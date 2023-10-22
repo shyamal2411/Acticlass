@@ -8,6 +8,17 @@ export const endpoints = {
     verifyCode: baseUrl + '/users/verify-code',
     resetPassword: baseUrl + '/users/reset-password',
     deleteProfile: baseUrl + '/users/profile',
+    //Group
+    createGroup: baseUrl + '/groups/create',
+    getGroups: baseUrl + '/groups/get-all',
+    getGroupById: baseUrl + '/groups/get/',
+    getGroupMembers: baseUrl + '/groups/get-members/',
+    updateGroup: baseUrl + '/groups/update/',
+    deleteGroup: baseUrl + '/groups/delete/',
+    joinGroup: baseUrl + '/groups/join/',
+    leaveGroup: baseUrl + '/groups/leave/',
+    kickUser: baseUrl + '/groups/kick/',
+
 };
 
 
