@@ -41,7 +41,7 @@ class groupService {
      * Gell All the group members by group ID
      * @param {Function} cb
      */
-    getAll() {
+    getAll(cb) {
         api({ url: endpoints.getAll, method: "GET" }).then(res => {
             console.log(this.tag, "[getAll]", "Groups retrieved successfully! ✅");
             if (cb != null) {
@@ -58,7 +58,7 @@ class groupService {
     /**
      * 
      * Join Group by group ID
-     * @param {string} groupId 
+     * @param {String} groupId 
      * @param {Function} cb
      */
     joinGroup(groupId, cb) {
@@ -79,9 +79,10 @@ class groupService {
      * 
      * Get ID of the group
      * @param {Function} cb
+     * @param {String} groupId
      */
-    getId(data) {
-        api({ url: endpoints.getId, method: "GET" }).then(res => {
+    getGroupById(groupId,cb) {
+        api({ url:`${endpoints.getGroupById}/${groupId}` , method: "GET" }).then(res => {
             console.log(this.tag, "[getId]", "Group ID retrieved successfully! ✅");
             if (cb != null) {
                 cb(null, res);
@@ -191,7 +192,7 @@ class groupService {
     
     /**
      * @param {String} groupId 
-     * 
+     * @param {Function} cb 
      */
     deleteGroup({groupId}, cb) {
         api({ url: `${endpoints.deleteGroup}/${groupId}`, method: "DELETE" }).then(res => {
