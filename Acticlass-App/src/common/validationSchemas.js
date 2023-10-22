@@ -45,34 +45,11 @@ export const resetCodeSchema = Yup.object().shape({
 });
 
 // Group Name Validation Schema
-export const groupName = Yup.object().shape({
+export const groupCreation = Yup.object().shape({
   groupname: Yup.string().required('Required'),
-});
-
-// Class Radius Validation Schema
-export const classRadiusValidation = Yup.object().shape({
-  radius: Yup.number().min(5).max(100).required('Required'),
-});
-
-// Passing Points Validation Schema
-export const passingPointsValidation = Yup.object().shape({
-  passingpoints: Yup.number().min(0).max(100).required('Required'),
-});
-
-// Attendance Frequency Validation Schema
-export const attendanceFrequenceValidation = Yup.object().shape({
-  attendanceFrequencyValidation: Yup.number().required('Required'),
-});
-
-// Attendance Reward Validation Schema
-export const attendanceRewardValidation = Yup.object().shape({
-  attendanceRewardValidation: Yup.number().min(0).max(100).required('Required'),
-});
-
-// Attendance Frequency Validation Schema
-export const falseRequestPenalty = Yup.object().shape({
-  falseRequestPenaltyValidation: Yup.number()
-    .min(0)
-    .max(100)
-    .required('Required'),
+  radius: Yup.number().min(50).max(150).required('Required'),
+  passingpoints: Yup.number().min(0).required('Required'),
+  attendanceFrequency: Yup.number().required('Required'),
+  attendanceReward: Yup.number().min(0).required('Required'),
+  falseRequestPenalty: Yup.number().min(0).max(30).required('Required'),
 });

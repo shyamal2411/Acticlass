@@ -15,3 +15,8 @@ test('Password Validation', () => {
   const password = 'Password123!';
   expect(validationServices.validatePassword(password)).toBe(true);
 });
+
+test('Group Name Validation', () => {
+  const groupname = 'CSCI5408';
+  expect(validationServices.groupName(groupname)).toBe(true);
+});
