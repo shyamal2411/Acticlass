@@ -6,7 +6,6 @@ import CreateNewGroup from '../components/createNewGroupSheet';
 import { Dimensions } from 'react-native'
 import Navbar from '../components/navBar';
 import groupData from '../mock/groupData';
-import randomColor from 'randomcolor';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import GroupCard from '../components/groupCard';
 
@@ -26,8 +25,8 @@ const HomeScreen = ({ navigation }) => {
                     style={{
                         alignItems: 'center',
                         justifyContent: 'center',
-                        width: 64,
-                        height: 64,
+                        width: 52,
+                        height: 52,
                         backgroundColor: colors.primary,
                         borderRadius: 50,
                     }}

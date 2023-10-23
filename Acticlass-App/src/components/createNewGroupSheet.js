@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   ScrollView,
   View,
@@ -11,22 +11,20 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
 } from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
-import {colors} from '../common/colors';
-import {Formik} from 'formik';
-import {useHeaderHeight} from '@react-navigation/elements';
-import {constant} from 'lodash';
+import { colors } from '../common/colors';
+import { Formik } from 'formik';
+import { useHeaderHeight } from '@react-navigation/elements';
 import SelectDropdown from 'react-native-select-dropdown';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
-const CreateNewGroup = ({cb}) => {
+const CreateNewGroup = ({ cb }) => {
   const [frameDropdownOpen, setFrameDropdownOpen] = useState(false);
   const [frameDropdownValue, setFrameDropdownValue] = useState();
   const [frameDropdownItems, setFrameDropdownItems] = useState([
-    {value: '0', label: '0'},
-    {value: '15', label: '15'},
-    {value: '30', label: '30'},
-    {value: '60', label: '60'},
+    { value: '0', label: '0' },
+    { value: '15', label: '15' },
+    { value: '30', label: '30' },
+    { value: '60', label: '60' },
   ]);
   const attendanceFrequency = ['0', '15', '30', '60'];
 
@@ -61,8 +59,8 @@ const CreateNewGroup = ({cb}) => {
               falseRequestPenalty: '',
             }}
             onSubmit={handleClickOnCreate}
-            // TODO: define validationSchema for group form fields
-            // Syntax : validationSchema={function}, formic documentation for more.
+          // TODO: define validationSchema for group form fields
+          // Syntax : validationSchema={function}, formic documentation for more.
           >
             {({
               handleChange,
@@ -73,7 +71,7 @@ const CreateNewGroup = ({cb}) => {
               touched,
             }) => (
               <View>
-                <View style={{paddingVertical: 8, paddingHorizontal: 40}}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>Name</Text>
                   <TextInput
                     style={styles.input}
@@ -83,7 +81,7 @@ const CreateNewGroup = ({cb}) => {
                     onChangeText={handleChange('name')}
                   />
                 </View>
-                <View style={{paddingVertical: 8, paddingHorizontal: 40}}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>{`Radius `}</Text>
                   <TextInput
                     style={styles.input}
@@ -93,7 +91,7 @@ const CreateNewGroup = ({cb}) => {
                     onChangeText={handleChange('radius')}
                   />
                 </View>
-                <View style={{paddingVertical: 8, paddingHorizontal: 40}}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>Passing Points</Text>
                   <TextInput
                     style={styles.input}
@@ -103,7 +101,7 @@ const CreateNewGroup = ({cb}) => {
                     onChangeText={handleChange('passingPoints')}
                   />
                 </View>
-                <View style={{paddingVertical: 8, paddingHorizontal: 40}}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>Attendance Frequency</Text>
                   <View>
                     <SelectDropdown
@@ -152,7 +150,7 @@ const CreateNewGroup = ({cb}) => {
                     />
                   </View>
                 </View>
-                <View style={{paddingVertical: 8, paddingHorizontal: 40}}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>Attendance Reward</Text>
                   <TextInput
                     style={styles.input}
@@ -162,7 +160,7 @@ const CreateNewGroup = ({cb}) => {
                     onChangeText={handleChange('attendanceRewards')}
                   />
                 </View>
-                <View style={{paddingVertical: 8, paddingHorizontal: 40}}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>False Request Penalty</Text>
                   <TextInput
                     style={styles.input}
@@ -172,7 +170,7 @@ const CreateNewGroup = ({cb}) => {
                     onChangeText={handleChange('falseRequestPenalty')}
                   />
                 </View>
-                <View style={{paddingVertical: 8, paddingHorizontal: 40}}>
+                <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <TouchableOpacity
                     style={styles.button}
                     onPress={handleSubmit}>
@@ -189,7 +187,7 @@ const CreateNewGroup = ({cb}) => {
 };
 
 const styles = StyleSheet.create({
-  wrapper: {flex: 1},
+  wrapper: { flex: 1 },
   container: {
     flex: 1,
     alignItems: 'left',
