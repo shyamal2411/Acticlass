@@ -9,7 +9,7 @@ const createGroup = async (req, res) => {
         return res.status(400).json({ msg: 'Only teachers can create groups.' });
     }
 
-    const { name, institute, radius = DEFAULT_RADIUS, passingPoints = 0, attendanceFrequency = 0, attendanceReward = 0, penalty = 0 } = req.body;
+    const { name, institute = user.institute, radius = DEFAULT_RADIUS, passingPoints = 0, attendanceFrequency = 0, attendanceReward = 0, penalty = 0 } = req.body;
 
     if (!name || isEmpty(name)) {
         return res.status(400).json({ msg: 'Group name is required.' });

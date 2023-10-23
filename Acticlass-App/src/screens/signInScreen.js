@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import {colors} from '../common/colors';
+import { colors } from '../common/colors';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import authService from '../services/authService';
-import {Formik} from 'formik';
-import {signInValidation} from '../common/validationSchemas';
+import { Formik } from 'formik';
+import { signInValidation } from '../common/validationSchemas';
 import Snackbar from 'react-native-snackbar';
-import {mmkv} from '../utils/MMKV';
-import {AUTH_TOKEN} from '../common/constants';
+import { mmkv } from '../utils/MMKV';
+import { AUTH_TOKEN } from '../common/constants';
 
-const SignInScreen = ({navigation}) => {
+const SignInScreen = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleSignIn = values => {
@@ -70,8 +70,8 @@ const SignInScreen = ({navigation}) => {
           }) => (
             <View>
               <Text style={styles.title}>Sign In</Text>
-              <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-                <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
                   Email
                 </Text>
                 <TextInput
@@ -85,8 +85,8 @@ const SignInScreen = ({navigation}) => {
                   <Text style={styles.errorText}>{errors.email}</Text>
                 ) : null}
               </View>
-              <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
-                <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
                   Password
                 </Text>
                 <View style={styles.passwordContainer}>
@@ -109,7 +109,7 @@ const SignInScreen = ({navigation}) => {
                   <Text style={styles.errorText}>{errors.password}</Text>
                 ) : null}
                 <TouchableOpacity
-                  style={{alignSelf: 'flex', marginTop: 10}}
+                  style={{ alignSelf: 'flex', marginTop: 10 }}
                   onPress={moveToForgotPassword}>
                   <Text
                     style={{
@@ -121,7 +121,7 @@ const SignInScreen = ({navigation}) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+              <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                   <Text style={styles.buttonText}>Sign In</Text>
                 </TouchableOpacity>
@@ -164,13 +164,13 @@ const SignInScreen = ({navigation}) => {
                   paddingVertical: 16,
                   paddingHorizontal: 40,
                 }}>
-                <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
+                <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
                   Don't have a account?
                 </Text>
                 <TouchableOpacity
-                  style={{alignSelf: 'flex'}}
+                  style={{ alignSelf: 'flex' }}
                   onPress={moveToSignUp}>
-                  <Text style={{fontSize: 16, color: colors.primary}}>
+                  <Text style={{ fontSize: 16, color: colors.primary }}>
                     {' '}
                     Sign Up
                   </Text>
@@ -192,8 +192,8 @@ const styles = StyleSheet.create({
   },
   appName: {
     marginVertical: 52,
-    textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: {width: -10, height: 10},
+    textShadowColor: 'rgba(0, 0, 0, 0.3))',
+    textShadowOffset: { width: -10, height: 10 },
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',

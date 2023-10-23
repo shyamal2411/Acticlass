@@ -22,8 +22,8 @@ class groupService {
      * @param {Integer} penalty
      * @param {Function} cb
      */
-    createGroup({ name,institute,radius,passingPoints, attendanceFrequency,attendanceReward, penalty }, cb) {
-        api({ url: endpoints.signIn, method: "POST", data: { name,institute,radius,passingPoints, attendanceFrequency,attendanceReward, penalty } }).then(res => {
+    createGroup({ name, radius, passingPoints, attendanceFrequency, attendanceReward, penalty }, cb) {
+        api({ url: endpoints.signIn, method: "POST", data: { name, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } }).then(res => {
             console.log(this.tag, "[createGroup]", "Group Creation successful! ✅");
             if (cb != null) {
                 cb(null, res);
@@ -81,8 +81,8 @@ class groupService {
      * @param {Function} cb
      * @param {String} groupId
      */
-    getGroupById(groupId,cb) {
-        api({ url:`${endpoints.getGroupById}/${groupId}` , method: "GET" }).then(res => {
+    getGroupById(groupId, cb) {
+        api({ url: `${endpoints.getGroupById}/${groupId}`, method: "GET" }).then(res => {
             console.log(this.tag, "[getId]", "Group ID retrieved successfully! ✅");
             if (cb != null) {
                 cb(null, res);
@@ -102,7 +102,8 @@ class groupService {
      */
     getMembers(groupId, cb) {
         api({
-            url: `${endpoints.getMembers}/${groupId}`,method: "GET"}).then(res => {
+            url: `${endpoints.getMembers}/${groupId}`, method: "GET"
+        }).then(res => {
             console.log(this.tag, "[getMembers]", "Members retrieved successfully! ✅");
             if (cb != null) {
                 cb(null, res);
@@ -126,13 +127,12 @@ class groupService {
      * @param {Integer} penalty
      * @param {Function} cb
      */
-    updateGroup({ name, institute, radius, passingPoints, attendanceFrequency, attendanceReward, penalty }, cb) {
+    updateGroup({ name, radius, passingPoints, attendanceFrequency, attendanceReward, penalty }, cb) {
         api({
             url: endpoints.updateGroup,
             method: "POST",
             data: {
                 name,
-                institute,
                 radius,
                 passingPoints,
                 attendanceFrequency,
@@ -152,13 +152,13 @@ class groupService {
         })
     }
 
-    
-    
+
+
     /**
      * 
      * @param {String} groupId 
     */
-   leaveGroup(groupId, cb) {
+    leaveGroup(groupId, cb) {
         api({ url: `${endpoints.leaveGroup}/${groupId}`, method: "POST" }).then(res => {
             console.log(this.tag, "[leaveGroup]", "Group left successfully! ✅");
             if (cb != null) {
@@ -169,14 +169,14 @@ class groupService {
             if (cb != null) {
                 cb(err, null);
             }
-        })       
+        })
     }
     /**
      * 
      * @param {{email:String,password:String}} data 
      * @param {Function} cb 
     */
-   kickUser({ userId }, cb) {
+    kickUser({ userId }, cb) {
         api({ url: endpoints.kickUser, method: "POST", data: { userId } }).then(res => {
             console.log(this.tag, "[kickUser]", "user kicked successful!");
             if (cb != null) {
@@ -189,12 +189,12 @@ class groupService {
             }
         })
     }
-    
+
     /**
      * @param {String} groupId 
      * @param {Function} cb 
      */
-    deleteGroup({groupId}, cb) {
+    deleteGroup({ groupId }, cb) {
         api({ url: `${endpoints.deleteGroup}/${groupId}`, method: "DELETE" }).then(res => {
             console.log(this.tag, "[deleteGroup]", "Group deleted successfully! ✅");
             if (cb != null) {
