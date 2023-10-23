@@ -1,58 +1,67 @@
 import React from 'react';
 import { colors } from '../common/colors';
-import { ScrollView, View, StyleSheet, Text, TextInput, Pressable, Button, TouchableOpacity, SafeAreaView, Image } from "react-native";
+import { ScrollView, View, StyleSheet, Text, TextInput, Pressable, Button, TouchableOpacity, SafeAreaView, Image, FlatList } from "react-native";
 import RBSheet from 'react-native-raw-bottom-sheet';
-import CreateNewGroup from './createNewGroupSheet';
+import CreateNewGroup from '../components/createNewGroupSheet';
 import { Dimensions } from 'react-native'
+import Navbar from '../components/navBar';
+import groupData from '../mock/groupData';
+import randomColor from 'randomcolor';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import GroupCard from '../components/groupCard';
 
-
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
     const refRBSheet = React.createRef();
     return (
         <View style={styles.container}>
-            <Text style={{ color: colors.black }}>Home Screen</Text>
-
-
-            <View>
+            <Navbar title={"Home"}></Navbar>
+            <FlatList style={{ width: '100%' }}
+                data={groupData}
+                renderItem={({ item }) =>
+                    <GroupCard item={item} />
+                }
+            />
+            <View style={styles.fab}>
                 <TouchableOpacity
                     style={{
-                        borderWidth: 1,
-                        borderColor: 'rgba(0,0,0,0.2)',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        width: 70,
-                        height: 70,
-                        backgroundColor: '#fff',
+                        width: 64,
+                        height: 64,
+                        backgroundColor: colors.primary,
                         borderRadius: 50,
                     }}
-                    onPress={() => refRBSheet.current.open()}
-                >
+                    onPress={() => refRBSheet.current.open()}>
+                    <FeatherIcon name="plus" size={32} color={colors.white} />
                 </TouchableOpacity>
-                <RBSheet
-                    ref={refRBSheet}
-                    closeOnDragDown={true}
-                    closeOnPressMask={true}
-                    customStyles={{
-                        container: { backgroundColor: colors.secondary },
-                        wrapper: {
-                            backgroundColor: "transparent"
-                        },
-                        draggableIcon: {
-                            backgroundColor: colors.placeholder
-                        }
-                    }}
-                    height={Dimensions.get('window').height * 0.85}
-                    animationType='slide'
-                >
-
-                    <ScrollView>
-                        <CreateNewGroup cb={(isDone) => {
-                            if (isDone) refRBSheet.current.close();
-                        }} />
-                    </ScrollView>
-                </RBSheet>
-
             </View>
+            <RBSheet
+                ref={refRBSheet}
+                closeOnDragDown={true}
+                closeOnPressMask={true}
+                customStyles={{
+                    container: {
+                        borderRadius: 10,
+                        elevation: 20,
+                        backgroundColor: colors.secondary,
+                    },
+                    wrapper: {
+                        backgroundColor: 'rgba(0,0,0,0.2)'
+                    },
+                    draggableIcon: {
+                        backgroundColor: colors.placeholder
+                    }
+                }}
+                height={Dimensions.get('window').height * 0.85}
+                animationType='slide'
+            >
+                <ScrollView>
+                    <CreateNewGroup cb={(isDone) => {
+                        if (isDone) refRBSheet.current.close();
+                    }} />
+                </ScrollView>
+            </RBSheet>
+
 
         </View>
     );
@@ -62,13 +71,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
     },
     fab: {
         position: 'absolute',
-        margin: 16,
-        right: 0,
-        bottom: 0,
+        right: 44,
+        bottom: 8,
     },
 });
 
