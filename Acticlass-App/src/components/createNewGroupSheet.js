@@ -16,18 +16,11 @@ import { Formik } from 'formik';
 import { useHeaderHeight } from '@react-navigation/elements';
 import SelectDropdown from 'react-native-select-dropdown';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import { ATTENDANCE_FREQUENCY } from '../common/constants';
+import { groupCreation } from '../common/validationSchemas';
+import groupServices from '../services/groupServices';
 
 const CreateNewGroup = ({ cb }) => {
-  const [frameDropdownOpen, setFrameDropdownOpen] = useState(false);
-  const [frameDropdownValue, setFrameDropdownValue] = useState();
-  const [frameDropdownItems, setFrameDropdownItems] = useState([
-    { value: '0', label: '0' },
-    { value: '15', label: '15' },
-    { value: '30', label: '30' },
-    { value: '60', label: '60' },
-  ]);
-  const attendanceFrequency = ['0', '15', '30', '60'];
-
   handleClickOnCreate = values => {
     console.log('Group Creation', values);
     //TODO: handle validation and group creation API call
@@ -55,10 +48,11 @@ const CreateNewGroup = ({ cb }) => {
               radius: '',
               passingPoints: '',
               attendanceFrequency: '',
-              attendanceRewards: '',
+              attendanceReward: '',
               falseRequestPenalty: '',
             }}
             onSubmit={handleClickOnCreate}
+            validationSchema={groupCreation}
           // TODO: define validationSchema for group form fields
           // Syntax : validationSchema={function}, formic documentation for more.
           >
@@ -80,29 +74,40 @@ const CreateNewGroup = ({ cb }) => {
                     value={values.name}
                     onChangeText={handleChange('name')}
                   />
+                  {errors.name ? (
+                    <Text style={styles.errorText}>{errors.name}</Text>
+                  ) : null}
                 </View>
                 <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>{`Radius `}</Text>
                   <TextInput
                     style={styles.input}
+                    inputMode='numeric'
                     placeholder="Enter radius in meters"
                     placeholderTextColor="#9e9292"
                     value={values.radius}
                     onChangeText={handleChange('radius')}
                   />
+                  {errors.radius ? (
+                    <Text style={styles.errorText}>{errors.radius}</Text>
+                  ) : null}
                 </View>
                 <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>Passing Points</Text>
                   <TextInput
                     style={styles.input}
+                    inputMode='numeric'
                     placeholder="Enter passing points"
                     placeholderTextColor="#9e9292"
                     value={values.passingPoints}
                     onChangeText={handleChange('passingPoints')}
                   />
+                  {errors.passingPoints ? (
+                    <Text style={styles.errorText}>{errors.passingPoints}</Text>
+                  ) : null}
                 </View>
                 <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
-                  <Text style={styles.inputTitle}>Attendance Frequency</Text>
+                  <Text style={styles.inputTitle}>Attendance Frequency (in minutes)</Text>
                   <View>
                     <SelectDropdown
                       renderDropdownIcon={() => {
@@ -141,34 +146,49 @@ const CreateNewGroup = ({ cb }) => {
                         fontSize: 16,
                       }}
                       defaultButtonText="Select frequency"
-                      data={attendanceFrequency}
+                      data={ATTENDANCE_FREQUENCY}
                       onSelect={(selectedItem, index) => {
-                        // console.log(selectedItem, index);
                         handleChange('attendanceFrequency')(selectedItem);
-                        // console.log(selectedItem, index);
                       }}
                     />
+                    {errors.attendanceFrequency ? (
+                      <Text style={styles.errorText}>
+                        {errors.attendanceFrequency}
+                      </Text>
+                    ) : null}
                   </View>
                 </View>
                 <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>Attendance Reward</Text>
                   <TextInput
                     style={styles.input}
+                    inputMode='numeric'
                     placeholder="Enter Attendance Reward points"
                     placeholderTextColor="#9e9292"
-                    value={values.attendanceRewards}
-                    onChangeText={handleChange('attendanceRewards')}
+                    value={values.attendanceReward}
+                    onChangeText={handleChange('attendanceReward')}
                   />
+                  {errors.attendanceReward ? (
+                    <Text style={styles.errorText}>
+                      {errors.attendanceReward}
+                    </Text>
+                  ) : null}
                 </View>
                 <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <Text style={styles.inputTitle}>False Request Penalty</Text>
                   <TextInput
                     style={styles.input}
+                    inputMode='numeric'
                     placeholder="Enter penalty points"
                     placeholderTextColor="#9e9292"
                     value={values.falseRequestPenalty}
                     onChangeText={handleChange('falseRequestPenalty')}
                   />
+                  {errors.falseRequestPenalty ? (
+                    <Text style={styles.errorText}>
+                      {errors.falseRequestPenalty}
+                    </Text>
+                  ) : null}
                 </View>
                 <View style={{ paddingVertical: 8, paddingHorizontal: 40 }}>
                   <TouchableOpacity
@@ -231,6 +251,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'black',
     marginLeft: 10,
+  },
+  errorText: {
+    color: 'red',
+    marginLeft: 5,
   },
 });
 
