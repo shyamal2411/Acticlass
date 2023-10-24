@@ -123,6 +123,24 @@ class AuthService {
         })
     }
 
+    /**
+     * 
+     * @param {Function} cb 
+     */
+    deleteAccount(cb) {
+        api({ url: endpoints.deleteProfile, method: "DELETE" }).then(res => {
+            console.log(this.tag, "[deleteAccount]", "Account deleted! ✅");
+            if (cb != null) {
+                cb(null, res);
+            }
+        }).catch(err => {
+            console.error(this.tag, "[deleteAccount]", err);
+            if (cb != null) {
+                cb(err, null);
+            }
+        })
+    }
+
 }
 
 export default instance = new AuthService();
