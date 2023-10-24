@@ -8,18 +8,50 @@ import Navbar from '../components/navBar';
 import groupData from '../mock/groupData';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import GroupCard from '../components/groupCard';
+import Snackbar from 'react-native-snackbar';
+import { useEffect } from 'react';
+import groupServices from '../services/groupServices';
+import { PubSubEvents } from '../common/constants';
+import PubSub from 'pubsub-js';
 
 const HomeScreen = ({ navigation }) => {
     const refRBSheet = React.createRef();
+    const [groups, setGroups] = React.useState([]);
+
+    const refreshGroups = () => {
+        groupServices.getAll((err, res) => {
+            if (err) {
+                console.error(err);
+            } else {
+                setGroups(res.groups);
+            }
+        });
+    }
+
+    useEffect(() => {
+        refreshGroups();
+        const t1 = PubSub.subscribe(PubSubEvents.OnGroupCreated, refreshGroups);
+        const t2 = PubSub.subscribe(PubSubEvents.OnGroupUpdated, refreshGroups);
+        const t3 = PubSub.subscribe(PubSubEvents.OnGroupDeleted, refreshGroups);
+        return () => {
+            PubSub.unsubscribe(t1);
+            PubSub.unsubscribe(t2);
+            PubSub.unsubscribe(t3);
+        }
+    }, []);
+
+
     return (
         <View style={styles.container}>
             <Navbar title={"Home"}></Navbar>
-            <FlatList style={{ width: '100%' }}
-                data={groupData}
+            {groups.length > 0 ? (<FlatList style={{ width: '100%' }}
+                data={groups}
                 renderItem={({ item }) =>
                     <GroupCard item={item} />
                 }
-            />
+            />) : (<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ fontSize: 24, fontWeight: '600', color: colors.placeholder }}>No Groups.</Text>
+            </View>)}
             <View style={styles.fab}>
                 <TouchableOpacity
                     style={{
@@ -55,13 +87,25 @@ const HomeScreen = ({ navigation }) => {
                 animationType='slide'
             >
                 <ScrollView>
-                    <CreateNewGroup cb={(isDone) => {
-                        if (isDone) refRBSheet.current.close();
+                    <CreateNewGroup cb={(err, res) => {
+                        refRBSheet.current.close();
+                        if (err) {
+                            Snackbar.show({
+                                text: err.msg,
+                                duration: Snackbar.LENGTH_SHORT,
+                                backgroundColor: colors.danger,
+                            });
+                        } else {
+                            Snackbar.show({
+                                text: res.msg,
+                                duration: Snackbar.LENGTH_SHORT,
+                                backgroundColor: colors.success,
+                            });
+                        }
+                        PubSub.publish(PubSubEvents.OnGroupCreated, null);
                     }} />
                 </ScrollView>
             </RBSheet>
-
-
         </View>
     );
 };

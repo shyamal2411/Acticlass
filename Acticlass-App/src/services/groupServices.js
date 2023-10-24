@@ -23,7 +23,7 @@ class groupService {
      * @param {Function} cb
      */
     createGroup({ name, radius, passingPoints, attendanceFrequency, attendanceReward, penalty }, cb) {
-        api({ url: endpoints.signIn, method: "POST", data: { name, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } }).then(res => {
+        api({ url: endpoints.createGroup, method: "POST", data: { name, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } }).then(res => {
             console.log(this.tag, "[createGroup]", "Group Creation successful! ✅");
             if (cb != null) {
                 cb(null, res);
@@ -42,7 +42,7 @@ class groupService {
      * @param {Function} cb
      */
     getAll(cb) {
-        api({ url: endpoints.getAll, method: "GET" }).then(res => {
+        api({ url: endpoints.getGroups, method: "GET" }).then(res => {
             console.log(this.tag, "[getAll]", "Groups retrieved successfully! ✅");
             if (cb != null) {
                 cb(null, res);
@@ -102,7 +102,7 @@ class groupService {
      */
     getMembers(groupId, cb) {
         api({
-            url: `${endpoints.getMembers}/${groupId}`, method: "GET"
+            url: `${endpoints.getGroupMembers}/${groupId}`, method: "GET"
         }).then(res => {
             console.log(this.tag, "[getMembers]", "Members retrieved successfully! ✅");
             if (cb != null) {

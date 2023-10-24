@@ -19,15 +19,24 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { ATTENDANCE_FREQUENCY } from '../common/constants';
 import { groupCreation } from '../common/validationSchemas';
 import groupServices from '../services/groupServices';
+import { toNumber } from 'lodash';
 
 const CreateNewGroup = ({ cb }) => {
   handleClickOnCreate = values => {
     console.log('Group Creation', values);
-    //TODO: handle validation and group creation API call
-    if (cb) {
-      cb(true);
-    }
+    const data = {
+      name: values.name,
+      radius: toNumber(values.radius),
+      passingPoints: toNumber(values.passingPoints),
+      attendanceFrequency: toNumber(values.attendanceFrequency),
+      attendanceReward: toNumber(values.attendanceReward),
+      penalty: toNumber(values.falseRequestPenalty),
+    };
+    groupServices.createGroup(data, (err, res) => {
+      if (cb) cb(err, res);
+    });
   };
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -53,8 +62,6 @@ const CreateNewGroup = ({ cb }) => {
             }}
             onSubmit={handleClickOnCreate}
             validationSchema={groupCreation}
-          // TODO: define validationSchema for group form fields
-          // Syntax : validationSchema={function}, formic documentation for more.
           >
             {({
               handleChange,
@@ -70,7 +77,7 @@ const CreateNewGroup = ({ cb }) => {
                   <TextInput
                     style={styles.input}
                     placeholder="Enter group name"
-                    placeholderTextColor="#9e9292"
+                    placeholderTextColor={colors.placeholder}
                     value={values.name}
                     onChangeText={handleChange('name')}
                   />
@@ -84,7 +91,7 @@ const CreateNewGroup = ({ cb }) => {
                     style={styles.input}
                     inputMode='numeric'
                     placeholder="Enter radius in meters"
-                    placeholderTextColor="#9e9292"
+                    placeholderTextColor={colors.placeholder}
                     value={values.radius}
                     onChangeText={handleChange('radius')}
                   />
@@ -98,7 +105,7 @@ const CreateNewGroup = ({ cb }) => {
                     style={styles.input}
                     inputMode='numeric'
                     placeholder="Enter passing points"
-                    placeholderTextColor="#9e9292"
+                    placeholderTextColor={colors.placeholder}
                     value={values.passingPoints}
                     onChangeText={handleChange('passingPoints')}
                   />
@@ -164,7 +171,7 @@ const CreateNewGroup = ({ cb }) => {
                     style={styles.input}
                     inputMode='numeric'
                     placeholder="Enter Attendance Reward points"
-                    placeholderTextColor="#9e9292"
+                    placeholderTextColor={colors.placeholder}
                     value={values.attendanceReward}
                     onChangeText={handleChange('attendanceReward')}
                   />
@@ -180,7 +187,7 @@ const CreateNewGroup = ({ cb }) => {
                     style={styles.input}
                     inputMode='numeric'
                     placeholder="Enter penalty points"
-                    placeholderTextColor="#9e9292"
+                    placeholderTextColor={colors.placeholder}
                     value={values.falseRequestPenalty}
                     onChangeText={handleChange('falseRequestPenalty')}
                   />

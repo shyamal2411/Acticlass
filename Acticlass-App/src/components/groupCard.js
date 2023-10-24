@@ -4,17 +4,14 @@ import { colors } from '../common/colors';
 import randomColor from 'randomcolor';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
-const GroupCard = ({ item }) => {
-
-    const groupNameInitials = (groupName) => {
-        groupName = groupName.split(' ');
-        if (groupName.length > 1) {
-            return groupName[0][0] + groupName[1][0];
-        }
-        return groupName[0];
+const groupNameInitials = (groupName) => {
+    groupName = groupName.split(' ');
+    if (groupName.length > 1) {
+        return groupName[0][0] + groupName[1][0];
     }
-
-
+    return groupName[0];
+}
+const GroupCard = ({ item }) => {
     return (
         <View style={[styles.container, {
             shadowColor: colors.placeholder, shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.5,
@@ -42,18 +39,19 @@ const GroupCard = ({ item }) => {
                             fontWeight: '600',
                             color: colors.white
                         }}>
-                            {groupNameInitials(item.Name)}
+                            {groupNameInitials(item.name)}
                         </Text>
                     </View>
                     <View style={{ flexDirection: 'column', alignItems: 'flex-start', width: '100%', height: '100%' }}>
-                        <Text style={{ fontSize: 16, fontWeight: '500', color: colors.black, marginLeft: 16, marginTop: 20 }}>{item.Name}</Text>
-                        <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>Passing Points: {item.PassingPoint}</Text>
-                        <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>Radius: {item.Radius}</Text>
+                        <Text style={{ fontSize: 16, fontWeight: '500', color: colors.black, marginLeft: 16, marginTop: 20 }}>{item.name}</Text>
+                        <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>Passing Points: {item.passingPoints}</Text>
+                        <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>Radius: {item.radius}</Text>
                     </View>
                     <View style={{ position: 'absolute', right: 15, top: 15, justifyContent: 'center', alignItems: 'flex-end' }}>
                         <TouchableOpacity style={{ width: 24, height: 24, justifyContent: 'center', alignItems: 'center' }}>
                             <FeatherIcon name="more-horizontal" size={24} color={colors.inactive} />
                         </TouchableOpacity>
+                        {/* TODO: Add points */}
                         <Text style={{ fontSize: 12, color: colors.inactive, textAlign: 'right' }}>{item.Points} Points</Text>
                     </View>
                 </View>
