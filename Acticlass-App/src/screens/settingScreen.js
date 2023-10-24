@@ -6,24 +6,44 @@ import { mmkv } from '../utils/MMKV';
 import { AUTH_TOKEN } from '../common/constants';
 import { StackActions } from '@react-navigation/routers';
 import authService from '../services/authService';
+import { createTwoButtonAlert } from '../components/twoButtonAlert';
 
 const SettingScreen = ({ navigation }) => {
 
     const handleLogout = () => {
-        mmkv.remove(AUTH_TOKEN);
-        navigation.dispatch(StackActions.replace('AuthStack'));
+        createTwoButtonAlert({
+            title: "Log Out",
+            desc: "Are you sure you want to log out?",
+            positiveText: "Yes",
+            negativeText: "No",
+            onPositive: () => {
+                mmkv.remove(AUTH_TOKEN);
+                navigation.dispatch(StackActions.replace('AuthStack'));
+            },
+            onNegative: () => { }
+        });
     }
 
     const handleDeleteAcc = () => {
         // handle delete account logic here
-        authService.deleteAccount((err, res) => {
-            if (err) {
-                console.error(err);
-            } else {
-                mmkv.remove(AUTH_TOKEN);
-                navigation.dispatch(StackActions.replace('AuthStack'));
-            }
+        createTwoButtonAlert({
+            title: "Delete Account",
+            desc: "Are you sure you want to delete your account?",
+            positiveText: "Yes",
+            negativeText: "No",
+            onPositive: () => {
+                authService.deleteAccount((err, res) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        mmkv.remove(AUTH_TOKEN);
+                        navigation.dispatch(StackActions.replace('AuthStack'));
+                    }
+                });
+            },
+            onNegative: () => { }
         });
+
     }
 
     return (
