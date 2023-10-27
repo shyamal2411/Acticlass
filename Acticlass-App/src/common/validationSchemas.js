@@ -33,12 +33,12 @@ export const signUpValidation3 = Yup.object().shape({
 });
 
 // Forgot password validation schema
-export const forgotPasswordSchema = Yup.object().shape({
+export const forgotPassword = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
 });
 
 // Reset password validation schema
-export const resetCodeSchema = Yup.object().shape({
+export const resetCode = Yup.object().shape({
   code: Yup.string()
     .matches(/^[0-9]{6}$/, 'Must be 6 digit code')
     .required('Required'),
@@ -47,9 +47,12 @@ export const resetCodeSchema = Yup.object().shape({
 // Group Name Validation Schema
 export const groupCreation = Yup.object().shape({
   name: Yup.string().required('Required'),
-  radius: Yup.number("must be a number").min(50).max(150).required('Required'),
-  passingPoints: Yup.number("must be a number").min(0).required('Required'),
-  attendanceFrequency: Yup.number("must be a number").required('Required'),
-  attendanceReward: Yup.number("must be a number").min(0).required('Required'),
-  falseRequestPenalty: Yup.number("must be a number").min(0).max(30).required('Required'),
+  radius: Yup.number('must be a number').min(50).max(150).required('Required'),
+  passingPoints: Yup.number('must be a number').min(0).required('Required'),
+  attendanceFrequency: Yup.number('must be a number').required('Required'),
+  attendanceReward: Yup.number('must be a number').min(0).required('Required'),
+  falseRequestPenalty: Yup.number('must be a number')
+    .min(0)
+    .max(30)
+    .required('Required'),
 });
