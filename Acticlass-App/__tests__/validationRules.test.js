@@ -1,5 +1,4 @@
-import {test} from '@jest/globals';
-import validationServices from '../src/utils/validationServices';
+import { test } from '@jest/globals';
 
 import {
   groupCreation,
@@ -8,26 +7,12 @@ import {
   signUpValidation3,
 } from '../src/common/validationSchemas';
 
-test('Email Validation', () => {
-  const email = 'sgp@dal.ca';
-  expect(validationServices.validateEmail(email)).toBe(true);
-});
-
-test('Phone Validation', () => {
-  const phone = '9021234567';
-  expect(validationServices.validatePhone(phone)).toBe(true);
-});
-
-test('Password Validation', () => {
-  const password = 'Password123!';
-  expect(validationServices.validatePassword(password)).toBe(true);
-});
 
 test('Group Creation Validation', () => {
   const groupData = {
     groupname: '354',
     radius: 70,
-    passingpoints: 54,
+    passingPoints: 54,
     attendanceFrequency: 40,
     attendanceReward: -1,
     falseRequestPenalty: 22,

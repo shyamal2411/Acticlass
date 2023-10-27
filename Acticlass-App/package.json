@@ -36,7 +36,6 @@
     "react-native-select-dropdown": "^3.4.0",
     "react-native-snackbar": "^2.6.2",
     "react-native-vector-icons": "^10.0.0",
-    "validator": "^13.11.0",
     "yup": "^1.3.2"
   },
   "devDependencies": {
