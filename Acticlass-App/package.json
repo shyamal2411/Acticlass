@@ -11,7 +11,7 @@
     "build-android": "cd android && gradlew.bat clean && gradlew.bat build && cd ..",
     "build-ios": "xcodebuild -workspace Acticlass.xcworkspace -scheme Acticlass -configuration Release -destination 'generic/platform=iOS' build",
     "build": "npm run build-android",
-    "test": "jest"
+    "test": "jest --coverage --verbose"
   },
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
