@@ -5,6 +5,9 @@ import {
   resetCode,
   forgotPassword,
   signUpValidation3,
+  signUpValidation2,
+  signUpValidation1,
+  signInValidation,
 } from '../src/common/validationSchemas';
 
 
@@ -192,6 +195,201 @@ test('SignUp Validation3', () => {
   };
 
   signUpValidation3.validate(SignUp3Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+
+//Incorrect input
+test('SignUp Validation2', () => {
+  const SignUp2Data = {
+    institute: '',
+    role: '',
+  };
+ 
+  signUpValidation2.validate(SignUp2Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation2', () => {
+  const SignUp2Data = {
+    institute: '',
+    role: 'Student',
+  };
+ 
+  signUpValidation2.validate(SignUp2Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation2', () => {
+  const SignUp2Data = {
+    institute: 'Dalhousie University',
+    role: '',
+  };
+ 
+  signUpValidation2.validate(SignUp2Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation2', () => {
+  const SignUp2Data = {
+    institute: null,
+    role: null,
+  };
+ 
+  signUpValidation2.validate(SignUp2Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Correct input
+test('SignUp Validation2', () => {
+  const SignUp2Data = {
+    institute: 'Dalhousie University',
+    role: 'Teacher',
+  };
+ 
+  signUpValidation2.validate(SignUp2Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation1', () => {
+  const SignUp1Data = {
+    email: 'aadi@gmail.com',
+    name: 'Krish184656553626352553634937443334535533',
+  };
+ 
+  signUpValidation1.validate(SignUp1Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation1', () => {
+  const SignUp1Data = {
+    email: 'aadi@',
+    name: 'Kri5533',
+  };
+ 
+  signUpValidation1.validate(SignUp1Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation1', () => {
+  const SignUp1Data = {
+    email: 'krish@',
+    name: 'Krishna',
+  };
+ 
+  signUpValidation1.validate(SignUp1Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Correct input
+test('SignUp Validation1', () => {
+  const SignUp1Data = {
+    email: 'krish@gmail.com',
+    name: 'Krishna',
+  };
+ 
+  signUpValidation1.validate(SignUp1Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation1', () => {
+  const SignUp1Data = {
+    email: null,
+    name: null,
+  };
+ 
+  signUpValidation1.validate(SignUp1Data).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation', () => {
+  const SignUpData = {
+    email: null,
+    name: null,
+  };
+ 
+  signInValidation.validate(SignUpData).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Correct input
+test('SignUp Validation', () => {
+  const SignUpData = {
+    email: 'krish@gmail.com',
+    name: 'Krishna',
+  };
+ 
+  signInValidation.validate(SignUpData).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation', () => {
+  const SignUpData = {
+    email: 'krish@',
+    name: 'Krishna',
+  };
+ 
+  signInValidation.validate(SignUpData).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation', () => {
+  const SignUpData = {
+    email: 'aadi@',
+    name: 'Kri5533',
+  };
+ 
+  signInValidation.validate(SignUpData).catch(err => {
+    console.log(err);
+    expect(true).toBe(err != null);
+  });
+});
+ 
+//Incorrect input
+test('SignUp Validation', () => {
+  const SignUpData = {
+    email: 'aadi@gmail.com',
+    name: 'Krish184656553626352553634937443334535533',
+  };
+ 
+  signInValidation.validate(SignUpData).catch(err => {
     console.log(err);
     expect(true).toBe(err != null);
   });
