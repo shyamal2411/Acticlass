@@ -1,11 +1,11 @@
 import * as Yup from 'yup';
- 
+
 // SignIn validation schema
 export const signInValidation = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string().required('Required'),
 });
- 
+
 // Signup validation schema
 export const signUpValidation1 = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -14,12 +14,12 @@ export const signUpValidation1 = Yup.object().shape({
     .matches(/^[A-Za-z]+$/, 'Whitespace and Number are not allowed!')
     .required('Required'),
 });
- 
+
 export const signUpValidation2 = Yup.object().shape({
   institute: Yup.string().required('Required'),
   role: Yup.string().required('Required'),
 });
- 
+
 export const signUpValidation3 = Yup.object().shape({
   password: Yup.string()
     .matches(
@@ -31,19 +31,19 @@ export const signUpValidation3 = Yup.object().shape({
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
     .required('Required'),
 });
- 
+
 // Forgot password validation schema
 export const forgotPassword = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Required'),
 });
- 
+
 // Reset password validation schema
 export const resetCode = Yup.object().shape({
   code: Yup.string()
     .matches(/^[0-9]{6}$/, 'Must be 6 digit code')
     .required('Required'),
 });
- 
+
 // Group Name Validation Schema
 export const groupCreation = Yup.object().shape({
   name: Yup.string().required('Required'),
@@ -56,4 +56,3 @@ export const groupCreation = Yup.object().shape({
     .max(30)
     .required('Required'),
 });
- 

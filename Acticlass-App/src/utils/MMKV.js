@@ -48,7 +48,12 @@ class MMKVManager {
      * @returns {Object}
      */
     getObject(key) {
-        return JSON.parse(this.storage.getString(key) || null);
+        const value = this.storage.getString(key);
+        try {
+            return JSON.parse(value);
+        } catch (error) {
+            return value;
+        }
     }
 
     /**
@@ -82,9 +87,8 @@ class MMKVManager {
      * 
      * @returns {void}
      */
-    cleanStorage() {
+    clearAll() {
         this.storage.clearAll();
-        console.info("[MMKV][" + this.name + "]", "storage is now reset!");
     }
     /**
      * 
@@ -125,3 +129,5 @@ export const KVDB = MMKVManager;
 
 
 export const mmkv = new MMKVManager();
+
+
