@@ -9,7 +9,6 @@ import {
 import { colors } from '../common/colors';
 import { ScrollView } from 'react-native-gesture-handler';
 import RadioButtonRN from 'radio-buttons-react-native';
-import validationServices from '../utils/validationServices';
 import { ROLES } from '../common/constants';
 import authService from '../services/authService';
 import { Form, Formik } from 'formik';

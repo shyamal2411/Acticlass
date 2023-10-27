@@ -9,8 +9,14 @@ const groupNameInitials = (groupName) => {
     if (groupName.length > 1) {
         return groupName[0][0] + groupName[1][0];
     }
-    return groupName[0];
+    if (groupName.length === 1) {
+        if (groupName[0].length > 1) {
+            return groupName[0][0] + groupName[0][1];
+        }
+    }
+    return groupName[0][0];
 }
+
 const GroupCard = ({ item }) => {
     return (
         <View style={[styles.container, {
