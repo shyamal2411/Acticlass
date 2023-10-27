@@ -27,7 +27,7 @@ api.interceptors.response.use(
     },
     error => {
         if (error.response.status === 401) {
-            mmkv.delete(AUTH_TOKEN);
+            mmkv.remove(AUTH_TOKEN);
             navRef.current.dispatch(StackActions.replace('AuthStack'));
         } else {
             return Promise.reject(error.response.data);
