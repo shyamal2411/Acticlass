@@ -17,12 +17,14 @@ const groupSchema = new mongoose.Schema({
     }],
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'users',
+        required: true
     },
     radius: {
         type: Number,
         default: DEFAULT_RADIUS,
-        required: true
+        required: true,
+        min: 0
     },
     passingPoints: {
         type: Number,
@@ -31,16 +33,23 @@ const groupSchema = new mongoose.Schema({
     attendanceFrequency: {
         type: Number,
         default: 0, // in minutes
-        enum: ATTENDANCE_FREQUENCY, // in minutes
+        validate: {
+            validator: function (value) {
+                return ATTENDANCE_FREQUENCY.includes(value);
+            },
+            message: 'Invalid attendance frequency'
+        },
         required: true
     },
     attendanceReward: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
     penalty: {
         type: Number,
-        default: 0
+        default: 0,
+        min: 0
     },
 });
 
