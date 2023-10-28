@@ -16,3 +16,6 @@ package-lock.json
 .flaskenv*
 !.env.project
 !.env.vault
+
+# Testing 
+/coverage
