@@ -11,12 +11,14 @@ import {
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colors } from '../common/colors';
-import { PubSubEvents } from '../common/constants';
+import { PubSubEvents, ROLES } from '../common/constants';
 import CreateNewGroup from '../components/createNewGroupSheet';
 import GroupCard from '../components/groupCard';
 import Navbar from '../components/navBar';
+import authService from '../services/authService';
 import groupServices from '../services/groupServices';
 
 const HomeScreen = ({ navigation }) => {
@@ -31,6 +33,10 @@ const HomeScreen = ({ navigation }) => {
         setGroups(res.groups);
       }
     });
+  };
+
+  const handleScan = () => {
+    //TODO: Handle QR Scan
   };
 
   useEffect(() => {
@@ -76,8 +82,12 @@ const HomeScreen = ({ navigation }) => {
             backgroundColor: colors.primary,
             borderRadius: 50,
           }}
-          onPress={() => refRBSheet.current.open()}>
-          <FeatherIcon name="plus" size={32} color={colors.white} />
+          onPress={() => {
+            (authService.getRole() == ROLES.TEACHER) ? refRBSheet.current.open() : handleScan()
+          }}>
+          {(authService.getRole() == ROLES.TEACHER) ?
+            <FeatherIcon name="plus" size={32} color={colors.white} /> :
+            <AntDesignIcon name="scan1" size={32} color={colors.white} />}
         </TouchableOpacity>
       </View>
       <RBSheet

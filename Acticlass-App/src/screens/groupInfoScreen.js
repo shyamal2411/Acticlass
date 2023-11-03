@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         width: 284,
         height: 284,
-        backgroundColor: colors.secondary,
+        backgroundColor: colors.transparent,
         marginTop: 48,
     },
     details: {
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
         color: colors.black,
         fontSize: 16,
         fontStyle: 'normal',
-        fontWeight: 'bold',
     },
     cellValue: {
         paddingVertical: 16,
