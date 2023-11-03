@@ -1,17 +1,16 @@
 import React from 'react';
 
 import {
-  Text,
-  Image,
-  StyleSheet,
-  SafeAreaView,
-  View,
-  TouchableOpacity,
   BackHandler,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {colors} from '../common/colors';
-import {navRef} from '../navigation/navRef';
+import { colors } from '../common/colors';
+import { navRef } from '../navigation/navRef';
 
 const Navbar = ({
   prefixIcon,
@@ -27,11 +26,11 @@ const Navbar = ({
 }) => {
   return (
     <SafeAreaView style={styles.navbar}>
-      <TouchableOpacity onPress={onPress} style={{width: '28', height: '28'}}>
-        {prefixIcon != null ? (
+      <TouchableOpacity onPress={onPress} style={{ width: '28', height: '28' }}>
+        {prefixIcon ? (
           <Icon name="arrow-back-ios" style={styles.navIcon} size={28} />
         ) : (
-          <View style={{width: '28', height: '28'}}>
+          <View style={{ width: '28', height: '28' }}>
             {/* //TODO: add initials of the user */}
           </View>
         )}
@@ -52,7 +51,7 @@ const styles = StyleSheet.create({
   },
 
   navIcon: {
-    marginLeft: 34,
+    marginLeft: 20,
     color: 'white',
   },
 
