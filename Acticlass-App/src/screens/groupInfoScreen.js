@@ -25,6 +25,7 @@ const GroupInfoScreen = ({
                 <View style={styles.container}>
                     <View style={styles.image}>
                         <QRCode
+                            backgroundColor='transparent'
                             value={groupId}
                             size={284}
                         />
@@ -32,7 +33,7 @@ const GroupInfoScreen = ({
                     <View style={styles.details}>
                         <View style={styles.row}>
                             <Text style={styles.cellLabel}>Radius </Text>
-                            <Text style={styles.cellValue}>{radius} m </Text>
+                            <Text style={styles.cellValue}>{radius} m</Text>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.cellLabel}>passing Points </Text>
@@ -41,15 +42,15 @@ const GroupInfoScreen = ({
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.cellLabel}>Attendance Frequency </Text>
-                            <Text style={styles.cellValue}>{attendanceFrequency} points </Text>
+                            <Text style={styles.cellValue}>{attendanceFrequency} mins</Text>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.cellLabel}>Attendance Reward </Text>
-                            <Text style={styles.cellValue}>{attendanceReward} points </Text>
+                            <Text style={styles.cellValue}>{attendanceReward} points</Text>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.cellLabel}>Default Penalty </Text>
-                            <Text style={styles.cellValue}>{falseRequestPenalty} points </Text>
+                            <Text style={styles.cellValue}>{falseRequestPenalty} points</Text>
                         </View>
                     </View>
                 </View>
