@@ -144,18 +144,44 @@ class AuthService {
         })
     }
 
+    /**
+     * 
+     * @param {'Teacher'|'Student'} role 
+     */
     setRole(role) {
         this.role = role;
         console.log(this.tag, "[setRole]", "Role set to", role);
     }
+
+    /**
+     * 
+     * @returns {'Teacher'|'Student'}
+     */
     getRole() {
         return this.role;
     }
 
+    /**
+     * 
+     * @param {*} res 
+     */
     saveAuth(res) {
         mmkv.set(AUTH_TOKEN, res.token);
         mmkv.set(USER, res.user);
         this.setRole(res.user.role);
+    }
+
+    /**
+     * 
+     * @param {Function} cb 
+     */
+    logout(cb) {
+        mmkv.remove(AUTH_TOKEN);
+        mmkv.remove(USER);
+        this.setRole(null);
+        if (cb != null) {
+            cb();
+        }
     }
 }
 

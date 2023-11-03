@@ -1,12 +1,12 @@
-import React from 'react';
-import { View, Text, Switch, StyleSheet, TouchableOpacity } from 'react-native';
-import { colors } from '../common/colors';
-import Navbar from '../components/navBar';
-import { mmkv } from '../utils/MMKV';
-import { AUTH_TOKEN } from '../common/constants';
 import { StackActions } from '@react-navigation/routers';
-import authService from '../services/authService';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors } from '../common/colors';
+import { AUTH_TOKEN } from '../common/constants';
+import Navbar from '../components/navBar';
 import { createTwoButtonAlert } from '../components/twoButtonAlert';
+import authService from '../services/authService';
+import { mmkv } from '../utils/MMKV';
 
 const SettingScreen = ({ navigation }) => {
 
@@ -17,8 +17,9 @@ const SettingScreen = ({ navigation }) => {
             positiveText: "Yes",
             negativeText: "No",
             onPositive: () => {
-                mmkv.remove(AUTH_TOKEN);
-                navigation.dispatch(StackActions.replace('AuthStack'));
+                authService.logout(() => {
+                    navigation.dispatch(StackActions.replace('AuthStack'));
+                });
             },
             onNegative: () => { }
         });
