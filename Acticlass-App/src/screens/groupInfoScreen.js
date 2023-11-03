@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { colors } from '../common/colors';
 import Navbar from '../components/navBar';
+import QRCode from 'react-native-qrcode-svg';
 
 
 const GroupInfoScreen = ({
@@ -23,7 +24,10 @@ const GroupInfoScreen = ({
             <ScrollView>
                 <View style={styles.container}>
                     <View style={styles.image}>
-
+                                    <QRCode
+                    value={groupId}
+                    size={284}
+                    />
                     </View>
                     <View style={styles.details}>
                         <View style={styles.row}>
