@@ -1,19 +1,20 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {colors} from '../common/colors';
+import { StackActions } from '@react-navigation/native';
 import randomColor from 'randomcolor';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import SelectDropdown from 'react-native-select-dropdown';
-import {MenuProvider} from 'react-native-popup-menu';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import {
   Menu,
-  MenuOptions,
   MenuOption,
+  MenuOptions,
   MenuTrigger,
 } from 'react-native-popup-menu';
-import groupServices from '../services/groupServices';
 import Snackbar from 'react-native-snackbar';
-import {PubSubEvents} from '../common/constants';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import { colors } from '../common/colors';
+import { PubSubEvents } from '../common/constants';
+import { navRef } from '../navigation/navRef';
+import groupServices from '../services/groupServices';
+
 
 const options = [
   'Leader Board',
@@ -36,7 +37,7 @@ const groupNameInitials = groupName => {
   return groupName[0][0];
 };
 
-const GroupCard = ({item}) => {
+const GroupCard = ({ navigation, item }) => {
   const handleOnMore = index => {
     console.log('Selected option: ' + options[index]);
 
@@ -45,14 +46,23 @@ const GroupCard = ({item}) => {
         // Handle Leader Board action
         break;
       case 'Group Info':
-        // Handle Group Info action
+        // Handle Group Info action        
+        navRef.current.dispatch(StackActions.push('GroupInfo', {
+          groupId: item.id,
+          groupName: item.name,
+          radius: item.radius,
+          passingPoints: item.passingPoints,
+          attendanceFrequency: item.attendanceFrequency,
+          attendanceReward: item.attendanceReward,
+          falseRequestPenalty: item.penalty,
+        }));
         break;
       case 'Leave Group':
         // Handle Leave Group action
         break;
       case 'Delete Group':
         // Handle Delete Group action
-        groupServices.deleteGroup({groupId: item.id}, (err, res) => {
+        groupServices.deleteGroup({ groupId: item.id }, (err, res) => {
           if (err) {
             Snackbar.show({
               text: err.msg,
@@ -84,7 +94,7 @@ const GroupCard = ({item}) => {
         styles.container,
         {
           shadowColor: colors.placeholder,
-          shadowOffset: {width: 0, height: 8},
+          shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.5,
           shadowRadius: 3.84,
           elevation: 5,
@@ -152,10 +162,10 @@ const GroupCard = ({item}) => {
               }}>
               {item.name}
             </Text>
-            <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
+            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
               Passing Points: {item.passingPoints}
             </Text>
-            <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
+            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
               Radius: {item.radius}
             </Text>
           </View>
@@ -179,7 +189,7 @@ const GroupCard = ({item}) => {
                 {options.map((option, index) => (
                   <MenuOption
                     key={index}
-                    customStyles={{optionText: styles.menuText}}
+                    customStyles={{ optionText: styles.menuText }}
                     text={option}
                     onSelect={() => handleOnMore(index)}
                   />

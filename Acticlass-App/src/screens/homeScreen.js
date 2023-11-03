@@ -1,33 +1,25 @@
-import React from 'react';
-import {colors} from '../common/colors';
+import PubSub from 'pubsub-js';
+import React, { useEffect } from 'react';
 import {
+  Dimensions,
+  FlatList,
   ScrollView,
-  View,
   StyleSheet,
   Text,
-  TextInput,
-  Pressable,
-  Button,
   TouchableOpacity,
-  SafeAreaView,
-  Image,
-  FlatList,
+  View
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import CreateNewGroup from '../components/createNewGroupSheet';
-import {Dimensions} from 'react-native';
-import Navbar from '../components/navBar';
-import groupData from '../mock/groupData';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import GroupCard from '../components/groupCard';
 import Snackbar from 'react-native-snackbar';
-import {useEffect} from 'react';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import { colors } from '../common/colors';
+import { PubSubEvents } from '../common/constants';
+import CreateNewGroup from '../components/createNewGroupSheet';
+import GroupCard from '../components/groupCard';
+import Navbar from '../components/navBar';
 import groupServices from '../services/groupServices';
-import {PubSubEvents} from '../common/constants';
-import PubSub from 'pubsub-js';
-import {MenuProvider} from 'react-native-popup-menu';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const refRBSheet = React.createRef();
   const [groups, setGroups] = React.useState([]);
 
@@ -58,12 +50,12 @@ const HomeScreen = ({navigation}) => {
       <Navbar title={'Home'}></Navbar>
       {groups.length > 0 ? (
         <FlatList
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           data={groups}
-          renderItem={({item}) => <GroupCard item={item} />}
+          renderItem={({ item }) => <GroupCard item={item} />}
         />
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text
             style={{
               fontSize: 24,
