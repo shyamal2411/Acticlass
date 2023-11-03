@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -7,25 +7,29 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
-import { colors } from '../common/colors';
-// import IonIcon from 'react-native-vector-icons/Ionicons';
-import { ScrollView } from 'react-native-gesture-handler';
-import { Formik } from 'formik';
-import { forgotPasswordSchema, resetCodeSchema, signUpValidation3 } from '../common/validationSchemas';
+import {colors} from '../common/colors';
+import {ScrollView} from 'react-native-gesture-handler';
+import {Formik} from 'formik';
+import {
+  forgotPasswordSchema,
+  resetCodeSchema,
+  signUpValidation3,
+} from '../common/validationSchemas';
 import authService from '../services/authService';
 import Snackbar from 'react-native-snackbar';
-import { toInteger } from 'lodash';
-import { mmkv } from '../utils/MMKV';
-import { AUTH_TOKEN, IS_FROM_RESET } from '../common/constants';
+import {toInteger} from 'lodash';
+import {mmkv} from '../utils/MMKV';
+import {AUTH_TOKEN, IS_FROM_RESET} from '../common/constants';
 import IonIcon from 'react-native-vector-icons/Ionicons';
 
-const ForgotPasswordScreen = ({ navigation }) => {
+const ForgotPasswordScreen = ({navigation}) => {
   const [isCodeSend, setIsCodeSend] = useState();
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
 
-  const handleSendCode = (values) => {
+  const handleSendCode = values => {
     authService.sendResetCode(values.email, (err, res) => {
       if (err) {
         Snackbar.show({
@@ -44,46 +48,52 @@ const ForgotPasswordScreen = ({ navigation }) => {
     });
   };
 
-  const handleVerifyCode = (values) => {
-    authService.verifyResetCode({ code: toInteger(values.code), email: isCodeSend }, (err, res) => {
-      if (err) {
+  const handleVerifyCode = values => {
+    authService.verifyResetCode(
+      {code: toInteger(values.code), email: isCodeSend},
+      (err, res) => {
+        if (err) {
+          Snackbar.show({
+            text: err.msg,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.danger,
+          });
+          return;
+        }
         Snackbar.show({
-          text: err.msg,
+          text: res.msg,
           duration: Snackbar.LENGTH_SHORT,
-          backgroundColor: colors.danger,
+          backgroundColor: colors.success,
         });
-        return;
-      }
-      Snackbar.show({
-        text: res.msg,
-        duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: colors.success,
-      });
-      mmkv.set(IS_FROM_RESET, true);
-      mmkv.set(AUTH_TOKEN, res.token);
-      setIsCodeVerified(true);
-    });
+        mmkv.set(IS_FROM_RESET, true);
+        mmkv.set(AUTH_TOKEN, res.token);
+        setIsCodeVerified(true);
+      },
+    );
   };
 
-  const handleResetPassword = (values) => {
-    authService.resetPassword({ email: values.email, password: values.password }, (err, res) => {
-      if (err) {
+  const handleResetPassword = values => {
+    authService.resetPassword(
+      {email: values.email, password: values.password},
+      (err, res) => {
+        if (err) {
+          Snackbar.show({
+            text: err.msg,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.danger,
+          });
+          return;
+        }
         Snackbar.show({
-          text: err.msg,
+          text: res.msg,
           duration: Snackbar.LENGTH_SHORT,
-          backgroundColor: colors.danger,
+          backgroundColor: colors.success,
         });
-        return;
-      }
-      Snackbar.show({
-        text: res.msg,
-        duration: Snackbar.LENGTH_SHORT,
-        backgroundColor: colors.success,
-      });
-      mmkv.remove(IS_FROM_RESET);
-      mmkv.remove(AUTH_TOKEN);
-      navigation.navigate('SignIn');
-    });
+        mmkv.remove(IS_FROM_RESET);
+        mmkv.remove(AUTH_TOKEN);
+        navigation.navigate('SignIn');
+      },
+    );
   };
 
   return (
@@ -98,20 +108,18 @@ const ForgotPasswordScreen = ({ navigation }) => {
           borderTopRightRadius: 50,
         }}>
         {isCodeVerified ? (
-          <Formik initialValues={
-            {
+          <Formik
+            initialValues={{
               password: '',
-              confirmPassword: ''
-            }
-          }
+              confirmPassword: '',
+            }}
             onSubmit={handleResetPassword}
-            validationSchema={signUpValidation3}
-          >
-            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+            validationSchema={signUpValidation3}>
+            {({handleChange, handleBlur, handleSubmit, values, errors}) => (
               <View>
                 <Text style={styles.title}>Forgot Password</Text>
-                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                  <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
                     New Password
                   </Text>
                   <View style={styles.passwordContainer}>
@@ -134,8 +142,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
                     <Text style={styles.errorText}>{errors.password}</Text>
                   ) : null}
                 </View>
-                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                  <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
                     Confirm Password
                   </Text>
                   <View style={styles.passwordContainer}>
@@ -157,11 +165,15 @@ const ForgotPasswordScreen = ({ navigation }) => {
                     />
                   </View>
                   {errors.confirmPassword ? (
-                    <Text style={styles.errorText}>{errors.confirmPassword}</Text>
+                    <Text style={styles.errorText}>
+                      {errors.confirmPassword}
+                    </Text>
                   ) : null}
                 </View>
-                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Reset</Text>
                   </TouchableOpacity>
                 </View>
@@ -169,12 +181,15 @@ const ForgotPasswordScreen = ({ navigation }) => {
             )}
           </Formik>
         ) : !isCodeSend ? (
-          <Formik initialValues={{ email: '' }} validationSchema={forgotPasswordSchema} onSubmit={handleSendCode}>
-            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+          <Formik
+            initialValues={{email: ''}}
+            validationSchema={forgotPasswordSchema}
+            onSubmit={handleSendCode}>
+            {({handleChange, handleBlur, handleSubmit, values, errors}) => (
               <View>
                 <Text style={styles.title}>Forgot Password</Text>
-                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                  <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
                     Email
                   </Text>
                   <TextInput
@@ -185,13 +200,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
                     onChangeText={handleChange('email')}
                   />
                   {errors.email ? (
-                    <Text style={styles.errorText}>
-                      {errors.email}
-                    </Text>
+                    <Text style={styles.errorText}>{errors.email}</Text>
                   ) : null}
                 </View>
-                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Send Code</Text>
                   </TouchableOpacity>
                 </View>
@@ -203,31 +218,35 @@ const ForgotPasswordScreen = ({ navigation }) => {
                   }}></View>
               </View>
             )}
-          </Formik>) : (
-          <Formik initialValues={{ code: '' }} validationSchema={resetCodeSchema} onSubmit={handleVerifyCode}>
-            {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+          </Formik>
+        ) : (
+          <Formik
+            initialValues={{code: ''}}
+            validationSchema={resetCodeSchema}
+            onSubmit={handleVerifyCode}>
+            {({handleChange, handleBlur, handleSubmit, values, errors}) => (
               <View>
                 <Text style={styles.title}>Forgot Password</Text>
-                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                  <Text style={{ fontSize: 16, color: 'black', marginLeft: 10 }}>
+                <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                  <Text style={{fontSize: 16, color: 'black', marginLeft: 10}}>
                     Code
                   </Text>
                   <TextInput
                     value={values.code}
                     style={styles.input}
-                    keyboardType='numeric'
+                    keyboardType="numeric"
                     placeholderTextColor={colors.placeholder}
                     placeholder="Enter your Code"
                     onChangeText={handleChange('code')}
                   />
                   {errors.code ? (
-                    <Text style={styles.errorText}>
-                      {errors.code}
-                    </Text>
+                    <Text style={styles.errorText}>{errors.code}</Text>
                   ) : null}
                 </View>
-                <View style={{ paddingVertical: 16, paddingHorizontal: 40 }}>
-                  <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <View style={{paddingVertical: 16, paddingHorizontal: 40}}>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Verify</Text>
                   </TouchableOpacity>
                 </View>
@@ -256,7 +275,7 @@ const styles = StyleSheet.create({
   appName: {
     marginVertical: 52,
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: { width: -10, height: 10 },
+    textShadowOffset: {width: -10, height: 10},
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',
