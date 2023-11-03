@@ -18,6 +18,7 @@ const SignInScreen = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleSignIn = values => {
+    values.email = values.email.toLowerCase();
     authService.signIn(values, (err, res) => {
       if (err) {
         Snackbar.show({
