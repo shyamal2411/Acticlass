@@ -11,18 +11,26 @@ import {
 import Snackbar from 'react-native-snackbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colors } from '../common/colors';
-import { PubSubEvents } from '../common/constants';
+import { PubSubEvents, ROLES } from '../common/constants';
 import { navRef } from '../navigation/navRef';
+import authService from '../services/authService';
 import groupServices from '../services/groupServices';
 
 
-const options = [
+const StudentOptions = [
   'Leader Board',
   'Group Info',
   'Leave Group',
+];
+
+const TeacherOptions = [
+  'Leader Board',
+  'Group Info',
   'Delete Group',
   'Edit group',
 ];
+
+const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
 const groupNameInitials = groupName => {
   groupName = groupName.split(' ');
@@ -59,6 +67,22 @@ const GroupCard = ({ navigation, item }) => {
         break;
       case 'Leave Group':
         // Handle Leave Group action
+        groupServices.leaveGroup({ groupId: item.id }, (err, res) => {
+          if (err) {
+            Snackbar.show({
+              text: err.msg,
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.danger,
+            });
+            return;
+          }
+          Snackbar.show({
+            text: res.msg,
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.success,
+          });
+          PubSub.publish(PubSubEvents.OnGroupDeleted);
+        });
         break;
       case 'Delete Group':
         // Handle Delete Group action
@@ -196,15 +220,17 @@ const GroupCard = ({ navigation, item }) => {
                 ))}
               </MenuOptions>
             </Menu>
-            {/* TODO: Add points */}
-            <Text
-              style={{
-                fontSize: 12,
-                color: colors.inactive,
-                textAlign: 'right',
-              }}>
-              {item.Points} Points
-            </Text>
+            {(authService.getRole() == ROLES.STUDENT) && <View>
+              {/* TODO: Add points */}
+              <Text
+                style={{
+                  fontSize: 12,
+                  color: colors.inactive,
+                  textAlign: 'right',
+                }}>
+                {item.Points} Points
+              </Text>
+            </View>}
           </View>
         </View>
       </View>
