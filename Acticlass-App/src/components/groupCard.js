@@ -30,7 +30,6 @@ const TeacherOptions = [
   'Edit group',
 ];
 
-const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
 const groupNameInitials = groupName => {
   groupName = groupName.split(' ');
@@ -46,6 +45,8 @@ const groupNameInitials = groupName => {
 };
 
 const GroupCard = ({ navigation, item }) => {
+  const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
+
   const handleOnMore = index => {
     console.log('Selected option: ' + options[index]);
 
