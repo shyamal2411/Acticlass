@@ -37,17 +37,19 @@ const HomeScreen = ({ navigation }) => {
 
   const handleScan = () => {
     //TODO: Handle QR Scan
+    navigation.navigate('QRScan');
   };
 
   useEffect(() => {
     refreshGroups();
-    const t1 = PubSub.subscribe(PubSubEvents.OnGroupCreated, refreshGroups);
-    const t2 = PubSub.subscribe(PubSubEvents.OnGroupUpdated, refreshGroups);
-    const t3 = PubSub.subscribe(PubSubEvents.OnGroupDeleted, refreshGroups);
+    const tokens = [];
+    const events = [PubSubEvents.OnGroupCreated, PubSubEvents.OnGroupUpdated, PubSubEvents.OnGroupDeleted,
+    PubSubEvents.OnGroupJoined, PubSubEvents.OnGroupLeft];
+    events.forEach(event => {
+      tokens.push(PubSub.subscribe(event, refreshGroups));
+    });
     return () => {
-      PubSub.unsubscribe(t1);
-      PubSub.unsubscribe(t2);
-      PubSub.unsubscribe(t3);
+      tokens.forEach(token => PubSub.unsubscribe(token));
     };
   }, []);
 
@@ -125,7 +127,7 @@ const HomeScreen = ({ navigation }) => {
                   duration: Snackbar.LENGTH_SHORT,
                   backgroundColor: colors.success,
                 });
-                PubSub.publish(PubSubEvents.OnGroupCreated, null);
+                PubSub.publish(PubSubEvents.OnGroupCreated);
               }
             }}
           />

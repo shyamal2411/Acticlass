@@ -7,6 +7,7 @@ import { colors } from '../common/colors';
 import ActivityScreen from '../screens/activityScreen';
 import GroupInfoScreen from '../screens/groupInfoScreen';
 import HomeScreen from '../screens/homeScreen';
+import QrCodeScanScreen from '../screens/qrCodeScanScreen';
 import SettingScreen from '../screens/settingScreen';
 
 const Stack = createStackNavigator();
@@ -68,6 +69,7 @@ const AppStack = () => {
       initialRouteName="HomeTabs">
       <Stack.Screen name="HomeTabs" component={HomeTabStack} />
       <Stack.Screen name="GroupInfo" component={GroupInfoScreen} />
+      <Stack.Screen name="QRScan" component={QrCodeScanScreen} />
     </Stack.Navigator>
   );
 };

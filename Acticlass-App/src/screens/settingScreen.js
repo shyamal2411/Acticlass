@@ -2,11 +2,9 @@ import { StackActions } from '@react-navigation/routers';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../common/colors';
-import { AUTH_TOKEN } from '../common/constants';
 import Navbar from '../components/navBar';
 import { createTwoButtonAlert } from '../components/twoButtonAlert';
 import authService from '../services/authService';
-import { mmkv } from '../utils/MMKV';
 
 const SettingScreen = ({ navigation }) => {
 
@@ -37,7 +35,7 @@ const SettingScreen = ({ navigation }) => {
                     if (err) {
                         console.error(err);
                     } else {
-                        mmkv.remove(AUTH_TOKEN);
+                        authService.logout();
                         navigation.dispatch(StackActions.replace('AuthStack'));
                     }
                 });
