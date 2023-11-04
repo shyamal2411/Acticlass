@@ -1,7 +1,10 @@
+import { AUTH_TOKEN, USER } from "../common/constants";
 import { endpoints } from "../common/endpoints";
+import { mmkv } from "../utils/MMKV";
 import api from "./APIRequest";
 
 class AuthService {
+    role = null;
     tag = '[AuthService]';
     signUpData = {};
     constructor() {
@@ -141,6 +144,45 @@ class AuthService {
         })
     }
 
+    /**
+     * 
+     * @param {'Teacher'|'Student'} role 
+     */
+    setRole(role) {
+        this.role = role;
+        console.log(this.tag, "[setRole]", "Role set to", role);
+    }
+
+    /**
+     * 
+     * @returns {'Teacher'|'Student'}
+     */
+    getRole() {
+        return this.role;
+    }
+
+    /**
+     * 
+     * @param {*} res 
+     */
+    saveAuth(res) {
+        mmkv.set(AUTH_TOKEN, res.token);
+        mmkv.set(USER, res.user);
+        this.setRole(res.user.role);
+    }
+
+    /**
+     * 
+     * @param {Function} cb 
+     */
+    logout(cb) {
+        mmkv.remove(AUTH_TOKEN);
+        mmkv.remove(USER);
+        this.setRole(null);
+        if (cb != null) {
+            cb();
+        }
+    }
 }
 
 export default instance = new AuthService();

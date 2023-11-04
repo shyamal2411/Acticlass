@@ -177,6 +177,9 @@ const joinGroupById = async (req, res) => {
         if (!group) {
             return res.status(404).json({ msg: 'Group not found.' });
         }
+        if (group.members.includes(user._id)) {
+            return res.status(400).json({ msg: 'User already joined the group.' });
+        }
         group.members.push(user._id);
         group.save().then(() => {
             return res.status(200).json({ msg: 'User joined successfully.' });

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { colors } from '../common/colors';
-import { AUTH_TOKEN, IS_FROM_RESET } from '../common/constants';
+import { AUTH_TOKEN, IS_FROM_RESET, USER } from '../common/constants';
+import authService from '../services/authService';
 import { mmkv } from '../utils/MMKV';
 
 const SplashScreen = ({ navigation }) => {
@@ -11,6 +12,8 @@ const SplashScreen = ({ navigation }) => {
             const token = mmkv.getString(AUTH_TOKEN);
             const isFromResetPW = mmkv.getBoolean(IS_FROM_RESET) || false;
             if (token && !isFromResetPW) {
+                const user = mmkv.getObject(USER);
+                authService.setRole(user.role);
                 navigation.replace('AppStack');
             } else {
                 if (isFromResetPW) {

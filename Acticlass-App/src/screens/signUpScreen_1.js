@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
+import { Formik } from 'formik';
+import React from 'react';
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
+  View,
 } from 'react-native';
-import { colors } from '../common/colors';
 import { ScrollView } from 'react-native-gesture-handler';
-import { Formik } from 'formik';
+import { colors } from '../common/colors';
 import { signUpValidation1 } from '../common/validationSchemas';
 import authService from '../services/authService';
 
 const SignUpScreen_1 = ({ navigation }) => {
 
   const handleSignUp1 = (values) => {
-    authService.updateSignUpData({ email: values.email, name: values.name });
+    authService.updateSignUpData({ email: values.email.toLowerCase(), name: values.name });
     navigation.navigate('SignUp2');
   };
 

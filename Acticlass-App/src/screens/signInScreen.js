@@ -1,25 +1,24 @@
-import React, { useState, useCallback } from 'react';
+import { Formik } from 'formik';
+import React, { useState } from 'react';
 import {
-  View,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
+  View,
 } from 'react-native';
-import { colors } from '../common/colors';
-import IonIcon from 'react-native-vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
-import authService from '../services/authService';
-import { Formik } from 'formik';
-import { signInValidation } from '../common/validationSchemas';
 import Snackbar from 'react-native-snackbar';
-import { mmkv } from '../utils/MMKV';
-import { AUTH_TOKEN } from '../common/constants';
+import IonIcon from 'react-native-vector-icons/Ionicons';
+import { colors } from '../common/colors';
+import { signInValidation } from '../common/validationSchemas';
+import authService from '../services/authService';
 
 const SignInScreen = ({ navigation }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleSignIn = values => {
+    values.email = values.email.toLowerCase();
     authService.signIn(values, (err, res) => {
       if (err) {
         Snackbar.show({
@@ -29,7 +28,7 @@ const SignInScreen = ({ navigation }) => {
         });
         return;
       }
-      mmkv.set(AUTH_TOKEN, res.token);
+      authService.saveAuth(res);
       navigation.replace('AppStack');
     });
   };
