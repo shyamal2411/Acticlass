@@ -1,7 +1,7 @@
 // add all schemas here
 module.exports.UserSchema = require('./schema/user');
 module.exports.GroupSchema = require('./schema/group');
-
+module.exports.PointBucketSchema = require('./schema/pointBucket');
 
 // connect to the database
 const mongoose = require('mongoose');

@@ -140,13 +140,6 @@ const verifyResetPasswordCode = async (req, res) => {
             if (!user) {
                 return res.status(400).json({ msg: 'User does not exist' });
             }
-            const data = {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role,
-                institute: user.institute,
-            }
             const token = generateToken(user);
             cache.del(email); // Delete the code from cache
             return res.status(200).json({ token, msg: 'Code verified successfully' });
@@ -171,6 +164,7 @@ const changePassword = async (req, res) => {
         }
         hash(password).then(async (hashedPassword) => {
             await UserSchema.updateOne({ email }, { password: hashedPassword });
+            cache.del(email); // Delete the code from cache
             return res.status(200).json({ msg: 'Password changed successfully' });
         });
     });

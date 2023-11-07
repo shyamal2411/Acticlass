@@ -11,10 +11,10 @@ const groupSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    members: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
-    }],
+    // members: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'users'
+    // }],
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'users',
