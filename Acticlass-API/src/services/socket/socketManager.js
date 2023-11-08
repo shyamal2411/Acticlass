@@ -15,7 +15,8 @@ class SocketManager {
         this.io = socketIO(server, { origins: '*:*' });
 
         ActivityManager.addListenerForPointBucketUpdate((data) => {
-            this.io.to(data.userId).emit(SOCKET_EVENTS.POINTS_UPDATED, data);
+            console.log(this.tag, "Point bucket updated 📦", data);
+            this.io.in(data.groupId).emit(SOCKET_EVENTS.POINTS_UPDATED, data);
         });
 
         this.io.use((socket, next) => {
