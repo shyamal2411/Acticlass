@@ -2,6 +2,7 @@
 module.exports.UserSchema = require('./schema/user');
 module.exports.GroupSchema = require('./schema/group');
 module.exports.PointBucketSchema = require('./schema/pointBucket');
+module.exports.ActivitySchema = require('./schema/activity');
 
 // connect to the database
 const mongoose = require('mongoose');
