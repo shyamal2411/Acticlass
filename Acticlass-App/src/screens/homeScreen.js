@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     refreshGroups();
     const tokens = [];
-    const events = [PubSubEvents.OnGroupCreated, PubSubEvents.OnGroupUpdated, PubSubEvents.OnGroupDeleted,
+    const events = [PubSubEvents.ONAppComesToForeground, PubSubEvents.OnGroupCreated, PubSubEvents.OnGroupUpdated, PubSubEvents.OnGroupDeleted,
     PubSubEvents.OnGroupJoined, PubSubEvents.OnGroupLeft];
     events.forEach(event => {
       tokens.push(PubSub.subscribe(event, refreshGroups));

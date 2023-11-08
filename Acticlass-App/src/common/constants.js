@@ -15,6 +15,11 @@ export const USER = "Acticlass_USER";
 export const ATTENDANCE_FREQUENCY = ['0', '15', '30', '60'];
 
 export const PubSubEvents = {
+  // App State
+  ONAppGoToBackground: 'ONAppGoToBackground',
+  ONAppComesToForeground: 'ONAppComesToForeground',
+
+  // Group
   OnGroupCreated: 'OnGroupCreated',
   OnGroupUpdated: 'OnGroupUpdated',
   OnGroupDeleted: 'OnGroupDeleted',
