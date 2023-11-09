@@ -1,4 +1,4 @@
-import { endpoints } from '../common/endpoints';
+import {endpoints} from '../common/endpoints';
 import api from './APIRequest';
 
 class groupService {
@@ -63,7 +63,7 @@ class groupService {
    * @param {Function} cb
    */
   getAll(cb) {
-    api({ url: endpoints.getGroups, method: 'GET' })
+    api({url: endpoints.getGroups, method: 'GET'})
       .then(res => {
         console.log(this.tag, '[getAll]', 'Groups retrieved successfully! ✅');
         if (cb != null) {
@@ -85,7 +85,7 @@ class groupService {
    * @param {Function} cb
    */
   joinGroup(groupId, cb) {
-    api({ url: `${endpoints.joinGroup}/${groupId}`, method: 'POST' })
+    api({url: `${endpoints.joinGroup}/${groupId}`, method: 'POST'})
       .then(res => {
         console.log(this.tag, '[joinGroup]', 'Group joined successfully! ✅');
         if (cb != null) {
@@ -107,7 +107,7 @@ class groupService {
    * @param {String} groupId
    */
   getGroupById(groupId, cb) {
-    api({ url: `${endpoints.getGroupById}/${groupId}`, method: 'GET' })
+    api({url: `${endpoints.getGroupById}/${groupId}`, method: 'GET'})
       .then(res => {
         console.log(this.tag, '[getId]', 'Group ID retrieved successfully! ✅');
         if (cb != null) {
@@ -163,6 +163,7 @@ class groupService {
    */
   updateGroup(
     {
+      groupId,
       name,
       radius,
       passingPoints,
@@ -173,7 +174,7 @@ class groupService {
     cb,
   ) {
     api({
-      url: endpoints.updateGroup,
+      url: `${endpoints.updateGroup}/${groupId}`,
       method: 'POST',
       data: {
         name,
@@ -207,7 +208,7 @@ class groupService {
    * @param {String} groupId
    */
   leaveGroup(groupId, cb) {
-    api({ url: `${endpoints.leaveGroup}/${groupId}`, method: 'POST' })
+    api({url: `${endpoints.leaveGroup}/${groupId}`, method: 'POST'})
       .then(res => {
         console.log(this.tag, '[leaveGroup]', 'Group left successfully! ✅');
         if (cb != null) {
@@ -226,8 +227,8 @@ class groupService {
    * @param {{email:String,password:String}} data
    * @param {Function} cb
    */
-  kickUser({ userId }, cb) {
-    api({ url: endpoints.kickUser, method: 'POST', data: { userId } })
+  kickUser({userId}, cb) {
+    api({url: endpoints.kickUser, method: 'POST', data: {userId}})
       .then(res => {
         console.log(this.tag, '[kickUser]', 'user kicked successful!');
         if (cb != null) {
@@ -246,8 +247,8 @@ class groupService {
    * @param {String} groupId
    * @param {Function} cb
    */
-  deleteGroup({ groupId }, cb) {
-    api({ url: `${endpoints.deleteGroup}/${groupId}`, method: 'DELETE' })
+  deleteGroup({groupId}, cb) {
+    api({url: `${endpoints.deleteGroup}/${groupId}`, method: 'DELETE'})
       .then(res => {
         console.log(
           this.tag,
