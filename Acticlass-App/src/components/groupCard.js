@@ -1,7 +1,9 @@
-import { StackActions } from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 import randomColor from 'randomcolor';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useEffect} from 'react';
+import RBSheet from 'react-native-raw-bottom-sheet';
+
+import {StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
 import {
   Menu,
   MenuOption,
@@ -10,18 +12,16 @@ import {
 } from 'react-native-popup-menu';
 import Snackbar from 'react-native-snackbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colors } from '../common/colors';
-import { PubSubEvents, ROLES } from '../common/constants';
-import { navRef } from '../navigation/navRef';
+import {colors} from '../common/colors';
+import {PubSubEvents, ROLES} from '../common/constants';
+import {navRef} from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
+import {log} from 'console';
+import EditGroup from './EditGroup';
+import {result} from 'lodash';
 
-
-const StudentOptions = [
-  'Leader Board',
-  'Group Info',
-  'Leave Group',
-];
+const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
 
 const TeacherOptions = [
   'Leader Board',
@@ -29,7 +29,6 @@ const TeacherOptions = [
   'Delete Group',
   'Edit group',
 ];
-
 
 const groupNameInitials = groupName => {
   groupName = groupName.split(' ');
@@ -44,8 +43,11 @@ const groupNameInitials = groupName => {
   return groupName[0][0];
 };
 
-const GroupCard = ({ navigation, item }) => {
-  const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
+const GroupCard = ({navigation, item}) => {
+  const refRBSheet = React.createRef();
+
+  const options =
+    authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
   const handleOnMore = index => {
     console.log('Selected option: ' + options[index]);
@@ -55,20 +57,22 @@ const GroupCard = ({ navigation, item }) => {
         // Handle Leader Board action
         break;
       case 'Group Info':
-        // Handle Group Info action        
-        navRef.current.dispatch(StackActions.push('GroupInfo', {
-          groupId: item.id,
-          groupName: item.name,
-          radius: item.radius,
-          passingPoints: item.passingPoints,
-          attendanceFrequency: item.attendanceFrequency,
-          attendanceReward: item.attendanceReward,
-          falseRequestPenalty: item.penalty,
-        }));
+        // Handle Group Info action
+        navRef.current.dispatch(
+          StackActions.push('GroupInfo', {
+            groupId: item.id,
+            groupName: item.name,
+            radius: item.radius,
+            passingPoints: item.passingPoints,
+            attendanceFrequency: item.attendanceFrequency,
+            attendanceReward: item.attendanceReward,
+            falseRequestPenalty: item.penalty,
+          }),
+        );
         break;
       case 'Leave Group':
         // Handle Leave Group action
-        groupServices.leaveGroup({ groupId: item.id }, (err, res) => {
+        groupServices.leaveGroup({groupId: item.id}, (err, res) => {
           if (err) {
             Snackbar.show({
               text: err.msg,
@@ -87,7 +91,7 @@ const GroupCard = ({ navigation, item }) => {
         break;
       case 'Delete Group':
         // Handle Delete Group action
-        groupServices.deleteGroup({ groupId: item.id }, (err, res) => {
+        groupServices.deleteGroup({groupId: item.id}, (err, res) => {
           if (err) {
             Snackbar.show({
               text: err.msg,
@@ -105,6 +109,7 @@ const GroupCard = ({ navigation, item }) => {
         });
         break;
       case 'Edit group':
+        refRBSheet.current.open();
         // Handle Edit group action
         break;
       default:
@@ -119,7 +124,7 @@ const GroupCard = ({ navigation, item }) => {
         styles.container,
         {
           shadowColor: colors.placeholder,
-          shadowOffset: { width: 0, height: 8 },
+          shadowOffset: {width: 0, height: 8},
           shadowOpacity: 0.5,
           shadowRadius: 3.84,
           elevation: 5,
@@ -187,10 +192,10 @@ const GroupCard = ({ navigation, item }) => {
               }}>
               {item.name}
             </Text>
-            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
+            <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
               Passing Points: {item.passingPoints}
             </Text>
-            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
+            <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
               Radius: {item.radius}
             </Text>
           </View>
@@ -214,24 +219,70 @@ const GroupCard = ({ navigation, item }) => {
                 {options.map((option, index) => (
                   <MenuOption
                     key={index}
-                    customStyles={{ optionText: styles.menuText }}
+                    customStyles={{optionText: styles.menuText}}
                     text={option}
                     onSelect={() => handleOnMore(index)}
                   />
                 ))}
               </MenuOptions>
             </Menu>
-            {(authService.getRole() == ROLES.STUDENT) && <View>
-              {/* TODO: Add points */}
-              <Text
-                style={{
-                  fontSize: 12,
-                  color: colors.inactive,
-                  textAlign: 'right',
-                }}>
-                {item.Points} Points
-              </Text>
-            </View>}
+
+            <RBSheet
+              ref={refRBSheet}
+              closeOnDragDown={true}
+              closeOnPressMask={true}
+              customStyles={{
+                container: {
+                  borderRadius: 10,
+                  elevation: 20,
+                  backgroundColor: colors.secondary,
+                },
+                wrapper: {
+                  backgroundColor: 'rgba(0,0,0,0.2)',
+                },
+                draggableIcon: {
+                  backgroundColor: colors.placeholder,
+                },
+              }}
+              height={Dimensions.get('window').height * 0.85}
+              animationType="slide">
+              <ScrollView>
+                <EditGroup
+                  group={item}
+                  cb={(err, res) => {
+                    refRBSheet.current.close();
+                    if (err) {
+                      Snackbar.show({
+                        text: err.msg,
+                        duration: Snackbar.LENGTH_SHORT,
+                        backgroundColor: colors.danger,
+                      });
+                      return;
+                    }
+                    Snackbar.show({
+                      text: res.msg,
+                      duration: Snackbar.LENGTH_SHORT,
+                      backgroundColor: colors.success,
+                    });
+                    PubSub.publish(PubSubEvents.OnGroupUpdated);
+                  }}
+                />
+              </ScrollView>
+            </RBSheet>
+
+            {authService.getRole() == ROLES.STUDENT && (
+              <View>
+                {/* TODO: Add points */}
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: colors.inactive,
+                    textAlign: 'right',
+                  }}>
+                  {item.Points} Points
+                </Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
