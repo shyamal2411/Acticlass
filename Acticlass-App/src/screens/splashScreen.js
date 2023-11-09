@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { colors } from '../common/colors';
 import { AUTH_TOKEN, IS_FROM_RESET, USER } from '../common/constants';
 import authService from '../services/authService';
+import socketService from '../services/socketService';
 import { mmkv } from '../utils/MMKV';
 
 const SplashScreen = ({ navigation }) => {
@@ -15,6 +16,7 @@ const SplashScreen = ({ navigation }) => {
                 const user = mmkv.getObject(USER);
                 authService.setRole(user.role);
                 navigation.replace('AppStack');
+                socketService.init();
             } else {
                 if (isFromResetPW) {
                     mmkv.remove(IS_FROM_RESET);
