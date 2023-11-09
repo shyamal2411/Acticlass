@@ -100,8 +100,8 @@ const GroupCard = ({navigation, item}) => {
         // Handle Delete Group action
 
         Alert.alert(
-          'Delete Group',
           'Do you want to delete this group?',
+          'This action will delete all the activities associated with this group.',
           [
             {
               text: 'Yes',
