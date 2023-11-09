@@ -2,8 +2,15 @@ import {StackActions} from '@react-navigation/native';
 import randomColor from 'randomcolor';
 import React, {useEffect} from 'react';
 import RBSheet from 'react-native-raw-bottom-sheet';
-
-import {StyleSheet, Text, View, Dimensions, ScrollView} from 'react-native';
+import {createTwoButtonAlert} from './twoButtonAlert';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  ScrollView,
+  Alert,
+} from 'react-native';
 import {
   Menu,
   MenuOption,
@@ -17,7 +24,7 @@ import {PubSubEvents, ROLES} from '../common/constants';
 import {navRef} from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-import {log} from 'console';
+import {Console, log} from 'console';
 import EditGroup from './EditGroup';
 import {result} from 'lodash';
 
@@ -91,22 +98,37 @@ const GroupCard = ({navigation, item}) => {
         break;
       case 'Delete Group':
         // Handle Delete Group action
-        groupServices.deleteGroup({groupId: item.id}, (err, res) => {
-          if (err) {
-            Snackbar.show({
-              text: err.msg,
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.danger,
-            });
-            return;
-          }
-          Snackbar.show({
-            text: res.msg,
-            duration: Snackbar.LENGTH_SHORT,
-            backgroundColor: colors.success,
-          });
-          PubSub.publish(PubSubEvents.OnGroupDeleted);
-        });
+
+        Alert.alert(
+          'Delete Group',
+          'Do you want to delete this group?',
+          [
+            {
+              text: 'Yes',
+              onPress: () => {
+                groupServices.deleteGroup({groupId: item.id}, (err, res) => {
+                  if (err) {
+                    Snackbar.show({
+                      text: err.msg,
+                      duration: Snackbar.LENGTH_SHORT,
+                      backgroundColor: colors.danger,
+                    });
+                    return;
+                  }
+                  Snackbar.show({
+                    text: res.msg,
+                    duration: Snackbar.LENGTH_SHORT,
+                    backgroundColor: colors.success,
+                  });
+                  PubSub.publish(PubSubEvents.OnGroupDeleted);
+                });
+              },
+              style: 'cancel',
+            },
+            {text: 'Cancel', onPress: () => {}},
+          ],
+          {cancelable: true},
+        );
         break;
       case 'Edit group':
         refRBSheet.current.open();
