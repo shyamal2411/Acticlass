@@ -28,6 +28,7 @@
     "randomcolor": "^0.6.2",
     "react": "18.2.0",
     "react-native": "0.72.5",
+    "react-native-elements": "^3.4.3",
     "react-native-gesture-handler": "^2.13.1",
     "react-native-mmkv": "^2.10.2",
     "react-native-permissions": "^3.10.1",
