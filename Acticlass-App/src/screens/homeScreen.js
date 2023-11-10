@@ -1,5 +1,5 @@
 import PubSub from 'pubsub-js';
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Dimensions,
   FlatList,
@@ -13,15 +13,17 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {colors} from '../common/colors';
-import {PubSubEvents, ROLES} from '../common/constants';
+import { colors } from '../common/colors';
+import { PubSubEvents, ROLES, USER } from '../common/constants';
 import CreateNewGroup from '../components/createNewGroupSheet';
 import GroupCard from '../components/groupCard';
 import Navbar from '../components/navBar';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
+import socketService from '../services/socketService';
+import { mmkv } from '../utils/MMKV';
 
-const HomeScreen = ({navigation}) => {
+const HomeScreen = ({ navigation }) => {
   const refRBSheet = React.createRef();
   const [groups, setGroups] = React.useState([]);
 
@@ -43,14 +45,19 @@ const HomeScreen = ({navigation}) => {
   useEffect(() => {
     refreshGroups();
     const tokens = [];
-    const events = [
-      PubSubEvents.ONAppComesToForeground,
-      PubSubEvents.OnGroupCreated,
-      PubSubEvents.OnGroupUpdated,
-      PubSubEvents.OnGroupDeleted,
-      PubSubEvents.OnGroupJoined,
-      PubSubEvents.OnGroupLeft,
-    ];
+    const user = mmkv.getObject(USER);
+    const userId = user.id;
+    const role = user.role;
+    data = { userId: userId, role: role };
+    socketService.startSession(data);
+    socketService.endSession(data);
+    socketService.joinSession(data);
+    socketService.leaveSession(data);
+    socketService.raiseRequest(data);
+    socketService.rejectRequest(data);
+    socketService.acceptRequest(data);
+    const events = [PubSubEvents.ONAppComesToForeground, PubSubEvents.OnGroupCreated, PubSubEvents.OnGroupUpdated, PubSubEvents.OnGroupDeleted,
+    PubSubEvents.OnGroupJoined, PubSubEvents.OnGroupLeft];
     events.forEach(event => {
       tokens.push(PubSub.subscribe(event, refreshGroups));
     });
@@ -64,14 +71,14 @@ const HomeScreen = ({navigation}) => {
       <Navbar title={'Home'}></Navbar>
       {groups.length > 0 ? (
         <FlatList
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           data={groups}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <GroupCard navigation={navigation} item={item} />
           )}
         />
       ) : (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text
             style={{
               fontSize: 24,

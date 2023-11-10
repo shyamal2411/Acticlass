@@ -1,20 +1,20 @@
-export const ROLES = {
+const ROLES = {
   STUDENT: 'Student',
   TEACHER: 'Teacher',
 };
 
 // MMKV
-export const MMKV_STORE_NAME = 'Acticlass_MMKV_Store';
-export const MMKV_ENC_KEY = 'Acticlass_MMKV_ENC_KEY';
+const MMKV_STORE_NAME = 'Acticlass_MMKV_Store';
+const MMKV_ENC_KEY = 'Acticlass_MMKV_ENC_KEY';
 
 // Auth Token
-export const AUTH_TOKEN = "Acticlass_AUTH_TOKEN";
-export const IS_FROM_RESET = "Acticlass_AUTH_IS_FROM_RESET";
-export const USER = "Acticlass_USER";
+const AUTH_TOKEN = "Acticlass_AUTH_TOKEN";
+const IS_FROM_RESET = "Acticlass_AUTH_IS_FROM_RESET";
+const USER = "Acticlass_USER";
 
-export const ATTENDANCE_FREQUENCY = ['0', '15', '30', '60'];
+const ATTENDANCE_FREQUENCY = ['0', '15', '30', '60'];
 
-export const PubSubEvents = {
+const PubSubEvents = {
   // App State
   ONAppGoToBackground: 'ONAppGoToBackground',
   ONAppComesToForeground: 'ONAppComesToForeground',
@@ -28,4 +28,47 @@ export const PubSubEvents = {
   OnGroupMemberAdded: 'OnGroupMemberAdded',
   OnGroupMemberRemoved: 'OnGroupMemberRemoved',
   OnGroupMemberUpdated: 'OnGroupMemberUpdated'
+}
+
+// Socket events
+const SOCKET_EVENTS = {
+
+  //Auth
+  CONNECTED: 'connected',
+  DISCONNECT: 'disconnect',
+
+  // outgoing events (client -> server)  
+  START_SESSION: 'StartSession',
+  JOIN_SESSION: 'JoinSession',
+  LEAVE_SESSION: 'LeaveSession',
+  END_SESSION: 'EndSession',
+  RAISE_REQUEST: 'RaiseRequest',
+  ACCEPT_REQUEST: 'AcceptRequest',
+  REJECT_REQUEST: 'RejectRequest',
+  LOCATION: 'Location',
+  ATTENDANCE: 'Attendance',
+
+  // incoming events (server -> client)
+  ON_SESSION_CREATED: 'sessionCreated',
+  ON_SESSION_JOINED: 'sessionJoined',
+  ON_SESSION_LEFT: 'sessionLeft',
+  ON_SESSION_DELETED: 'sessionDeleted',
+  ON_REQUEST_ACCEPTED: 'requestAccepted',
+  ON_REQUEST_REJECTED: 'requestRejected',
+  ON_REQUEST_RAISED: 'requestRaised',
+  ON_POINTS_UPDATED: 'pointsUpdated',
+  ON_LOCATION_REQUEST: 'locationRequest',
+  ON_CHECK_ATTENDANCE: 'checkAttendance',
+}
+
+module.exports = {
+  ROLES,
+  MMKV_STORE_NAME,
+  MMKV_ENC_KEY,
+  AUTH_TOKEN,
+  IS_FROM_RESET,
+  USER,
+  ATTENDANCE_FREQUENCY,
+  PubSubEvents,
+  SOCKET_EVENTS
 }
