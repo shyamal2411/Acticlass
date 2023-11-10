@@ -49,7 +49,7 @@ const HomeScreen = ({ navigation }) => {
     const user = mmkv.getObject(USER);
     const userId = user.id;
     const role = user.role;
-    data={userId:userId,role:role};
+    data={userId:userId,role:role,groupId:"6549bd1ecd2066db1bd22e4e"};
     socketService.startSession(data) ;
     socketService.endSession(data);
     socketService.joinSession(data);
