@@ -73,7 +73,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.START_SESSION, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Session Started ✅");
             } else {
@@ -90,7 +90,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.END_SESSION, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Session Ended ✅");
             } else {
@@ -107,7 +107,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.JOIN_SESSION, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Session Joined ✅");
             } else {
@@ -123,7 +123,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.LEAVE_SESSION, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Session Left ✅");
             } else {
@@ -139,7 +139,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.RAISE_REQUEST, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Request Raised ✅");
             } else {
@@ -155,7 +155,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.ACCEPT_REQUEST, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Request Accepted ✅");
             } else {
@@ -171,7 +171,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.REJECT_REQUEST, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Request Rejected ✅");
             } else {
@@ -187,7 +187,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.ACCEPT_REQUEST, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Request Accepted ✅");
             } else {
@@ -203,7 +203,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.LOCATION, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Location Sent ✅");
             } else {
@@ -219,7 +219,7 @@ class SocketService {
             if (socket) {
                 socket.emit(SOCKET_EVENTS.ATTENDANCE, data, (response) => {
                     // Handle the callback response here
-                    // console.log(this.tag,'registerForSocket response:', response);
+                    console.log(this.tag,'registerForSocket response:', response);
                 });
                 console.log(this.tag,"Attendance Sent ✅");
             } else {
