@@ -1,5 +1,5 @@
 import PubSub from 'pubsub-js';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -7,21 +7,21 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colors } from '../common/colors';
-import { PubSubEvents, ROLES } from '../common/constants';
+import {colors} from '../common/colors';
+import {PubSubEvents, ROLES} from '../common/constants';
 import CreateNewGroup from '../components/createNewGroupSheet';
 import GroupCard from '../components/groupCard';
 import Navbar from '../components/navBar';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({navigation}) => {
   const refRBSheet = React.createRef();
   const [groups, setGroups] = React.useState([]);
 
@@ -43,8 +43,14 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     refreshGroups();
     const tokens = [];
-    const events = [PubSubEvents.ONAppComesToForeground, PubSubEvents.OnGroupCreated, PubSubEvents.OnGroupUpdated, PubSubEvents.OnGroupDeleted,
-    PubSubEvents.OnGroupJoined, PubSubEvents.OnGroupLeft];
+    const events = [
+      PubSubEvents.ONAppComesToForeground,
+      PubSubEvents.OnGroupCreated,
+      PubSubEvents.OnGroupUpdated,
+      PubSubEvents.OnGroupDeleted,
+      PubSubEvents.OnGroupJoined,
+      PubSubEvents.OnGroupLeft,
+    ];
     events.forEach(event => {
       tokens.push(PubSub.subscribe(event, refreshGroups));
     });
@@ -58,12 +64,14 @@ const HomeScreen = ({ navigation }) => {
       <Navbar title={'Home'}></Navbar>
       {groups.length > 0 ? (
         <FlatList
-          style={{ width: '100%' }}
+          style={{width: '100%'}}
           data={groups}
-          renderItem={({ item }) => <GroupCard item={item} />}
+          renderItem={({item}) => (
+            <GroupCard navigation={navigation} item={item} />
+          )}
         />
       ) : (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text
             style={{
               fontSize: 24,
@@ -85,11 +93,15 @@ const HomeScreen = ({ navigation }) => {
             borderRadius: 50,
           }}
           onPress={() => {
-            (authService.getRole() == ROLES.TEACHER) ? refRBSheet.current.open() : handleScan()
+            authService.getRole() == ROLES.TEACHER
+              ? refRBSheet.current.open()
+              : handleScan();
           }}>
-          {(authService.getRole() == ROLES.TEACHER) ?
-            <FeatherIcon name="plus" size={32} color={colors.white} /> :
-            <AntDesignIcon name="scan1" size={32} color={colors.white} />}
+          {authService.getRole() == ROLES.TEACHER ? (
+            <FeatherIcon name="plus" size={32} color={colors.white} />
+          ) : (
+            <AntDesignIcon name="scan1" size={32} color={colors.white} />
+          )}
         </TouchableOpacity>
       </View>
       <RBSheet

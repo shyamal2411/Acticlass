@@ -61,6 +61,7 @@ const GroupCard = ({navigation, item}) => {
 
     switch (options[index]) {
       case 'Leader Board':
+        navigation.navigate('LeaderBoard');
         // Handle Leader Board action
         break;
       case 'Group Info':
@@ -79,7 +80,7 @@ const GroupCard = ({navigation, item}) => {
         break;
       case 'Leave Group':
         // Handle Leave Group action
-        groupServices.leaveGroup({groupId: item.id}, (err, res) => {
+        groupServices.leaveGroup(item.id, (err, res) => {
           if (err) {
             Snackbar.show({
               text: err.msg,
