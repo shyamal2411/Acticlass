@@ -20,6 +20,9 @@ import GroupCard from '../components/groupCard';
 import Navbar from '../components/navBar';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
+import socketService from '../services/socketService';
+import { mmkv } from '../utils/MMKV';
+import { USER } from '../common/constants';
 
 const HomeScreen = ({ navigation }) => {
   const refRBSheet = React.createRef();
@@ -43,6 +46,17 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     refreshGroups();
     const tokens = [];
+    const user = mmkv.getObject(USER);
+    const userId = user.id;
+    const role = user.role;
+    data={userId:userId,role:role};
+    socketService.startSession(data) ;
+    socketService.endSession(data);
+    socketService.joinSession(data);
+    socketService.leaveSession(data);
+    socketService.raiseRequest(data);
+    socketService.rejectRequest(data);
+    socketService.acceptRequest(data);
     const events = [PubSubEvents.ONAppComesToForeground, PubSubEvents.OnGroupCreated, PubSubEvents.OnGroupUpdated, PubSubEvents.OnGroupDeleted,
     PubSubEvents.OnGroupJoined, PubSubEvents.OnGroupLeft];
     events.forEach(event => {
