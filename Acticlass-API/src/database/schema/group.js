@@ -49,4 +49,14 @@ const groupSchema = new mongoose.Schema({
     },
 });
 
+// Delete all point buckets associated with this group
+groupSchema.pre('deleteOne', function (next) {
+    const groupId = this.getQuery()["_id"];
+    mongoose.model('pointBuckets').deleteMany({ group: groupId }).then((result) => {
+        next();
+    }).catch((err) => {
+        next(err);
+    });
+});
+
 module.exports = mongoose.model('groups', groupSchema);

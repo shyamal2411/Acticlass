@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { UserSchema } = require('../../../database');
+const { UserSchema, PointBucketSchema, GroupSchema } = require('../../../database');
 const { hash, compare } = require('../../../services/bcrypt');
 const { sendMail } = require('../../../services/nodeMailer');
 
@@ -173,12 +173,23 @@ const changePassword = async (req, res) => {
 
 // Function to delete a user's profile
 const deleteProfile = async (req, res) => {
-    const { email } = req.user;
+    const { email, _id, role } = req.user;
     if (!email) {
         return res.status(400).json({ msg: 'Email is required!' });
     }
-    UserSchema.deleteOne({ email }).then(() => {
-        return res.status(200).json({ msg: 'User deleted successfully' });
+    UserSchema.deleteOne({ email }).then(async () => {
+        if (role === Roles.STUDENT) {
+            PointBucketSchema.deleteMany({ user: _id }).then(() => {
+                return res.status(200).json({ msg: 'User deleted successfully' });
+            });
+        } else if (role === Roles.TEACHER) {
+            let ids = await GroupSchema.find({ createdBy: _id }).select('_id');
+            Promise.all([GroupSchema.deleteMany({ createdBy: _id }), PointBucketSchema.deleteMany({ group: { $in: ids } })]).then(() => {
+                return res.status(200).json({ msg: 'User deleted successfully' });
+            });
+        }
+    }).catch((err) => {
+        return res.status(500).json({ msg: 'Internal server error', err });
     });
 }
 

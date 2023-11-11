@@ -187,11 +187,6 @@ const deleteGroupById = async (req, res) => {
         }
         GroupSchema.deleteOne({ _id: groupId }).then(() => {
             //TODO: Send notification to all members of the group
-            PointBucketSchema.deleteMany({ groupId }).then(() => {
-                console.log("Point buckets deleted successfully.");
-            }).catch((error) => {
-                console.error("Error deleting point buckets: ", error);
-            });
             return res.status(200).json({ msg: 'Group deleted successfully.' });
         }).catch((error) => {
             console.error("Error deleting group: ", error);

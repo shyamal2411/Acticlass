@@ -7,12 +7,11 @@ import { mmkv } from '../utils/MMKV';
 
 const SplashScreen = ({ navigation }) => {
     useEffect(() => {
-        //TODO: check if user is logged in
         setTimeout(() => {
             const token = mmkv.getString(AUTH_TOKEN);
+            const user = mmkv.getObject(USER);
             const isFromResetPW = mmkv.getBoolean(IS_FROM_RESET) || false;
-            if (token && !isFromResetPW) {
-                const user = mmkv.getObject(USER);
+            if (token && user && !isFromResetPW) {
                 authService.setRole(user.role);
                 navigation.replace('AppStack');
             } else {
@@ -22,7 +21,7 @@ const SplashScreen = ({ navigation }) => {
                 }
                 navigation.replace('AuthStack');
             }
-        }, 1000);
+        }, 500);
     }, [navigation]);
 
     return (
