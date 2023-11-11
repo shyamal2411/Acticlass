@@ -227,12 +227,21 @@ const joinGroupById = async (req, res) => {
                 });
             }
             if (!pointBucket) {
-                PointBucketSchema({ user: user._id, group: groupId }).save().then(() => {
-                    return res.status(200).json({ msg: 'User joined successfully.' });
+                GroupSchema.findOne({ _id: groupId }).then((group) => {
+                    if (!group) {
+                        return res.status(404).json({ msg: 'Group not found.' });
+                    }
+                    PointBucketSchema({ user: user._id, group: groupId }).save().then(() => {
+                        return res.status(200).json({ msg: 'User joined successfully.' });
+                    }).catch((error) => {
+                        console.error("Error joining group: ", error);
+                        return res.status(500).json({ msg: 'Something went wrong.' });
+                    });
                 }).catch((error) => {
-                    console.error("Error joining group: ", error);
+                    console.error("Error joining a group: ", error);
                     return res.status(500).json({ msg: 'Something went wrong.' });
                 });
+
             }
         }).catch((error) => {
             console.error("Error joining a group: ", error);
