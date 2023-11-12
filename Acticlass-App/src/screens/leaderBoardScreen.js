@@ -1,10 +1,7 @@
 import {StackActions} from '@react-navigation/native';
 import randomColor from 'randomcolor';
-import React, {useEffect} from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import {createTwoButtonAlert} from './twoButtonAlert';
+import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
 import {
   TouchableOpacity,
   TextInput,
@@ -12,96 +9,114 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
-  ScrollView,
-  Alert,
 } from 'react-native';
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-import Snackbar from 'react-native-snackbar';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import {colors} from '../common/colors';
 import {PubSubEvents, ROLES} from '../common/constants';
-import {navRef} from '../navigation/navRef';
-import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-import {Console, log} from 'console';
-import {result} from 'lodash';
 import Navbar from '../components/navBar';
 import StudentCard from '../components/studentCard';
-import {Button, SearchBar} from 'react-native-elements';
-import {color} from 'react-native-elements/dist/helpers';
+import jsonQuery from 'json-query';
 
 const LeaderBoard = ({navigation}) => {
-  const [searchText, setSearchText] = React.useState('');
+  const [searchText, setSearchText] = useState('');
 
-  const mockStudents = [
-    {
-      rank: '1',
-      StudentName: 'Kuldeep',
-      Points: '100',
-      EmailId: 'abc@gmail.com',
-    },
-    {rank: '2', StudentName: 'Nisarg', Points: '200', EmailId: 'abc@gmail.com'},
-    {
-      rank: '3',
-      StudentName: 'Shyamal',
-      Points: '300',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '4',
-      StudentName: 'Venkata',
-      Points: '400',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '5',
-      StudentName: 'Vaibhav',
-      Points: '500',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '6',
-      StudentName: 'Darshit',
-      Points: '600',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '7',
-      StudentName: 'Bhautik',
-      Points: '700',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '8',
-      StudentName: 'Dhruvik',
-      Points: '800',
-      EmailId: 'abc@gmail.com',
-    },
-    {rank: '9', StudentName: 'Jeet', Points: '900', EmailId: 'abc@gmail.com'},
-    {rank: '10', StudentName: 'Rushi', Points: '800', EmailId: 'abc@gmail.com'},
-    {
-      rank: '11',
-      StudentName: 'Drashti',
-      Points: '700',
-      EmailId: 'abc@gmail.com',
-    },
-    {rank: '12', StudentName: 'Yash', Points: '600', EmailId: 'abc@gmail.com'},
-  ];
-  const [students, setStudents] = React.useState(mockStudents);
+  // const mockStudents = [
+  //   {
+  //     rank: '1',
+  //     StudentName: 'Kuldeep',
+  //     Points: '100',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {rank: '2', StudentName: 'Nisarg', Points: '200', EmailId: 'abc@gmail.com'},
+  //   {
+  //     rank: '3',
+  //     StudentName: 'Shyamal',
+  //     Points: '300',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {
+  //     rank: '4',
+  //     StudentName: 'Venkata',
+  //     Points: '400',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {
+  //     rank: '5',
+  //     StudentName: 'Vaibhav',
+  //     Points: '500',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {
+  //     rank: '6',
+  //     StudentName: 'Darshit',
+  //     Points: '600',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {
+  //     rank: '7',
+  //     StudentName: 'Bhautik',
+  //     Points: '700',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {
+  //     rank: '8',
+  //     StudentName: 'Dhruvik',
+  //     Points: '800',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {rank: '9', StudentName: 'Jeet', Points: '900', EmailId: 'abc@gmail.com'},
+  //   {rank: '10', StudentName: 'Rushi', Points: '800', EmailId: 'abc@gmail.com'},
+  //   {
+  //     rank: '11',
+  //     StudentName: 'Drashti',
+  //     Points: '700',
+  //     EmailId: 'abc@gmail.com',
+  //   },
+  //   {rank: '12', StudentName: 'Yash', Points: '600', EmailId: 'abc@gmail.com'},
+  // ];
+  const [students, setStudents] = useState(members);
 
   updateSearch = searchText => {
     setSearchText(searchText);
   };
 
-  handleSearch = () => {
-    console.log(searchText);
+  const [members, setMembers] = useState([]);
+  const refreshMembers = () => {
+    groupServices.getMembers(groupId, (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        // TODO: short members by points
+        setMembers(res.members);
+        console.log(res, '  res');
+        console.log(res.members, '  members');
+      }
+    });
+    setMembers(groupMembersData);
   };
+  useEffect(() => {
+    refreshMembers();
+    const tokens = [];
+    const events = [
+      PubSubEvents.ONAppComesToForeground,
+      PubSubEvents.OnGroupJoined,
+      PubSubEvents.OnGroupLeft,
+    ];
+    events.forEach(event => {
+      tokens.push(PubSub.subscribe(event, refreshMembers));
+    });
+    return () => {
+      tokens.forEach(token => PubSub.unsubscribe(token));
+    };
+  }, []);
+
+  if (searchText.trim() === '') {
+    setStudents(members);
+  } else {
+    const query = `[name~*${searchText}]|[email~*${searchText}]`;
+    const result = jsonQuery(query, {data: members}).value;
+    setStudents(result);
+  }
 
   return (
     <View style={styles.container}>

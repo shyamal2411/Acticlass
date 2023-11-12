@@ -1,35 +1,44 @@
 import {StackActions} from '@react-navigation/native';
 import randomColor from 'randomcolor';
-import React, {useEffect} from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import React from 'react';
 import {createTwoButtonAlert} from './twoButtonAlert';
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-import Snackbar from 'react-native-snackbar';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+import {TouchableOpacity, StyleSheet, Text, View} from 'react-native';
 import {colors} from '../common/colors';
 import {PubSubEvents, ROLES} from '../common/constants';
-import {navRef} from '../navigation/navRef';
 import authService from '../services/authService';
-import groupServices from '../services/groupServices';
-import {Console, log} from 'console';
-import EditGroup from './EditGroup';
-import {result} from 'lodash';
+
+import jsonQuery from 'json-query';
 
 const StudentCard = ({navigation, item}) => {
+  // const [members, setMembers] = React.useState([]);
+  // const refreshMembers = () => {
+  //   groupServices.getMembers(groupId, (err, res) => {
+  //     if (err) {
+  //       console.error(err);
+  //     } else {
+  //       // TODO: short members by points
+  //       setMembers(res.members);
+  //       console.log(res, '  res');
+  //       console.log(res.members, '  members');
+  //     }
+  //   });
+  //   setMembers(groupMembersData);
+  // };
+  // useEffect(() => {
+  //   refreshMembers();
+  //   const tokens = [];
+  //   const events = [
+  //     PubSubEvents.ONAppComesToForeground,
+  //     PubSubEvents.OnGroupJoined,
+  //     PubSubEvents.OnGroupLeft,
+  //   ];
+  //   events.forEach(event => {
+  //     tokens.push(PubSub.subscribe(event, refreshMembers));
+  //   });
+  //   return () => {
+  //     tokens.forEach(token => PubSub.unsubscribe(token));
+  //   };
+  // }, []);
   return (
     <View
       style={[
