@@ -24,11 +24,7 @@ import { PubSubEvents, ROLES } from '../common/constants';
 import { navRef } from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-<<<<<<< Acticlass-App/src/components/groupCard.js
 import EditGroup from './editGroup';
-=======
-import EditGroup from './EditGroup';
->>>>>>> Acticlass-App/src/components/groupCard.js
 
 const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
 
@@ -70,7 +66,7 @@ const GroupCard = ({ navigation, item }) => {
     switch (options[index]) {
       case 'Leader Board':
         navRef.current.dispatch(
-          StackActions.push('LeaderBoard', {groupId: item.id}),
+          StackActions.push('LeaderBoard', { groupId: item.id }),
         );
         break;
       case 'Group Info':
