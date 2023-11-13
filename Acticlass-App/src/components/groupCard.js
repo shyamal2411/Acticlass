@@ -1,15 +1,13 @@
-import {StackActions} from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 import randomColor from 'randomcolor';
-import React, {useEffect} from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import {createTwoButtonAlert} from './twoButtonAlert';
+import React from 'react';
 import {
+  Alert,
+  Dimensions,
+  ScrollView,
   StyleSheet,
   Text,
   View,
-  Dimensions,
-  ScrollView,
-  Alert,
 } from 'react-native';
 import {
   Menu,
@@ -17,16 +15,15 @@ import {
   MenuOptions,
   MenuTrigger,
 } from 'react-native-popup-menu';
+import RBSheet from 'react-native-raw-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import {colors} from '../common/colors';
-import {PubSubEvents, ROLES} from '../common/constants';
-import {navRef} from '../navigation/navRef';
+import { colors } from '../common/colors';
+import { PubSubEvents, ROLES } from '../common/constants';
+import { navRef } from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-import {Console, log} from 'console';
 import EditGroup from './EditGroup';
-import {result} from 'lodash';
 
 const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
 
@@ -50,7 +47,7 @@ const groupNameInitials = groupName => {
   return groupName[0][0];
 };
 
-const GroupCard = ({navigation, item}) => {
+const GroupCard = ({ navigation, item }) => {
   const refRBSheet = React.createRef();
 
   const options =
@@ -61,8 +58,7 @@ const GroupCard = ({navigation, item}) => {
 
     switch (options[index]) {
       case 'Leader Board':
-        navigation.navigate('LeaderBoard');
-        // Handle Leader Board action
+        navRef.current.dispatch(StackActions.push('LeaderBoard', { groupId: item.id }));
         break;
       case 'Group Info':
         // Handle Group Info action
@@ -107,7 +103,7 @@ const GroupCard = ({navigation, item}) => {
             {
               text: 'Yes',
               onPress: () => {
-                groupServices.deleteGroup({groupId: item.id}, (err, res) => {
+                groupServices.deleteGroup({ groupId: item.id }, (err, res) => {
                   if (err) {
                     Snackbar.show({
                       text: err.msg,
@@ -126,9 +122,9 @@ const GroupCard = ({navigation, item}) => {
               },
               style: 'cancel',
             },
-            {text: 'Cancel', onPress: () => {}},
+            { text: 'Cancel', onPress: () => { } },
           ],
-          {cancelable: true},
+          { cancelable: true },
         );
         break;
       case 'Edit group':
@@ -147,7 +143,7 @@ const GroupCard = ({navigation, item}) => {
         styles.container,
         {
           shadowColor: colors.placeholder,
-          shadowOffset: {width: 0, height: 8},
+          shadowOffset: { width: 0, height: 8 },
           shadowOpacity: 0.5,
           shadowRadius: 3.84,
           elevation: 5,
@@ -215,10 +211,10 @@ const GroupCard = ({navigation, item}) => {
               }}>
               {item.name}
             </Text>
-            <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
+            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
               Passing Points: {item.passingPoints}
             </Text>
-            <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
+            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
               Radius: {item.radius}
             </Text>
           </View>
@@ -242,7 +238,7 @@ const GroupCard = ({navigation, item}) => {
                 {options.map((option, index) => (
                   <MenuOption
                     key={index}
-                    customStyles={{optionText: styles.menuText}}
+                    customStyles={{ optionText: styles.menuText }}
                     text={option}
                     onSelect={() => handleOnMore(index)}
                   />
