@@ -47,105 +47,87 @@ const StudentCard = ({navigation, item, groupId}) => {
   };
 
   return (
-    <View
-      style={[
-        styles.container,
-        {
-          shadowColor: colors.placeholder,
-          shadowOffset: {width: 0, height: 8},
-          shadowOpacity: 0.5,
-          shadowRadius: 3.84,
-          elevation: 5,
-          borderRadius: 10,
-          marginHorizontal: 30,
-          backgroundColor: colors.secondary,
-          height: 72,
-          marginTop: 16,
-        },
-      ]}>
-      <View style={styles.rectangle1}>
+    <View style={styles.rectangle}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '100%',
+        }}>
         <View
           style={{
-            flexDirection: 'row',
+            width: 50,
+            height: 50,
+            marginLeft: 14,
+            flexDirection: 'column',
+            backgroundColor: item.color,
             alignItems: 'center',
-            justifyContent: 'space-between',
-            height: '100%',
+            justifyContent: 'center',
+            borderRadius: 25,
           }}>
-          <View
+          <Text style={{fontSize: 16}}>{item.index}</Text>
+        </View>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '100%',
+        }}>
+        <View
+          style={{
+            marginLeft: 14,
+            marginVertical: 16,
+            flexDirection: 'column',
+          }}>
+          <Text style={{fontSize: 14, fontWeight: '400', color: colors.black}}>
+            {item.name}
+          </Text>
+          <Text
             style={{
-              width: 50,
-              height: 50,
-              marginLeft: 14,
-              flexDirection: 'column',
-              backgroundColor: item.color,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 25,
+              fontSize: 12,
+              fontWeight: '300',
+              marginTop: 12,
+              color: colors.black,
             }}>
-            <Text style={{fontSize: 16}}>{item.index}</Text>
-          </View>
+            {item.email}
+          </Text>
         </View>
         <View
           style={{
-            flex: 1,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            height: '100%',
+            display: 'flex',
+            justifyContent: 'flex-end',
+            flexDirection: 'column',
           }}>
-          <View
+          <Text
             style={{
-              marginLeft: 14,
-              marginVertical: 16,
-              flexDirection: 'column',
+              fontSize: 14,
+              fontWeight: '400',
+              textAlign: 'right',
+              marginRight: 16,
+              marginBottom: isStudent ? 29 : 13,
+              color: colors.black,
             }}>
-            <Text
-              style={{fontSize: 14, fontWeight: '400', color: colors.black}}>
-              {item.name}
-            </Text>
-            <Text
-              style={{
-                fontSize: 12,
-                fontWeight: '300',
-                marginTop: 12,
-                color: colors.black,
-              }}>
-              {item.email}
-            </Text>
-          </View>
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              flexDirection: 'column',
-            }}>
-            <Text
-              style={{
-                fontSize: 14,
-                fontWeight: '400',
-                textAlign: 'right',
-                marginRight: 16,
-                marginBottom: isStudent ? 29 : 13,
-                color: colors.black,
-              }}>
-              {item.points} points
-            </Text>
-            {authService.getRole() == ROLES.TEACHER && (
-              <TouchableOpacity onPress={handleRemove}>
-                <Text
-                  style={{
-                    color: colors.danger,
-                    textAlign: 'right',
-                    marginRight: 16,
-                    //marginTop: 4,
-                    fontSize: 14,
-                    fontWeight: '400',
-                  }}>
-                  Remove
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
+            {item.points} points
+          </Text>
+          {authService.getRole() == ROLES.TEACHER && (
+            <TouchableOpacity onPress={handleRemove}>
+              <Text
+                style={{
+                  color: colors.danger,
+                  textAlign: 'right',
+                  marginRight: 16,
+                  //marginTop: 4,
+                  fontSize: 14,
+                  fontWeight: '400',
+                }}>
+                Remove
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     </View>
@@ -163,15 +145,15 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     marginLeft: 4,
   },
-  rectangle1: {
+  rectangle: {
     display: 'flex',
-    height: '100%',
+    height: '72',
     maxHeight: '100%',
-    width: '100%',
     flexDirection: 'row',
     backgroundColor: colors.secondary,
     borderRadius: 10,
-    //marginVertical: 10,
+    marginTop: 16,
+    marginHorizontal: 30,
     maxWidth: '100%',
     shadowColor: colors.placeholder,
     shadowOffset: {width: 0, height: 8},
