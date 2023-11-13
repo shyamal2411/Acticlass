@@ -1,69 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
+  View
 } from 'react-native';
 
-import {colors} from '../common/colors';
+import { colors } from '../common/colors';
 import Navbar from '../components/navBar';
 
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import authService from '../services/authService';
-import {PubSubEvents, ROLES} from '../common/constants';
 import AntDesignIcon from 'react-native-vector-icons/Ionicons';
-import {NavigationContainer} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { ROLES } from '../common/constants';
+import authService from '../services/authService';
 
-const handleSubmit = values => {};
-
-const groupScreen = ({route}) => {
+const GroupScreen = ({ route }) => {
   //const {groupName} = route.params;
+  const [isSessionStarted, setIsSessionStarted] = useState(false);
+
+  const handleSubmit = () => {
+
+  }
 
   return (
-    <View>
+    <View style={styles.container}>
       <Navbar
         prefixIcon={true}
         title="Group Name"
-        suffix={
-          <TouchableOpacity style={{margin: 10}}>
-            <Icon name="ellipsis-v" size={50} color={colors.white} />
-          </TouchableOpacity>
-        }
       />
-      <View style={{backgroundColor: 'grey', width: '100%', height: 30}}>
+      <View style={{ alignItems: 'center', backgroundColor: colors.inactive, width: '100%', height: 40, flexDirection: 'row' }}>
         <Text
           style={{
-            fontSize: 18,
+            flex: 1,
+            marginLeft: 34,
+            fontSize: 14,
             fontWeight: '400',
             color: colors.white,
           }}>
           Session has started.
         </Text>
-
         <TouchableOpacity
-          style={[styles.button, {alignSelf: 'flex-end'}]}
+          style={[styles.button]}
           onPress={handleSubmit}>
           <Text style={styles.buttonText}>Join</Text>
         </TouchableOpacity>
       </View>
-      <ScrollView>
-        <View style={styles.container}>
-          <View
-            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-            <Text
-              style={{
-                fontSize: 24,
-                fontWeight: '600',
-                color: colors.placeholder,
-              }}>
-              No Conversation
-            </Text>
-          </View>
+      {/* //TODO: Add group Conversation */}
+      {isSessionStarted ? null :
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text
+            style={{
+              fontSize: 24,
+              fontWeight: '600',
+              color: colors.placeholder,
+            }}>
+            No Conversation.
+          </Text>
         </View>
-      </ScrollView>
+      }
       <View style={styles.fab}>
         <TouchableOpacity
           style={{
@@ -79,12 +72,10 @@ const groupScreen = ({route}) => {
               ? refRBSheet.current.open()
               : handleScan();
           }}>
-          {authService.getRole() == ROLES.STUDENT ? (
-            <FeatherIcon name="plus" size={45} color={colors.white} />
-          ) : (
+          {authService.getRole() == ROLES.STUDENT && (
             <AntDesignIcon
-              name="hand-left-outline"
-              size={35}
+              name="hand-left"
+              size={24}
               color={colors.white}
             />
           )}
@@ -129,24 +120,22 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   fab: {
-    position: 'relative',
-    right: -320,
-    bottom: -670,
+    position: 'absolute',
+    right: 36,
+    bottom: 36,
   },
   button: {
+    marginRight: 16,
     backgroundColor: colors.primary,
-    width: '20%',
-    height: 20,
-    marginTop: '-5%',
     borderRadius: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
+    paddingHorizontal: 20,
+    paddingVertical: 4
   },
 });
 
-export default groupScreen;
+export default GroupScreen;

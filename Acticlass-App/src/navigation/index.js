@@ -1,9 +1,8 @@
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
 import splashScreen from '../screens/splashScreen';
-import authStack from './authStack';
 import appStack from './appStack';
-import groupScreen from '../screens/groupScreen';
+import authStack from './authStack';
 
 const Stack = createStackNavigator();
 
