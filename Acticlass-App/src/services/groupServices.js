@@ -13,7 +13,6 @@ class groupService {
   /**
    *
    * @param {String} name
-   * @param {String} institute
    * @param {Integer} radius
    * @param {Integer} passingPoints
    * @param {Integer} attendanceFrequency
@@ -103,8 +102,8 @@ class groupService {
   /**
    *
    * Get ID of the group
-   * @param {Function} cb
    * @param {String} groupId
+   * @param {Function} cb
    */
   getGroupById(groupId, cb) {
     api({url: `${endpoints.getGroupById}/${groupId}`, method: 'GET'})
@@ -152,8 +151,8 @@ class groupService {
 
   /**
    *
+   * @param {string} groupId
    * @param {String} name
-   * @param {String} institute
    * @param {Integer} radius
    * @param {Integer} passingPoints
    * @param {Integer} attendanceFrequency
@@ -224,11 +223,15 @@ class groupService {
   }
   /**
    *
-   * @param {{email:String,password:String}} data
+   * @param {{groupId:String,userId:String}} data
    * @param {Function} cb
    */
-  kickUser({userId}, cb) {
-    api({url: endpoints.kickUser, method: 'POST', data: {userId}})
+  kickUser({userId, groupId}, cb) {
+    api({
+      url: `${endpoints.kickUser}/${groupId}`,
+      method: 'POST',
+      data: {userId},
+    })
       .then(res => {
         console.log(this.tag, '[kickUser]', 'user kicked successful!');
         if (cb != null) {

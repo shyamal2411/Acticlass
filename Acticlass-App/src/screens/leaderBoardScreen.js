@@ -1,124 +1,87 @@
-import {StackActions} from '@react-navigation/native';
 import randomColor from 'randomcolor';
-import React, {useEffect} from 'react';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import {createTwoButtonAlert} from './twoButtonAlert';
+import React, {useEffect, useState} from 'react';
+import {FlatList, StyleSheet, Text, TextInput, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import {
-  TouchableOpacity,
-  TextInput,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ScrollView,
-  Alert,
-} from 'react-native';
-import {
-  Menu,
-  MenuOption,
-  MenuOptions,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-import Snackbar from 'react-native-snackbar';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import {colors} from '../common/colors';
-import {PubSubEvents, ROLES} from '../common/constants';
-import {navRef} from '../navigation/navRef';
-import authService from '../services/authService';
-import groupServices from '../services/groupServices';
-import {Console, log} from 'console';
-import {result} from 'lodash';
+import {PubSubEvents} from '../common/constants';
 import Navbar from '../components/navBar';
 import StudentCard from '../components/studentCard';
-import {Button, SearchBar} from 'react-native-elements';
-import {color} from 'react-native-elements/dist/helpers';
+import groupServices from '../services/groupServices';
 
-const LeaderBoard = ({navigation}) => {
-  const [searchText, setSearchText] = React.useState('');
+const LeaderBoard = ({navigation, route}) => {
+  const {groupId} = route.params;
+  const [searchText, setSearchText] = useState('');
+  const [leaderBoardData, setLeaderBoardData] = useState([]);
+  const [students, setStudents] = useState([]);
+  useEffect(() => {
+    let text = searchText.trim().toLowerCase();
+    if (text === '') {
+      setStudents(leaderBoardData);
+    } else {
+      const result = leaderBoardData.filter(
+        student =>
+          student.name.toLowerCase().includes(text) ||
+          student.email.toLowerCase().includes(text),
+      );
+      setStudents(result);
+    }
+  }, [searchText]);
 
-  const mockStudents = [
-    {
-      rank: '1',
-      StudentName: 'Kuldeep',
-      Points: '100',
-      EmailId: 'abc@gmail.com',
-    },
-    {rank: '2', StudentName: 'Nisarg', Points: '200', EmailId: 'abc@gmail.com'},
-    {
-      rank: '3',
-      StudentName: 'Shyamal',
-      Points: '300',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '4',
-      StudentName: 'Venkata',
-      Points: '400',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '5',
-      StudentName: 'Vaibhav',
-      Points: '500',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '6',
-      StudentName: 'Darshit',
-      Points: '600',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '7',
-      StudentName: 'Bhautik',
-      Points: '700',
-      EmailId: 'abc@gmail.com',
-    },
-    {
-      rank: '8',
-      StudentName: 'Dhruvik',
-      Points: '800',
-      EmailId: 'abc@gmail.com',
-    },
-    {rank: '9', StudentName: 'Jeet', Points: '900', EmailId: 'abc@gmail.com'},
-    {rank: '10', StudentName: 'Rushi', Points: '800', EmailId: 'abc@gmail.com'},
-    {
-      rank: '11',
-      StudentName: 'Drashti',
-      Points: '700',
-      EmailId: 'abc@gmail.com',
-    },
-    {rank: '12', StudentName: 'Yash', Points: '600', EmailId: 'abc@gmail.com'},
-  ];
-  const [students, setStudents] = React.useState(mockStudents);
-
-  updateSearch = searchText => {
-    setSearchText(searchText);
+  const refreshMembers = () => {
+    groupServices.getMembers(groupId, (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        let data = res.members.sort((a, b) => b.points - a.points);
+        data = data.map((student, index) => {
+          student.color = randomColor({
+            luminosity: 'dark',
+            format: 'rgba',
+            alpha: 0.5,
+          });
+          student.index = index + 1;
+          return student;
+        });
+        setLeaderBoardData(data);
+        setStudents(data);
+      }
+    });
   };
 
-  handleSearch = () => {
-    console.log(searchText);
-  };
+  useEffect(() => {
+    refreshMembers();
+    const tokens = [];
+    const events = [
+      PubSubEvents.ONAppComesToForeground,
+      PubSubEvents.OnGroupJoined,
+      PubSubEvents.OnGroupLeft,
+      PubSubEvents.OnGroupMemberKicked,
+    ];
+    events.forEach(event => {
+      tokens.push(PubSub.subscribe(event, refreshMembers));
+    });
+    return () => {
+      tokens.forEach(token => PubSub.unsubscribe(token));
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
       <Navbar prefixIcon={true} title={'LeaderBoard'}></Navbar>
-
       <View style={styles.searchContainer}>
-        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
+        <Icon
+          name="search"
+          size={24}
+          color={colors.placeholder}
+          style={styles.searchIcon}
+        />
         <TextInput
           style={styles.input}
+          value={searchText}
           placeholderTextColor={colors.placeholder}
           placeholder="Search by name or email"
-          onChangeText={updateSearch}
-          value={searchText}
+          onChangeText={setSearchText}
         />
-        <TouchableOpacity style={styles.button} onPress={handleSearch}>
-          <Text style={{fontSize: 16, color: colors.white}}>Search</Text>
-        </TouchableOpacity>
       </View>
 
       {students.length > 0 ? (
@@ -126,7 +89,11 @@ const LeaderBoard = ({navigation}) => {
           style={{width: '100%'}}
           data={students}
           renderItem={({item}) => (
-            <StudentCard navigation={navigation} item={item} />
+            <StudentCard
+              navigation={navigation}
+              item={item}
+              groupId={groupId}
+            />
           )}
         />
       ) : (

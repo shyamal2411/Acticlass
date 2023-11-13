@@ -24,7 +24,7 @@ import { PubSubEvents, ROLES } from '../common/constants';
 import { navRef } from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-import EditGroup from './EditGroup';
+import EditGroup from './editGroup';
 
 const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
 
@@ -65,8 +65,9 @@ const GroupCard = ({ navigation, item }) => {
 
     switch (options[index]) {
       case 'Leader Board':
-        navigation.navigate('LeaderBoard');
-        // Handle Leader Board action
+        navRef.current.dispatch(
+          StackActions.push('LeaderBoard', { groupId: item.id }),
+        );
         break;
       case 'Group Info':
         // Handle Group Info action
