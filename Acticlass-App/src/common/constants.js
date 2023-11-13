@@ -8,6 +8,7 @@ const MMKV_STORE_NAME = 'Acticlass_MMKV_Store';
 const MMKV_ENC_KEY = 'Acticlass_MMKV_ENC_KEY';
 
 // Auth Token
+
 const AUTH_TOKEN = "Acticlass_AUTH_TOKEN";
 const IS_FROM_RESET = "Acticlass_AUTH_IS_FROM_RESET";
 const USER = "Acticlass_USER";
@@ -27,7 +28,8 @@ const PubSubEvents = {
   OnGroupLeft: 'OnGroupLeft',
   OnGroupMemberAdded: 'OnGroupMemberAdded',
   OnGroupMemberRemoved: 'OnGroupMemberRemoved',
-  OnGroupMemberUpdated: 'OnGroupMemberUpdated'
+  OnGroupMemberUpdated: 'OnGroupMemberUpdated',
+  OnGroupMemberKicked: 'OnGroupMemberKicked',
 }
 
 // Socket events

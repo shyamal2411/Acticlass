@@ -209,31 +209,44 @@ const joinGroupById = async (req, res) => {
         return res.status(400).json({ msg: 'Group id is required.' });
     }
 
-    PointBucketSchema.findOne({ user: user._id, group: groupId }).then((pointBucket) => {
-        if (pointBucket && pointBucket.isActive) {
-            return res.status(400).json({ msg: 'User already joined the group.' });
-        }
-        if (pointBucket && !pointBucket.isActive) {
-            pointBucket.isActive = true;
-            pointBucket.save().then(() => {
-                return res.status(200).json({ msg: 'User joined successfully.' });
-            }).catch((error) => {
-                console.error("Error joining group: ", error);
-                return res.status(500).json({ msg: 'Something went wrong.' });
-            });
-        }
-        if (!pointBucket) {
-            PointBucketSchema({ user: user._id, group: groupId }).save().then(() => {
-                return res.status(200).json({ msg: 'User joined successfully.' });
-            }).catch((error) => {
-                console.error("Error joining group: ", error);
-                return res.status(500).json({ msg: 'Something went wrong.' });
-            });
-        }
-    }).catch((error) => {
-        console.error("Error joining a group: ", error);
-        return res.status(500).json({ msg: 'Something went wrong.' });
-    });
+    PointBucketSchema.findOne({ user: user._id, group: groupId }).populate('group').
+        then((pointBucket) => {
+            if (pointBucket && !pointBucket.group) {
+                return res.status(404).json({ msg: 'Group not found.' });
+            }
+            if (pointBucket && pointBucket.isActive) {
+                return res.status(400).json({ msg: 'User already joined the group.' });
+            }
+            if (pointBucket && !pointBucket.isActive) {
+                pointBucket.isActive = true;
+                pointBucket.save().then(() => {
+                    return res.status(200).json({ msg: 'User joined successfully.' });
+                }).catch((error) => {
+                    console.error("Error joining group: ", error);
+                    return res.status(500).json({ msg: 'Something went wrong.' });
+                });
+            }
+            if (!pointBucket) {
+                GroupSchema.findOne({ _id: groupId }).then((group) => {
+                    if (!group) {
+                        return res.status(404).json({ msg: 'Group not found.' });
+                    }
+                    PointBucketSchema({ user: user._id, group: groupId }).save().then(() => {
+                        return res.status(200).json({ msg: 'User joined successfully.' });
+                    }).catch((error) => {
+                        console.error("Error joining group: ", error);
+                        return res.status(500).json({ msg: 'Something went wrong.' });
+                    });
+                }).catch((error) => {
+                    console.error("Error joining a group: ", error);
+                    return res.status(500).json({ msg: 'Something went wrong.' });
+                });
+
+            }
+        }).catch((error) => {
+            console.error("Error joining a group: ", error);
+            return res.status(500).json({ msg: 'Something went wrong.' });
+        });
 }
 
 const leaveGroupById = async (req, res) => {

@@ -7,6 +7,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import {
@@ -23,7 +24,11 @@ import { PubSubEvents, ROLES } from '../common/constants';
 import { navRef } from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
+<<<<<<< Acticlass-App/src/components/groupCard.js
 import EditGroup from './EditGroup';
+=======
+import EditGroup from './editGroup';
+>>>>>>> Acticlass-App/src/components/groupCard.js
 
 const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
 
@@ -55,13 +60,20 @@ const GroupCard = ({ navigation, item }) => {
   const options =
     authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
+  const handleCardPress = () => {
+    navRef.current.dispatch(
+      StackActions.push('GroupScreen', {
+        group: item,
+      }))
+  }
   const handleOnMore = index => {
     console.log('Selected option: ' + options[index]);
 
     switch (options[index]) {
       case 'Leader Board':
-        navigation.navigate('LeaderBoard');
-        // Handle Leader Board action
+        navRef.current.dispatch(
+          StackActions.push('LeaderBoard', { groupId: item.id }),
+        );
         break;
       case 'Group Info':
         // Handle Group Info action
@@ -141,6 +153,7 @@ const GroupCard = ({ navigation, item }) => {
   };
 
   return (
+<<<<<<< Acticlass-App/src/components/groupCard.js
     <View
       style={[
         styles.container,
@@ -157,14 +170,25 @@ const GroupCard = ({ navigation, item }) => {
           marginVertical: 16,
         },
       ]}>
+=======
+    <TouchableOpacity onPress={handleCardPress}>
+>>>>>>> Acticlass-App/src/components/groupCard.js
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          width: '100%',
-          height: '100%',
-        }}>
+        style={[
+          styles.container,
+          {
+            shadowColor: colors.placeholder,
+            shadowOffset: { width: 0, height: 8 },
+            shadowOpacity: 0.5,
+            shadowRadius: 3.84,
+            elevation: 5,
+            borderRadius: 10,
+            marginHorizontal: 30,
+            backgroundColor: colors.secondary,
+            height: 100,
+            marginVertical: 16,
+          },
+        ]}>
         <View
           style={{
             flexDirection: 'row',
@@ -175,43 +199,28 @@ const GroupCard = ({ navigation, item }) => {
           }}>
           <View
             style={{
-              width: 60,
-              height: 60,
-              marginVertical: 20,
-              marginLeft: 20,
-              backgroundColor: randomColor({
-                luminosity: 'dark',
-                format: 'rgba',
-                alpha: 0.5,
-              }),
+              flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 4,
-            }}>
-            <Text
-              style={{
-                fontSize: 28,
-                fontWeight: '600',
-                color: colors.white,
-              }}>
-              {groupNameInitials(item.name)}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: 'column',
-              alignItems: 'flex-start',
+              justifyContent: 'space-between',
               width: '100%',
               height: '100%',
             }}>
-            <Text
+            <View
               style={{
-                fontSize: 16,
-                fontWeight: '500',
-                color: colors.black,
-                marginLeft: 16,
-                marginTop: 20,
+                width: 60,
+                height: 60,
+                marginVertical: 20,
+                marginLeft: 20,
+                backgroundColor: randomColor({
+                  luminosity: 'dark',
+                  format: 'rgba',
+                  alpha: 0.5,
+                }),
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 4,
               }}>
+<<<<<<< Acticlass-App/src/components/groupCard.js
               {item.name}
             </Text>
             <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
@@ -244,54 +253,113 @@ const GroupCard = ({ navigation, item }) => {
                     customStyles={{ optionText: styles.menuText }}
                     text={option}
                     onSelect={() => handleOnMore(index)}
+=======
+              <Text
+                style={{
+                  fontSize: 28,
+                  fontWeight: '600',
+                  color: colors.white,
+                }}>
+                {groupNameInitials(item.name)}
+              </Text>
+            </View>
+            <View
+              style={{
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                width: '100%',
+                height: '100%',
+              }}>
+              <Text
+                style={{
+                  fontSize: 16,
+                  fontWeight: '500',
+                  color: colors.black,
+                  marginLeft: 16,
+                  marginTop: 20,
+                }}>
+                {item.name}
+              </Text>
+              <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
+                Passing Points: {item.passingPoints}
+              </Text>
+              <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
+                Radius: {item.radius}
+              </Text>
+            </View>
+            <View
+              style={{
+                position: 'absolute',
+                right: 15,
+                top: 15,
+                justifyContent: 'center',
+                alignItems: 'flex-end',
+              }}>
+              <Menu>
+                <MenuTrigger>
+                  <FeatherIcon
+                    name="more-horizontal"
+                    size={24}
+                    color={colors.inactive}
+>>>>>>> Acticlass-App/src/components/groupCard.js
                   />
-                ))}
-              </MenuOptions>
-            </Menu>
+                </MenuTrigger>
+                <MenuOptions>
+                  {options.map((option, index) => (
+                    <MenuOption
+                      key={index}
+                      customStyles={{ optionText: styles.menuText }}
+                      text={option}
+                      onSelect={() => handleOnMore(index)}
+                    />
+                  ))}
+                </MenuOptions>
+              </Menu>
 
-            <RBSheet
-              ref={refRBSheet}
-              closeOnDragDown={true}
-              closeOnPressMask={true}
-              customStyles={{
-                container: {
-                  borderRadius: 10,
-                  elevation: 20,
-                  backgroundColor: colors.secondary,
-                },
-                wrapper: {
-                  backgroundColor: 'rgba(0,0,0,0.2)',
-                },
-                draggableIcon: {
-                  backgroundColor: colors.placeholder,
-                },
-              }}
-              height={Dimensions.get('window').height * 0.85}
-              animationType="slide">
-              <ScrollView>
-                <EditGroup
-                  group={item}
-                  cb={(err, res) => {
-                    refRBSheet.current.close();
-                    if (err) {
+              <RBSheet
+                ref={refRBSheet}
+                closeOnDragDown={true}
+                closeOnPressMask={true}
+                customStyles={{
+                  container: {
+                    borderRadius: 10,
+                    elevation: 20,
+                    backgroundColor: colors.secondary,
+                  },
+                  wrapper: {
+                    backgroundColor: 'rgba(0,0,0,0.2)',
+                  },
+                  draggableIcon: {
+                    backgroundColor: colors.placeholder,
+                  },
+                }}
+                height={Dimensions.get('window').height * 0.85}
+                animationType="slide">
+                <ScrollView>
+                  <EditGroup
+                    group={item}
+                    cb={(err, res) => {
+                      refRBSheet.current.close();
+                      if (err) {
+                        Snackbar.show({
+                          text: err.msg,
+                          duration: Snackbar.LENGTH_SHORT,
+                          backgroundColor: colors.danger,
+                        });
+                        return;
+                      }
                       Snackbar.show({
-                        text: err.msg,
+                        text: res.msg,
                         duration: Snackbar.LENGTH_SHORT,
-                        backgroundColor: colors.danger,
+                        backgroundColor: colors.success,
                       });
-                      return;
-                    }
-                    Snackbar.show({
-                      text: res.msg,
-                      duration: Snackbar.LENGTH_SHORT,
-                      backgroundColor: colors.success,
-                    });
-                    PubSub.publish(PubSubEvents.OnGroupUpdated);
-                  }}
-                />
-              </ScrollView>
-            </RBSheet>
+                      PubSub.publish(PubSubEvents.OnGroupUpdated);
+                    }}
+                  />
+                </ScrollView>
+              </RBSheet>
 
+<<<<<<< Acticlass-App/src/components/groupCard.js
             {authService.getRole() == ROLES.STUDENT && (
               <View>
                 {/* TODO: Add points */}
@@ -305,10 +373,25 @@ const GroupCard = ({ navigation, item }) => {
                 </Text>
               </View>
             )}
+=======
+              {authService.getRole() == ROLES.STUDENT && (
+                <View>
+                  <Text
+                    style={{
+                      fontSize: 12,
+                      color: colors.inactive,
+                      textAlign: 'right',
+                    }}>
+                    {item.Points} Points
+                  </Text>
+                </View>
+              )}
+            </View>
+>>>>>>> Acticlass-App/src/components/groupCard.js
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
