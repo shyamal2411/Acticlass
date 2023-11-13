@@ -8,9 +8,9 @@ export const MMKV_STORE_NAME = 'Acticlass_MMKV_Store';
 export const MMKV_ENC_KEY = 'Acticlass_MMKV_ENC_KEY';
 
 // Auth Token
-export const AUTH_TOKEN = "Acticlass_AUTH_TOKEN";
-export const IS_FROM_RESET = "Acticlass_AUTH_IS_FROM_RESET";
-export const USER = "Acticlass_USER";
+export const AUTH_TOKEN = 'Acticlass_AUTH_TOKEN';
+export const IS_FROM_RESET = 'Acticlass_AUTH_IS_FROM_RESET';
+export const USER = 'Acticlass_USER';
 
 export const ATTENDANCE_FREQUENCY = ['0', '15', '30', '60'];
 
@@ -27,5 +27,6 @@ export const PubSubEvents = {
   OnGroupLeft: 'OnGroupLeft',
   OnGroupMemberAdded: 'OnGroupMemberAdded',
   OnGroupMemberRemoved: 'OnGroupMemberRemoved',
-  OnGroupMemberUpdated: 'OnGroupMemberUpdated'
-}
+  OnGroupMemberUpdated: 'OnGroupMemberUpdated',
+  OnGroupMemberKicked: 'OnGroupMemberKicked',
+};

@@ -1,14 +1,49 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { colors } from '../common/colors';
-import { ROLES } from '../common/constants';
+import {StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
+import {colors} from '../common/colors';
+import {PubSubEvents, ROLES} from '../common/constants';
 import authService from '../services/authService';
+import groupServices from '../services/groupServices';
+import Snackbar from 'react-native-snackbar';
 
-
-const StudentCard = ({ navigation, item }) => {
-
+const StudentCard = ({navigation, item, groupId}) => {
+  const isStudent = authService.getRole() == ROLES.STUDENT;
   const handleRemove = () => {
     //TODO: remove student from group
+    console.log('remove student');
+    Alert.alert(
+      'Remove Student',
+      'Do you want to remove this student from your group?',
+      [
+        {
+          text: 'Yes',
+          onPress: () => {
+            groupServices.kickUser(
+              {userId: item.id, groupId: groupId},
+              (err, res) => {
+                if (err) {
+                  Snackbar.show({
+                    text: err.msg,
+                    duration: Snackbar.LENGTH_SHORT,
+                    backgroundColor: colors.danger,
+                  });
+                  return;
+                }
+                Snackbar.show({
+                  text: res.msg,
+                  duration: Snackbar.LENGTH_SHORT,
+                  backgroundColor: colors.success,
+                });
+                PubSub.publish(PubSubEvents.OnGroupMemberKicked);
+              },
+            );
+          },
+          style: 'cancel',
+        },
+        {text: 'Cancel', onPress: () => {}},
+      ],
+      {cancelable: true},
+    );
   };
 
   return (
@@ -17,7 +52,7 @@ const StudentCard = ({ navigation, item }) => {
         styles.container,
         {
           shadowColor: colors.placeholder,
-          shadowOffset: { width: 0, height: 8 },
+          shadowOffset: {width: 0, height: 8},
           shadowOpacity: 0.5,
           shadowRadius: 3.84,
           elevation: 5,
@@ -29,12 +64,13 @@ const StudentCard = ({ navigation, item }) => {
         },
       ]}>
       <View style={styles.rectangle1}>
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '100%',
-        }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            height: '100%',
+          }}>
           <View
             style={{
               width: 50,
@@ -46,7 +82,7 @@ const StudentCard = ({ navigation, item }) => {
               justifyContent: 'center',
               borderRadius: 25,
             }}>
-            <Text style={{ fontSize: 16 }}>{item.index}</Text>
+            <Text style={{fontSize: 16}}>{item.index}</Text>
           </View>
         </View>
         <View
@@ -64,7 +100,7 @@ const StudentCard = ({ navigation, item }) => {
               flexDirection: 'column',
             }}>
             <Text
-              style={{ fontSize: 14, fontWeight: '400', color: colors.black }}>
+              style={{fontSize: 14, fontWeight: '400', color: colors.black}}>
               {item.name}
             </Text>
             <Text
@@ -89,18 +125,19 @@ const StudentCard = ({ navigation, item }) => {
                 fontWeight: '400',
                 textAlign: 'right',
                 marginRight: 16,
+                marginBottom: isStudent ? 29 : 13,
                 color: colors.black,
               }}>
               {item.points} points
             </Text>
             {authService.getRole() == ROLES.TEACHER && (
-              <TouchableOpacity onPress={() => { handleRemove }}>
+              <TouchableOpacity onPress={handleRemove}>
                 <Text
                   style={{
                     color: colors.danger,
                     textAlign: 'right',
                     marginRight: 16,
-                    marginTop: 4,
+                    //marginTop: 4,
                     fontSize: 14,
                     fontWeight: '400',
                   }}>
@@ -137,7 +174,7 @@ const styles = StyleSheet.create({
     //marginVertical: 10,
     maxWidth: '100%',
     shadowColor: colors.placeholder,
-    shadowOffset: { width: 0, height: 8 },
+    shadowOffset: {width: 0, height: 8},
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 5,
