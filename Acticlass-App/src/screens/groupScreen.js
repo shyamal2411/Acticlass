@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,24 +10,102 @@ import { colors } from '../common/colors';
 import Navbar from '../components/navBar';
 
 import AntDesignIcon from 'react-native-vector-icons/Ionicons';
-import { ROLES } from '../common/constants';
+import { PubSubEvents, ROLES } from '../common/constants';
 import authService from '../services/authService';
+import socketService from '../services/socketService';
 
-const GroupScreen = ({ route }) => {
-  //const {groupName} = route.params;
+const GroupScreen = ({ navigation, route }) => {
+  const { group } = route.params;
   const [isSessionStarted, setIsSessionStarted] = useState(false);
+  const [sessionBtnText, setSessionBtnText] = useState('Start');
+  const [activities, setActivities] = useState([]);
+
+  const groupStatus = (cb) => socketService.getGroupStatus({ groupId: group.id }, cb);
+
+  const getSessionMsg = () => {
+    if (isSessionStarted) {
+      return 'Session has started.';
+    } else {
+      return 'Session has not started yet.';
+    }
+  }
+
+  const getActivities = () => {
+    socketService.getGroupStatus({ groupId: group.id }, (res) => {
+      setIsSessionStarted(res.isActive);
+      setActivities(res.activities || []);
+    });
+  }
+
+  useEffect(() => {
+    groupStatus((res) => {
+      setIsSessionStarted(res.isActive);
+      if (authService.getRole() === ROLES.TEACHER) {
+        setSessionBtnText(res.isActive ? 'End' : 'Start');
+      } else {
+        socketService.joinSession({ groupId: group.id }, getActivities);
+      }
+      if (res.activities) {
+        setActivities(res.activities || []);
+      }
+    });
+
+    const tokens = [];
+    const events = [PubSubEvents.OnSessionCreated, PubSubEvents.OnSessionJoined, PubSubEvents.OnSessionLeft, PubSubEvents.OnRequestRaised, PubSubEvents.OnRequestAccepted, PubSubEvents.OnRequestRejected, PubSubEvents.OnPointsUpdated];
+
+    events.forEach((event) => {
+      tokens.push(PubSub.subscribe(event, getActivities));
+    });
+
+    tokens.push(PubSub.subscribe(PubSubEvents.OnSessionDeleted, (data) => {
+      if (authService.getRole() == ROLES.STUDENT) {
+        socketService.leaveSession({ groupId: group.id });
+      } else {
+        if (isSessionStarted)
+          socketService.endSession({ groupId: group.id });
+      }
+      navigation.goBack();
+    }));
+
+    return () => {
+      tokens.forEach((token) => {
+        PubSub.unsubscribe(token);
+      });
+    }
+  }, []);
 
   const handleSubmit = () => {
-
+    if (isSessionStarted) {
+      socketService.endSession({ groupId: group.id }, (res) => {
+        setIsSessionStarted(false);
+        setSessionBtnText('Start');
+      });
+    } else {
+      socketService.startSession({ groupId: group.id }, (res) => {
+        setIsSessionStarted(true);
+        setSessionBtnText('End');
+      });
+    }
   }
+
 
   return (
     <View style={styles.container}>
       <Navbar
         prefixIcon={true}
-        title="Group Name"
+        title={group.name}
+        onBackPress={() => {
+          if (authService.getRole() == ROLES.STUDENT) {
+            socketService.leaveSession({ groupId: group.id });
+          } else {
+            if (isSessionStarted)
+              socketService.endSession({ groupId: group.id });
+          }
+          navigation.goBack();
+          return true;
+        }}
       />
-      <View style={{ alignItems: 'center', backgroundColor: colors.inactive, width: '100%', height: 40, flexDirection: 'row' }}>
+      {authService.getRole() == ROLES.TEACHER && (<View style={{ alignItems: 'center', backgroundColor: colors.inactive, width: '100%', height: 40, flexDirection: 'row' }}>
         <Text
           style={{
             flex: 1,
@@ -36,14 +114,14 @@ const GroupScreen = ({ route }) => {
             fontWeight: '400',
             color: colors.white,
           }}>
-          Session has started.
+          {getSessionMsg()}
         </Text>
         <TouchableOpacity
           style={[styles.button]}
           onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Join</Text>
+          <Text style={styles.buttonText}>{sessionBtnText}</Text>
         </TouchableOpacity>
-      </View>
+      </View>)}
       {/* //TODO: Add group Conversation */}
       {isSessionStarted ? null :
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -53,11 +131,11 @@ const GroupScreen = ({ route }) => {
               fontWeight: '600',
               color: colors.placeholder,
             }}>
-            No Conversation.
+            {isSessionStarted ? "No Conversation." : "Session has not started."}
           </Text>
         </View>
       }
-      <View style={styles.fab}>
+      {isSessionStarted && authService.getRole() == ROLES.STUDENT && (<View style={styles.fab}>
         <TouchableOpacity
           style={{
             alignItems: 'center',
@@ -72,15 +150,13 @@ const GroupScreen = ({ route }) => {
               ? refRBSheet.current.open()
               : handleScan();
           }}>
-          {authService.getRole() == ROLES.STUDENT && (
-            <AntDesignIcon
-              name="hand-left"
-              size={24}
-              color={colors.white}
-            />
-          )}
+          <AntDesignIcon
+            name="hand-left"
+            size={24}
+            color={colors.white}
+          />
         </TouchableOpacity>
-      </View>
+      </View>)}
     </View>
   );
 };

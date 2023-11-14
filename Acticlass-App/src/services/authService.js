@@ -163,7 +163,7 @@ class AuthService {
 
     /**
      * 
-     * @param {*} res 
+     * @param {{token:String,user:Object,role:ROLES}} res 
      */
     saveAuth(res) {
         mmkv.set(AUTH_TOKEN, res.token);
@@ -185,4 +185,8 @@ class AuthService {
     }
 }
 
+
+/**
+ * @type {AuthService}
+ */
 export default instance = new AuthService();
