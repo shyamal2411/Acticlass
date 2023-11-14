@@ -43,7 +43,7 @@ const GroupScreen = ({ navigation, route }) => {
       if (authService.getRole() === ROLES.TEACHER) {
         setSessionBtnText(res.isActive ? 'End' : 'Start');
       } else {
-        socketService.joinSession({ groupId: group.id });
+        socketService.joinSession({ groupId: group.id }, getActivities);
       }
       if (res.activities) {
         setActivities(res.activities || []);

@@ -451,7 +451,7 @@ class ActivityManager {
 
     /**
      * 
-     * @param {{groupId:String,role:Roles}} data      
+     * @param {{groupId:String,role:Roles,userId:String}} data      
      * @returns {Array}
      */
     getCurrentSessionActivities(data) {
@@ -556,10 +556,10 @@ class ActivityManager {
 
     /**
      * 
-     * @param {{groupId:String,role:Roles}} data 
+     * @param {{groupId:String,role:Roles,userId:String}} data 
      * @returns {{isActive:Boolean}}
      */
-    getGroupStatus({ groupId, role }) {
+    getGroupStatus({ groupId, role, userId }) {
         if (!groupId || isEmpty(groupId)) {
             return { isActive: false, message: "Invalid groupId" };
         }
@@ -567,8 +567,7 @@ class ActivityManager {
         if (!session) {
             return { isActive: false };
         }
-        const activities = this.getCurrentSessionActivities({ groupId, role });
-        console.log(this.tag, "Session activities", activities);
+        const activities = this.getCurrentSessionActivities({ groupId, role, userId });
         return { isActive: true, activities };
     }
 

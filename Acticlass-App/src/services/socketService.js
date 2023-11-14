@@ -147,7 +147,7 @@ class SocketService {
         this.withSocket((socket) => {
             socket.emit(SOCKET_EVENTS.GROUP_STATUS, { groupId }, (res) => {
                 if (res) {
-                    console.log(this.tag, "Group Status:", groupId, res);
+                    console.log(this.tag, "Group Status:", authService.getRole(), groupId, res);
                     if (cb) cb(res);
                 }
             });

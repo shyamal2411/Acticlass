@@ -190,7 +190,7 @@ class SocketManager {
             if (!data?.groupId) {
                 return cb({ err: "Invalid groupId" });
             }
-            const group = ActivityManager.getGroupStatus({ groupId: data.groupId, role: socket.role });
+            const group = ActivityManager.getGroupStatus({ groupId: data.groupId, userId: socket.userId, role: socket.role });
             if (group) {
                 return cb(group);
             }
