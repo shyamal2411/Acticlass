@@ -1,4 +1,5 @@
 import { PubSubEvents, ROLES, SOCKET_EVENTS, USER } from '../common/constants';
+import { baseUrl } from '../common/endpoints';
 import { mmkv } from '../utils/MMKV';
 import authService from './authService';
 const io = require('socket.io-client');
@@ -98,7 +99,7 @@ class SocketService {
             }
         } else {
             const user = mmkv.getObject(USER);
-            this.socket = io("http://localhost:3000",
+            this.socket = io(baseUrl,
                 {
                     forceNew: true,
                     autoConnect: false,
