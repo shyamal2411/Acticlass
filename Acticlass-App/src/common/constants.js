@@ -30,14 +30,26 @@ const PubSubEvents = {
   OnGroupMemberRemoved: 'OnGroupMemberRemoved',
   OnGroupMemberUpdated: 'OnGroupMemberUpdated',
   OnGroupMemberKicked: 'OnGroupMemberKicked',
+
+  // Session
+  OnSessionCreated: 'OnSessionCreated',
+  OnSessionDeleted: 'OnSessionDeleted',
+  OnSessionJoined: 'OnSessionJoined',
+  OnSessionLeft: 'OnSessionLeft',
+  OnRequestRaised: 'OnRequestRaised',
+  OnRequestAccepted: 'OnRequestAccepted',
+  OnRequestRejected: 'OnRequestRejected',
+  OnPointsUpdated: 'OnPointsUpdated',
 }
 
 // Socket events
 const SOCKET_EVENTS = {
 
   //Auth
-  CONNECTED: 'connected',
+  CONNECTED: 'connect',
   DISCONNECT: 'disconnect',
+  ERROR: 'error',
+  CONNECTION_ERROR: 'connect_error',
 
   // outgoing events (client -> server)  
   START_SESSION: 'StartSession',
@@ -49,6 +61,7 @@ const SOCKET_EVENTS = {
   REJECT_REQUEST: 'RejectRequest',
   LOCATION: 'Location',
   ATTENDANCE: 'Attendance',
+  GROUP_STATUS: 'GroupStatus',
 
   // incoming events (server -> client)
   ON_SESSION_CREATED: 'sessionCreated',

@@ -35,8 +35,20 @@ class SocketManager {
 
         this.io.on('connection', (socket) => {
             console.log(this.tag, socket.userId, ' user connected 👍');
-            //TODO: handle disconnect for both teacher and student
-            socket.on('disconnect', () => {
+            //TODO: handle disconnect for both teacher and student            
+            socket.on(SOCKET_EVENTS.DISCONNECT, () => {
+                if (socket.role === Roles.TEACHER) {
+                    ActivityManager.getStartedSessions({ userId: socket.userId, role: socket.role }).forEach((groupId) => {
+                        ActivityManager.endSession({ userId: socket.userId, role: socket.role, groupId }, (err, result) => {
+                            if (err) {
+                                return console.log(this.tag, err.message);
+                            }
+                            ActivityManager.removeGroupAttendanceCheck(groupId);
+                            socket.leave(groupId);
+                            this.io.to(groupId).emit(SOCKET_EVENTS.SESSION_DELETED, { groupId });
+                        });
+                    });
+                }
                 console.log(this.tag, socket.userId, 'user disconnected ❌');
             });
             this.registerSocketEvents(socket);
@@ -62,13 +74,13 @@ class SocketManager {
                     if (err) {
                         return cb({ err: err.message });
                     }
-                    ActivityManager.addGroupAttendanceCheck(result.groupId, () => {
+                    ActivityManager.addGroupAttendanceCheck(data.groupId, () => {
                         // Send location request to group owner
-                        console.log(this.tag, "Cron job to request location of owner ⏲️", result.groupId);
-                        this.io.to(socket.userId).emit(SOCKET_EVENTS.LOCATION_REQUEST, { groupId: result.groupId });
+                        console.log(this.tag, "Cron job to request location of owner ⏲️ ", data.groupId);
+                        this.io.to(socket.userId).emit(SOCKET_EVENTS.LOCATION_REQUEST, { groupId: data.groupId });
                     });
-                    socket.join(result.groupId);
-                    this.io.to(result.groupId).emit(SOCKET_EVENTS.SESSION_CREATED, { groupId: data.groupId });
+                    socket.join(data.groupId);
+                    this.io.to(data.groupId).emit(SOCKET_EVENTS.SESSION_CREATED, { groupId: data.groupId });
                     cb(result);
                 });
             });
@@ -79,9 +91,9 @@ class SocketManager {
                     if (err) {
                         return cb({ err: err.message });
                     }
-                    ActivityManager.removeGroupAttendanceCheck(result.groupId);
-                    socket.leave(result.groupId);
-                    this.io.to(result.groupId).emit(SOCKET_EVENTS.SESSION_DELETED, { groupId: data.groupId });
+                    ActivityManager.removeGroupAttendanceCheck(data.groupId);
+                    socket.leave(data.groupId);
+                    this.io.to(data.groupId).emit(SOCKET_EVENTS.SESSION_DELETED, { groupId: data.groupId });
                     cb(result);
                 });
             });
@@ -129,8 +141,8 @@ class SocketManager {
                     if (err) {
                         return cb({ err: err.message });
                     }
-                    socket.join(result.groupId);
-                    this.io.to(result.groupId).emit(SOCKET_EVENTS.SESSION_JOINED, { groupId: data.groupId });
+                    socket.join(data.groupId);
+                    this.io.to(data.groupId).emit(SOCKET_EVENTS.SESSION_JOINED, { groupId: data.groupId });
                     cb(result);
                 });
             });
@@ -141,8 +153,8 @@ class SocketManager {
                     if (err) {
                         return cb({ err: err.message });
                     }
-                    socket.leave(result.groupId);
-                    this.io.to(result.groupId).emit(SOCKET_EVENTS.SESSION_LEFT, { groupId: data.groupId });
+                    socket.leave(data.groupId);
+                    this.io.to(data.groupId).emit(SOCKET_EVENTS.SESSION_LEFT, { groupId: data.groupId });
                     cb(result);
                 });
             });
@@ -153,7 +165,7 @@ class SocketManager {
                     if (err) {
                         return cb({ err: err.message });
                     }
-                    const owner = ActivityManager.getSessionOwner(result.groupId);
+                    const owner = ActivityManager.getSessionOwner(data.groupId);
                     if (!owner) {
                         return cb({ err: "Session not found" });
                     }
@@ -172,6 +184,17 @@ class SocketManager {
                 });
             });
         }
+
+        // Group status
+        socket.on(SOCKET_EVENTS.ON_GROUP_STATUS, (data, cb) => {
+            if (!data?.groupId) {
+                return cb({ err: "Invalid groupId" });
+            }
+            const group = ActivityManager.getGroupStatus({ groupId: data.groupId, role: socket.role });
+            if (group) {
+                return cb(group);
+            }
+        });
     }
 }
 

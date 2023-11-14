@@ -24,11 +24,7 @@ import { PubSubEvents, ROLES } from '../common/constants';
 import { navRef } from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-<<<<<<< Acticlass-App/src/components/groupCard.js
-import EditGroup from './EditGroup';
-=======
 import EditGroup from './editGroup';
->>>>>>> Acticlass-App/src/components/groupCard.js
 
 const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
 
@@ -54,11 +50,7 @@ const groupNameInitials = groupName => {
 
 const GroupCard = ({ navigation, item }) => {
   const refRBSheet = React.createRef();
-
-  console.log("item", item);
-
-  const options =
-    authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
+  const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
   const handleCardPress = () => {
     navRef.current.dispatch(
@@ -67,7 +59,6 @@ const GroupCard = ({ navigation, item }) => {
       }))
   }
   const handleOnMore = index => {
-    console.log('Selected option: ' + options[index]);
 
     switch (options[index]) {
       case 'Leader Board':
@@ -144,35 +135,12 @@ const GroupCard = ({ navigation, item }) => {
         break;
       case 'Edit group':
         refRBSheet.current.open();
-        // Handle Edit group action
-        break;
-      default:
-        // Handle the default case if needed
         break;
     }
   };
 
   return (
-<<<<<<< Acticlass-App/src/components/groupCard.js
-    <View
-      style={[
-        styles.container,
-        {
-          shadowColor: colors.placeholder,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.5,
-          shadowRadius: 3.84,
-          elevation: 5,
-          borderRadius: 10,
-          marginHorizontal: 30,
-          backgroundColor: colors.secondary,
-          height: 100,
-          marginVertical: 16,
-        },
-      ]}>
-=======
     <TouchableOpacity onPress={handleCardPress}>
->>>>>>> Acticlass-App/src/components/groupCard.js
       <View
         style={[
           styles.container,
@@ -220,40 +188,6 @@ const GroupCard = ({ navigation, item }) => {
                 justifyContent: 'center',
                 borderRadius: 4,
               }}>
-<<<<<<< Acticlass-App/src/components/groupCard.js
-              {item.name}
-            </Text>
-            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
-              Passing Points: {item.passingPoints}
-            </Text>
-            <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
-              Radius: {item.radius}
-            </Text>
-          </View>
-          <View
-            style={{
-              position: 'absolute',
-              right: 15,
-              top: 15,
-              justifyContent: 'center',
-              alignItems: 'flex-end',
-            }}>
-            <Menu>
-              <MenuTrigger>
-                <FeatherIcon
-                  name="more-horizontal"
-                  size={24}
-                  color={colors.inactive}
-                />
-              </MenuTrigger>
-              <MenuOptions>
-                {options.map((option, index) => (
-                  <MenuOption
-                    key={index}
-                    customStyles={{ optionText: styles.menuText }}
-                    text={option}
-                    onSelect={() => handleOnMore(index)}
-=======
               <Text
                 style={{
                   fontSize: 28,
@@ -301,7 +235,6 @@ const GroupCard = ({ navigation, item }) => {
                     name="more-horizontal"
                     size={24}
                     color={colors.inactive}
->>>>>>> Acticlass-App/src/components/groupCard.js
                   />
                 </MenuTrigger>
                 <MenuOptions>
@@ -359,21 +292,6 @@ const GroupCard = ({ navigation, item }) => {
                 </ScrollView>
               </RBSheet>
 
-<<<<<<< Acticlass-App/src/components/groupCard.js
-            {authService.getRole() == ROLES.STUDENT && (
-              <View>
-                {/* TODO: Add points */}
-                <Text
-                  style={{
-                    fontSize: 12,
-                    color: colors.inactive,
-                    textAlign: 'right',
-                  }}>
-                  {item.points} Points
-                </Text>
-              </View>
-            )}
-=======
               {authService.getRole() == ROLES.STUDENT && (
                 <View>
                   <Text
@@ -382,16 +300,15 @@ const GroupCard = ({ navigation, item }) => {
                       color: colors.inactive,
                       textAlign: 'right',
                     }}>
-                    {item.Points} Points
+                    {item.points} Points
                   </Text>
                 </View>
               )}
             </View>
->>>>>>> Acticlass-App/src/components/groupCard.js
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
+          </View >
+        </View >
+      </View >
+    </TouchableOpacity >
   );
 };
 

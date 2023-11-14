@@ -1,7 +1,7 @@
 const NodeCache = require("node-cache");
 const { ActivitySchema, PointBucketSchema, GroupSchema } = require("../database");
 const { ACTIVITY_TYPES, Roles, ATTENDANCE_FREQUENCY } = require("../common/constants");
-const { sortBy } = require("lodash");
+const { sortBy, isEmpty } = require("lodash");
 const { scheduleJob } = require("node-schedule");
 
 class ActivityManager {
@@ -26,6 +26,37 @@ class ActivityManager {
         this.bucketUpdateListener = null;
     }
 
+
+    /**
+     * @private
+     * @param {ActivitySchema} activity 
+     * @returns {{id:String,type:ACTIVITY_TYPES,timestamp:Date,group:String,triggerBy:String,triggerFor:String,points:Number}}
+     */
+    parseActivity(activity) {
+        let data = {};
+        data.id = activity._id.toString();
+        data.type = activity.type;
+        data.timestamp = activity.timestamp;
+        data.group = activity.group.toString();
+        data.triggerBy = activity.triggerBy?.toString();
+        data.triggerFor = activity.triggerFor?.toString();
+        data.points = activity.points;
+        return data;
+    }
+
+    /**
+     * @private
+     * @param {String} groupId
+     * @param {*} activity 
+     */
+    addActivity(groupId, activity) {
+        const session = this.sessions.get(groupId);
+        if (!session) {
+            return;
+        }
+        session.push(this.parseActivity(activity));
+        this.sessions.set(groupId, session);
+    }
 
     /**
      * 
@@ -95,7 +126,7 @@ class ActivityManager {
             triggerBy: data.userId,
         }).then((activity) => {
             this.sessionOwner.set(data.groupId, data.userId);
-            this.sessions.set(data.groupId, [{ ...activity }]);
+            this.sessions.set(data.groupId, [this.parseActivity(activity)]);
             console.log(this.tag, data.groupId, "Session started");
             if (cb) {
                 cb(null, { message: "Session started" });
@@ -136,7 +167,7 @@ class ActivityManager {
             triggerBy: data.userId,
         }).then((activity) => {
             this.sessionOwner.del(data.groupId);
-            this.sessions.delete(data.groupId);
+            this.sessions.del(data.groupId);
             console.log(this.tag, data.groupId, "Session ended");
             if (cb) {
                 cb(null, { message: "Session ended" });
@@ -196,7 +227,7 @@ class ActivityManager {
             group: data.groupId,
             triggerBy: data.userId,
         }).then((activity) => {
-            session.get(data.groupId).push({ ...activity });
+            this.addActivity(data.groupId, activity);
             console.log(this.tag, data.userId, "Student joined");
             if (cb) {
                 cb(null, { message: "Student joined" });
@@ -255,7 +286,7 @@ class ActivityManager {
             group: data.groupId,
             triggerBy: data.userId,
         }).then((activity) => {
-            session.get(data.groupId).push({ ...activity });
+            this.addActivity(data.groupId, activity);
             console.log(this.tag, data.userId, "Student left");
             if (cb) {
                 cb(null, { message: "Student left" });
@@ -294,8 +325,8 @@ class ActivityManager {
             group: data.groupId,
             triggerBy: data.userId,
         }).then((activity) => {
-            this.pendingRequests.set(activity._id.toString(), { ...activity });
-            this.sessions.get(data.groupId).push({ ...activity });
+            this.addActivity(data.groupId, activity);
+            this.pendingRequests.set(activity._id.toString(), this.parseActivity(activity));
             console.log(this.tag, data.userId, "has raised Request");
             if (cb) {
                 cb(null, { message: "Request raised" });
@@ -365,9 +396,9 @@ class ActivityManager {
             triggerFor: data.requestId,
         }).then((activity) => {
             let request = this.pendingRequests.get(data.requestId);
+            this.addActivity(data.groupId, activity);
             this.updateUserPointBucket({ groupId: data.groupId, userId: request.triggerBy, points: data.points, type: data.type });
-            this.pendingRequests.delete(data.requestId);
-            this.sessions.get(data.groupId).push({ ...activity });
+            this.pendingRequests.del(data.requestId);
             console.log(this.tag, data.userId, "has approved/rejected Request");
             if (cb) {
                 cb(null, { studentId: request.triggerBy, message: "Request approved/rejected" });
@@ -420,32 +451,29 @@ class ActivityManager {
 
     /**
      * 
-     * @param {{groupId:String,role:Roles}} data 
-     * @param {Function} cb 
+     * @param {{groupId:String,role:Roles}} data      
+     * @returns {Array}
      */
-    getCurrentSessionActivities(data, cb) {
+    getCurrentSessionActivities(data) {
         const session = this.sessions.get(data.groupId);
         if (!session) {
             console.log(this.tag, "Session does not exist");
-            if (cb) {
-                cb({ message: "Session does not exist" });
-            }
-            return;
+            return [];
         }
         if (data.role === Roles.TEACHER) {
-            cb(null, session);
+            return session;
         }
         if (data.role === Roles.STUDENT) {
             // filter all the activities related to student
-            const activities = session.filter(activity => activity.triggerBy === data.userId);
+            const activities = session.filter(activity => activity.triggerBy.toString() === data.userId);
             // filter all the RequestAccepted and RequestRejected activities for which student has raised request
             const requests = session.filter(activity => (activity.type === ACTIVITY_TYPES.REQUEST_ACCEPTED || activity.type === ACTIVITY_TYPES.REQUEST_REJECTED));
             // filter all the requests for which teacher has accepted/rejected
-            const filteredRequests = requests.filter(request => activities.find(activity => request.triggerFor === activity._id.toString()) !== undefined);
+            const filteredRequests = requests.filter(request => activities.find(activity => request.triggerFor && request.triggerFor.toString() === activity.id.toString()) !== undefined);
             let result = activities.concat(filteredRequests);
             // sort by timestamp
             result = sortBy(result, ['timestamp']);
-            cb(null, result);
+            return result;
         }
     }
 
@@ -477,7 +505,7 @@ class ActivityManager {
             triggerBy: data.userId,
             points: data.points,
         }).then((activity) => {
-            session.get(data.groupId).push({ ...activity });
+            this.addActivity(data.groupId, activity);
             this.updateUserPointBucket({ groupId: data.groupId, userId: data.userId, points: data.points, type: ACTIVITY_TYPES.ATTENDANCE })
             console.log(this.tag, data.userId, "Attendance marked");
             if (cb) {
@@ -501,6 +529,47 @@ class ActivityManager {
             return null;
         }
         return this.sessionOwner.get(groupId);
+    }
+
+    /**
+     * 
+     * @param {{userId:String}} data 
+     * @returns {sessions:Array}
+     */
+    getStartedSessions({ userId }) {
+        let sessions = [];
+        this.sessions.keys().forEach((groupId) => {
+            const session = this.sessions.get(groupId);
+            if (!session) {
+                return;
+            }
+            const owner = this.getSessionOwner(groupId);
+            if (!owner) {
+                return;
+            }
+            if (owner === userId) {
+                sessions.push(groupId);
+            }
+        });
+        return sessions;
+    }
+
+    /**
+     * 
+     * @param {{groupId:String,role:Roles}} data 
+     * @returns {{isActive:Boolean}}
+     */
+    getGroupStatus({ groupId, role }) {
+        if (!groupId || isEmpty(groupId)) {
+            return { isActive: false, message: "Invalid groupId" };
+        }
+        const session = this.sessions.get(groupId);
+        if (!session) {
+            return { isActive: false };
+        }
+        const activities = this.getCurrentSessionActivities({ groupId, role });
+        console.log(this.tag, "Session activities", activities);
+        return { isActive: true, activities };
     }
 
 }

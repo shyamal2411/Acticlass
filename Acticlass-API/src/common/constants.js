@@ -28,6 +28,7 @@ const SOCKET_EVENTS = {
     ON_REJECT_REQUEST: 'RejectRequest',
     ON_LOCATION: 'Location',
     ON_ATTENDANCE: 'Attendance',
+    ON_GROUP_STATUS: 'GroupStatus',
 
     // outgoing events (server -> client)
     SESSION_CREATED: 'sessionCreated',
