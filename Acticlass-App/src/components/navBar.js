@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useEffect } from 'react';
 import {
   BackHandler,
   SafeAreaView,
@@ -24,6 +25,14 @@ const Navbar = ({
     return true;
   },
 }) => {
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    };
+  });
+
   return (
     <SafeAreaView style={styles.navbar}>
       <TouchableOpacity onPress={onBackPress} style={{ width: '28', height: '28' }}>

@@ -102,6 +102,7 @@ const GroupScreen = ({ navigation, route }) => {
               socketService.endSession({ groupId: group.id });
           }
           navigation.goBack();
+          return true;
         }}
       />
       {authService.getRole() == ROLES.TEACHER && (<View style={{ alignItems: 'center', backgroundColor: colors.inactive, width: '100%', height: 40, flexDirection: 'row' }}>
