@@ -21,6 +21,7 @@ class ActivityManager {
         //     // this.endSession({ groupId: key, userId: value.triggerBy, role: Roles.TEACHER });
         // });        
         this.sessionOwner = new NodeCache();
+        this.sessionLocation = new Map();
         this.cronJobs = new Map();
 
         this.bucketUpdateListener = null;
@@ -102,7 +103,7 @@ class ActivityManager {
 
 
     /**   
-     * @param {{groupId:String,userId:String,role:String}} data 
+     * @param {{groupId:String,location:{lat:Number,long:Number},userId:String,role:String}} data 
      * @param {Function} cb 
      */
     startSession(data, cb) {
@@ -120,6 +121,13 @@ class ActivityManager {
             }
             return;
         }
+        if (!data.location) {
+            console.log(this.tag, data.groupId, "Location is required");
+            if (cb) {
+                cb({ message: "Location is required" });
+            }
+            return;
+        }
         ActivitySchema.create({
             type: ACTIVITY_TYPES.SESSION_STARTED,
             group: data.groupId,
@@ -127,6 +135,7 @@ class ActivityManager {
         }).then((activity) => {
             this.sessionOwner.set(data.groupId, data.userId);
             this.sessions.set(data.groupId, [this.parseActivity(activity)]);
+            this.sessionLocation.set(data.groupId, data.location);
             console.log(this.tag, data.groupId, "Session started");
             if (cb) {
                 cb(null, { message: "Session started" });
@@ -168,6 +177,7 @@ class ActivityManager {
         }).then((activity) => {
             this.sessionOwner.del(data.groupId);
             this.sessions.del(data.groupId);
+            this.sessionLocation.delete(data.groupId);
             console.log(this.tag, data.groupId, "Session ended");
             if (cb) {
                 cb(null, { message: "Session ended" });
@@ -390,7 +400,7 @@ class ActivityManager {
             return;
         }
         let request = this.pendingRequests.get(data.requestId);
-        if (request && request.triggerBy ) {
+        if (request && request.triggerBy) {
             ActivitySchema.create({
                 type: data.type,
                 group: data.groupId,
@@ -575,7 +585,8 @@ class ActivityManager {
             return { isActive: false };
         }
         const activities = this.getCurrentSessionActivities({ groupId, role, userId });
-        return { isActive: true, activities };
+        const location = this.sessionLocation.get(groupId);
+        return { isActive: true, location, activities };
     }
 
 }
