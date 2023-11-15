@@ -1,65 +1,64 @@
 import React from 'react';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors } from '../common/colors';
+import { ROLES } from '../common/constants';
+import authService from '../services/authService';
 
-const deviceWidth = Dimensions.get('window').width;
+const RequestCard = ({ item, group }) => {
 
-const requestcard = () => {
+  const handleRequest = () => {
+    if (authService.getRole() === ROLES.TEACHER) {
+      //TODO: handle request      
+      console.log('handleRequest', group);
+      // socketService.acceptRequest({ groupId: group.id, requestId: item.id, points: 100 }); // just for testing
+      // socketService.rejectRequest({ groupId: group.id, requestId: item.id, points: group.penalty }); // just for testing                  
+    } else {
+      // socketService.markAttendance({ groupId: group.id, points: group.attendanceReward }); // just for testing
+    }
+
+  }
+
+  const getRequestComponent = () => {
+    return (<View style={[styles.row, item.isMine ? { flexDirection: 'row-reverse' } : { flexDirection: 'row' }]}>
+      <View style={styles.container}>
+        <Text style={styles.text}>Raised a Request ✋</Text>
+      </View>
+    </View>);
+  }
+
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.text}>Raised a Request</Text>
-        <Image
-          source={require('../Assets/raise-hand.png')}
-          style={styles.ImageIconStyle}
-          resizeMode="contain"
-        />
-        {/* <Icon name="hand-raised" size={30} color="black" /> */}
+    authService.getRole() === ROLES.TEACHER ?
+      <TouchableOpacity onPress={handleRequest}>
+        {getRequestComponent()}
       </TouchableOpacity>
-    </View>
+      : getRequestComponent()
   );
 };
 
 const styles = StyleSheet.create({
-  ImageIconStyle: {
-    width: 20,
-    height: 28,
-    marginLeft: -10,
+  row: {
+    marginVertical: 14,
+    flexDirection: 'row',
+    marginHorizontal: 16,
   },
   container: {
-    flex: 1,
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start',
-    backgroundColor: '#F5FCFF',
-  },
-  button: {
-    width: 142,
+    paddingHorizontal: 8,
     height: 28,
+    marginLeft: 16,
     borderRadius: 8,
-    backgroundColor: '#D9D9D9',
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginTop: 184,
-    marginLeft: 270,
+    justifyContent: 'center',
+    backgroundColor: colors.card,
   },
   text: {
-    color: 'black',
-    fontFamily: 'Roboto',
+    color: colors.black,
     fontSize: 14,
     fontWeight: '400',
-    lineHeight: 16.41,
-    width: 126,
-    height: 16,
+  },
+  text_points: {
+    color: colors.placeholder,
+    fontSize: 12,
   },
 });
 
-export default requestcard;
+export default RequestCard;

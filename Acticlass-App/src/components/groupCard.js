@@ -53,6 +53,7 @@ const GroupCard = ({ navigation, item }) => {
   const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
   const handleCardPress = () => {
+    //TODO: check if location is enabled, if not, show a snackbar.
     navRef.current.dispatch(
       StackActions.push('GroupScreen', {
         group: item,

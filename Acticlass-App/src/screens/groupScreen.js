@@ -9,8 +9,14 @@ import {
 import { colors } from '../common/colors';
 import Navbar from '../components/navBar';
 
+import { FlatList } from 'react-native-gesture-handler';
 import AntDesignIcon from 'react-native-vector-icons/Ionicons';
-import { PubSubEvents, ROLES } from '../common/constants';
+import { ACTIVITY_TYPES, PubSubEvents, ROLES } from '../common/constants';
+import AttendanceRewardCard from '../components/attendanceReward';
+import RequestCard from '../components/requestCard';
+import RequestApproveCard from '../components/requestapproveCard';
+import RequestDeclineCard from '../components/requestdeclineCard';
+import ActivityParser from '../services/activityParser';
 import authService from '../services/authService';
 import socketService from '../services/socketService';
 
@@ -33,7 +39,7 @@ const GroupScreen = ({ navigation, route }) => {
   const getActivities = () => {
     socketService.getGroupStatus({ groupId: group.id }, (res) => {
       setIsSessionStarted(res.isActive);
-      setActivities(res.activities || []);
+      setActivities(ActivityParser.parse(res.activities));
     });
   }
 
@@ -46,7 +52,7 @@ const GroupScreen = ({ navigation, route }) => {
         socketService.joinSession({ groupId: group.id }, getActivities);
       }
       if (res.activities) {
-        setActivities(res.activities || []);
+        setActivities(ActivityParser.parse(res.activities));
       }
     });
 
@@ -122,8 +128,17 @@ const GroupScreen = ({ navigation, route }) => {
           <Text style={styles.buttonText}>{sessionBtnText}</Text>
         </TouchableOpacity>
       </View>)}
-      {/* //TODO: Add group Conversation */}
-      {isSessionStarted ? null :
+      {isSessionStarted ? <FlatList data={activities} renderItem={({ item }) => {
+        if (item.type == ACTIVITY_TYPES.RAISE_REQUEST)
+          return (<RequestCard item={item} group={group} />);
+        if (item.type == ACTIVITY_TYPES.REQUEST_ACCEPTED)
+          return (<RequestApproveCard item={item} />);
+        if (item.type == ACTIVITY_TYPES.REQUEST_REJECTED)
+          return (<RequestDeclineCard item={item} />);
+        if (item.type == ACTIVITY_TYPES.ATTENDANCE)
+          return (<AttendanceRewardCard item={item} />);
+        return <></>;
+      }} /> :
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <Text
             style={{
@@ -146,9 +161,7 @@ const GroupScreen = ({ navigation, route }) => {
             borderRadius: 50,
           }}
           onPress={() => {
-            authService.getRole() == ROLES.STUDENT
-              ? refRBSheet.current.open()
-              : handleScan();
+            socketService.raiseRequest({ groupId: group.id }, getActivities)
           }}>
           <AntDesignIcon
             name="hand-left"

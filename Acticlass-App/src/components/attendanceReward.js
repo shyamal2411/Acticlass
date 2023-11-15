@@ -1,55 +1,42 @@
 import React from 'react';
 
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors } from '../common/colors';
 
-const deviceWidth = Dimensions.get('window').width;
-
-const attedancerewardcard = () => {
+const AttendanceRewardCard = ({ item }) => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Attendance Reward</Text>
-      <Image
-        source={require('../Assets/clock1.png')}
-        style={styles.ImageIconStyle}
-        resizeMode="contain"
-      />
-      <Text style={styles.text_points}>+10 points!</Text>
+    <View style={[styles.row, !item.isMine ? { flexDirection: 'row-reverse' } : { flexDirection: 'row' }]}>
+      <View style={styles.container}>
+        <Text style={styles.text}>Attendance Reward ⏲️</Text>
+        <Text style={styles.text_points}>+10 points!</Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  ImageIconStyle: {
-    left: 30,
-    width: 14,
+  row: {
+    marginVertical: 14,
+    flexDirection: 'row',
+    marginHorizontal: 16,
   },
   container: {
+    paddingHorizontal: 8,
     height: 44,
-    left: 16,
+    marginLeft: 16,
     borderRadius: 8,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: colors.card,
   },
   text: {
-    color: '#000000',
-    fontFamily: 'Roboto',
+    color: colors.black,
     fontSize: 14,
-    height: 16,
-    left: 24,
+    marginTop: 6,
     fontWeight: '400',
   },
   text_points: {
-    height: 14,
-    left: 24,
+    color: colors.placeholder,
     fontSize: 12,
   },
 });
 
-export default attedancerewardcard;
+export default AttendanceRewardCard;

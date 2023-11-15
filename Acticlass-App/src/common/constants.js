@@ -42,6 +42,18 @@ const PubSubEvents = {
   OnPointsUpdated: 'OnPointsUpdated',
 }
 
+
+const ACTIVITY_TYPES = {
+  SESSION_STARTED: 'SessionStarted',
+  SESSION_ENDED: 'SessionEnded',
+  STUDENT_JOINED: 'StudentJoined',
+  STUDENT_LEFT: 'StudentLeft',
+  RAISE_REQUEST: 'RaiseRequest',
+  REQUEST_ACCEPTED: 'RequestAccepted',
+  REQUEST_REJECTED: 'RequestRejected',
+  ATTENDANCE: 'Attendance',
+}
+
 // Socket events
 const SOCKET_EVENTS = {
 
@@ -85,5 +97,6 @@ module.exports = {
   USER,
   ATTENDANCE_FREQUENCY,
   PubSubEvents,
-  SOCKET_EVENTS
+  SOCKET_EVENTS,
+  ACTIVITY_TYPES
 }
