@@ -24,7 +24,7 @@ import { PubSubEvents, ROLES } from '../common/constants';
 import { navRef } from '../navigation/navRef';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-import EditGroup from './editGroup';
+import EditGroup from './EditGroup';
 
 const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
 
