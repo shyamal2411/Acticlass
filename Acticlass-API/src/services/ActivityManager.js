@@ -389,26 +389,33 @@ class ActivityManager {
             }
             return;
         }
-        ActivitySchema.create({
-            type: data.type,
-            group: data.groupId,
-            triggerBy: data.userId,
-            triggerFor: data.requestId,
-        }).then((activity) => {
-            let request = this.pendingRequests.get(data.requestId);
-            this.addActivity(data.groupId, activity);
-            this.updateUserPointBucket({ groupId: data.groupId, userId: request.triggerBy, points: data.points, type: data.type });
-            this.pendingRequests.del(data.requestId);
-            console.log(this.tag, data.userId, "has approved/rejected Request");
+        let request = this.pendingRequests.get(data.requestId);
+        if (request && request.triggerBy ) {
+            ActivitySchema.create({
+                type: data.type,
+                group: data.groupId,
+                triggerBy: data.userId,
+                triggerFor: data.requestId,
+            }).then((activity) => {
+                this.addActivity(data.groupId, activity);
+                this.updateUserPointBucket({ groupId: data.groupId, userId: request.triggerBy, points: data.points, type: data.type });
+                this.pendingRequests.del(data.requestId);
+                console.log(this.tag, data.userId, "has approved/rejected Request");
+                if (cb) {
+                    cb(null, { studentId: request.triggerBy, message: "Request approved/rejected" });
+                }
+            }).catch((error) => {
+                console.log(this.tag, data.userId, "Request approve/reject failed", error);
+                if (cb) {
+                    cb({ message: "Request approve/reject failed" });
+                }
+            });
+        } else {
+            console.log(this.tag, "Request does not exist/already handled");
             if (cb) {
-                cb(null, { studentId: request.triggerBy, message: "Request approved/rejected" });
+                cb({ message: "Request does not exist/already handled" });
             }
-        }).catch((error) => {
-            console.log(this.tag, data.userId, "Request approve/reject failed", error);
-            if (cb) {
-                cb({ message: "Request approve/reject failed" });
-            }
-        });
+        }
     }
 
     addListenerForPointBucketUpdate(cb) {
