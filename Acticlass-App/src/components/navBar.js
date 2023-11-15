@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { useEffect } from 'react';
 import {
   BackHandler,
   SafeAreaView,
@@ -15,7 +16,7 @@ import { navRef } from '../navigation/navRef';
 const Navbar = ({
   prefixIcon,
   title,
-  onPress = () => {
+  onBackPress = () => {
     if (navRef?.current?.canGoBack()) {
       navRef?.current?.goBack();
     } else {
@@ -24,9 +25,17 @@ const Navbar = ({
     return true;
   },
 }) => {
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    };
+  });
+
   return (
     <SafeAreaView style={styles.navbar}>
-      <TouchableOpacity onPress={onPress} style={{ width: '28', height: '28' }}>
+      <TouchableOpacity onPress={onBackPress} style={{ width: '28', height: '28' }}>
         {prefixIcon ? (
           <Icon name="arrow-back-ios" style={styles.navIcon} size={28} />
         ) : (

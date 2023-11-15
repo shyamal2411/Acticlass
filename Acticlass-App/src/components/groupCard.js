@@ -50,9 +50,7 @@ const groupNameInitials = groupName => {
 
 const GroupCard = ({ navigation, item }) => {
   const refRBSheet = React.createRef();
-
-  const options =
-    authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
+  const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
   const handleCardPress = () => {
     navRef.current.dispatch(
@@ -61,7 +59,6 @@ const GroupCard = ({ navigation, item }) => {
       }))
   }
   const handleOnMore = index => {
-    console.log('Selected option: ' + options[index]);
 
     switch (options[index]) {
       case 'Leader Board':
@@ -138,10 +135,6 @@ const GroupCard = ({ navigation, item }) => {
         break;
       case 'Edit group':
         refRBSheet.current.open();
-        // Handle Edit group action
-        break;
-      default:
-        // Handle the default case if needed
         break;
     }
   };
@@ -307,15 +300,15 @@ const GroupCard = ({ navigation, item }) => {
                       color: colors.inactive,
                       textAlign: 'right',
                     }}>
-                    {item.Points} Points
+                    {item.points} Points
                   </Text>
                 </View>
               )}
             </View>
-          </View>
-        </View>
-      </View>
-    </TouchableOpacity>
+          </View >
+        </View >
+      </View >
+    </TouchableOpacity >
   );
 };
 
