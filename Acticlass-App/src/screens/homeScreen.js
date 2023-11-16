@@ -36,7 +36,6 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleScan = () => {
-    //TODO: Handle QR Scan
     navigation.navigate('QRScan');
   };
 

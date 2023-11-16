@@ -2,6 +2,7 @@ import { PubSubEvents, ROLES, SOCKET_EVENTS, USER } from '../common/constants';
 import { baseUrl } from '../common/endpoints';
 import { mmkv } from '../utils/MMKV';
 import authService from './authService';
+import locationService from './locationService';
 const io = require('socket.io-client');
 
 class SocketService {
@@ -43,47 +44,49 @@ class SocketService {
 
         // incoming events (server -> client)
         this.socket.on(SOCKET_EVENTS.ON_SESSION_CREATED, (data) => {
-            console.log(this.tag, 'ON_SESSION_CREATED', data);
+            console.log(this.tag, 'ON_SESSION_CREATED');
             PubSub.publish(PubSubEvents.OnSessionCreated, data);
         });
 
         this.socket.on(SOCKET_EVENTS.ON_SESSION_DELETED, (data) => {
-            console.log(this.tag, 'ON_SESSION_DELETED', data);
+            console.log(this.tag, 'ON_SESSION_DELETED');
             PubSub.publish(PubSubEvents.OnSessionDeleted, data);
         });
 
         this.socket.on(SOCKET_EVENTS.ON_SESSION_JOINED, (data) => {
-            console.log(this.tag, 'ON_SESSION_JOINED', data);
+            console.log(this.tag, 'ON_SESSION_JOINED');
             PubSub.publish(PubSubEvents.OnSessionJoined, data);
         });
         this.socket.on(SOCKET_EVENTS.ON_SESSION_LEFT, (data) => {
-            console.log(this.tag, 'ON_SESSION_LEFT', data);
+            console.log(this.tag, 'ON_SESSION_LEFT');
             PubSub.publish(PubSubEvents.OnSessionLeft, data);
         });
         this.socket.on(SOCKET_EVENTS.ON_POINTS_UPDATED, (data) => {
-            console.log(this.tag, 'ON_POINTS_UPDATED', data);
+            console.log(this.tag, 'ON_POINTS_UPDATED');
             PubSub.publish(PubSubEvents.OnPointsUpdated, data);
         });
         this.socket.on(SOCKET_EVENTS.ON_REQUEST_ACCEPTED, (data) => {
-            console.log(this.tag, 'ON_REQUEST_ACCEPTED', data);
+            console.log(this.tag, 'ON_REQUEST_ACCEPTED');
             PubSub.publish(PubSubEvents.OnRequestAccepted, data);
         });
         this.socket.on(SOCKET_EVENTS.ON_REQUEST_REJECTED, (data) => {
-            console.log(this.tag, 'ON_REQUEST_REJECTED', data);
+            console.log(this.tag, 'ON_REQUEST_REJECTED');
             PubSub.publish(PubSubEvents.OnRequestRejected, data);
         });
         this.socket.on(SOCKET_EVENTS.ON_REQUEST_RAISED, (data) => {
-            console.log(this.tag, 'ON_REQUEST_RAISED', data);
+            console.log(this.tag, 'ON_REQUEST_RAISED');
             PubSub.publish(PubSubEvents.OnRequestRaised, data);
         });
         this.socket.on(SOCKET_EVENTS.ON_LOCATION_REQUEST, (data) => {
-            console.log(this.tag, 'ON_LOCATION_REQUEST', data);
-            //TODO: get location from user(Teacher) and send to server on LOCATION event
+            console.log(this.tag, 'ON_LOCATION_REQUEST');
+            locationService.getCurrentLocation((err, location) => {
+                if (err) return;
+                this.sendLocation({ groupId: data.groupId, location });
+            });
 
         });
         this.socket.on(SOCKET_EVENTS.ON_CHECK_ATTENDANCE, (data) => {
-            console.log(this.tag, 'ON_CHECK_ATTENDANCE', data);
-            //TODO: get location and check if in the radius and send to server on ATTENDANCE event
+            PubSub.publish(PubSubEvents.OnAttendanceRequested, data);
         });
     }
 
@@ -148,7 +151,6 @@ class SocketService {
         this.withSocket((socket) => {
             socket.emit(SOCKET_EVENTS.GROUP_STATUS, { groupId }, (res) => {
                 if (res) {
-                    console.log(this.tag, "Group Status:", authService.getRole(), groupId, res);
                     if (cb) cb(res);
                 }
             });
@@ -156,13 +158,13 @@ class SocketService {
     }
 
     /**     
-     * @param {{groupId:String}} data 
+     * @param {{groupId:String,location:{lat:Number,long:Number}}} data 
      * @param {Function} cb
      */
-    startSession({ groupId }, cb) {
+    startSession({ groupId, location }, cb) {
         if (authService.getRole() === ROLES.TEACHER) {
             this.withSocket((socket) => {
-                socket.emit(SOCKET_EVENTS.START_SESSION, { groupId }, (res) => {
+                socket.emit(SOCKET_EVENTS.START_SESSION, { groupId, location }, (res) => {
                     if (res) {
                         console.log(this.tag, "Start Session", res);
                         if (cb) cb(res);

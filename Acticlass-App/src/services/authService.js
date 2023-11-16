@@ -158,6 +158,9 @@ class AuthService {
      * @returns {'Teacher'|'Student'}
      */
     getRole() {
+        if (this.role == null) {
+            this.role = mmkv.getObject(USER)?.role;
+        }
         return this.role;
     }
 
@@ -182,6 +185,15 @@ class AuthService {
         if (cb != null) {
             cb();
         }
+    }
+
+
+    getUserId() {
+        const user = mmkv.getObject(USER);
+        if (user)
+            return user.id;
+        console.warn(this.tag, "[getUserId]", "Trying to get user Id without login/signup");
+        return null;
     }
 }
 

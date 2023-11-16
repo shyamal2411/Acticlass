@@ -3,6 +3,7 @@ export const colors = {
   secondary: '#E6E6E6',
   placeholder: '#9E9292',
   inactive: '#767676',
+  card: '#d9d9d9',
   success: '#28a745',
   danger: '#dc3545',
   warning: '#ffc107',
