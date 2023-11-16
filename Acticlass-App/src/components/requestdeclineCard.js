@@ -8,7 +8,7 @@ const RequestDeclineCard = ({ item }) => {
     <View style={[styles.row, item.isMine ? { flexDirection: 'row-reverse' } : { flexDirection: 'row' }]}>
       <View style={styles.container}>
         <Text style={styles.text}>Request Declined ⛔</Text>
-        <Text style={styles.text_points}>-10 points!</Text>
+        <Text style={styles.text_points}>-{item.points} points!</Text>
       </View>
     </View>
   );

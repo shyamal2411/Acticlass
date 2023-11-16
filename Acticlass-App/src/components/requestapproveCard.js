@@ -8,7 +8,7 @@ const RequestApproveCard = ({ item }) => {
     <View style={[styles.row, item.isMine ? { flexDirection: 'row-reverse' } : { flexDirection: 'row' }]}>
       <View style={styles.container}>
         <Text style={styles.text}>Request Approved ✅</Text>
-        <Text style={styles.text_points}>+100 points!</Text>
+        <Text style={styles.text_points}>+{item.points} points!</Text>
       </View>
     </View>
   );

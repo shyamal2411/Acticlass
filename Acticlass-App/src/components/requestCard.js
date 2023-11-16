@@ -13,10 +13,7 @@ const RequestCard = ({ item, group }) => {
       console.log('handleRequest', group);
       // socketService.acceptRequest({ groupId: group.id, requestId: item.id, points: 100 }); // just for testing
       // socketService.rejectRequest({ groupId: group.id, requestId: item.id, points: group.penalty }); // just for testing                  
-    } else {
-      // socketService.markAttendance({ groupId: group.id, points: group.attendanceReward }); // just for testing
     }
-
   }
 
   const getRequestComponent = () => {

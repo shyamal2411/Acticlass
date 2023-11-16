@@ -60,13 +60,13 @@ class PermissionManager {
      * @returns {Promise<PermissionStatus>}
      */
     static async requestLocationPermission() {
-        try{
+        try {
             console.log(this.tag, 'Requesting location permission...');
             let result = RESULTS.UNAVAILABLE;
             if (Platform.OS === 'android') {
                 result = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
             } else {
-                result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+                result = await request(PERMISSIONS.IOS.LOCATION_ALWAYS);
             }
             this.permissionResult(result);
             return result;

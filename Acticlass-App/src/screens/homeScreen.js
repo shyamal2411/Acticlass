@@ -30,7 +30,6 @@ const HomeScreen = ({ navigation }) => {
       if (err) {
         console.error(err);
       } else {
-        console.log("groups", res.groups);
         setGroups(res.groups);
       }
     });

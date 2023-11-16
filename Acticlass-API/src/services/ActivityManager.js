@@ -9,17 +9,13 @@ class ActivityManager {
 
     constructor() {
         this.pendingRequests = new NodeCache();
-        //TODO: reject request
-        // this.pendingRequests.on("expired", (key, value) => {
-        //     console.log(this.tag, "Request expired", key, value);
-        //     // this.rejectRequest({ groupId: key, userId: value.triggerBy, role: Roles.TEACHER });
-        // });
-        this.sessions = new NodeCache();
-        // TODO: end session
-        // this.sessions.on("expired", (key, value) => {
-        //     console.log(this.tag, "Session expired", key, value);
-        //     // this.endSession({ groupId: key, userId: value.triggerBy, role: Roles.TEACHER });
-        // });        
+        this.sessions = new NodeCache({ stdTTL: 60 * 60 * 6, checkperiod: 60 * 60 * 6, delayedDelete: true });
+        // end session after 6 hours of inactivity.
+        this.sessions.on("expired", (key, value) => {
+            console.log(this.tag, "Session expired", key, value);
+            let owner = this.sessionOwner.get(key);
+            this.endSession({ groupId: key, userId: owner, role: Roles.TEACHER });
+        });
         this.sessionOwner = new NodeCache();
         this.sessionLocation = new Map();
         this.cronJobs = new Map();
@@ -478,7 +474,20 @@ class ActivityManager {
             return [];
         }
         if (data.role === Roles.TEACHER) {
-            return session;
+            let activities = [];
+            let isAttendanceChecked = false;
+            session.forEach((activity) => {
+                if (activity.type === ACTIVITY_TYPES.ATTENDANCE) {
+                    if (!isAttendanceChecked) {
+                        isAttendanceChecked = true;
+                        activities.push(activity);
+                    }
+                } else {
+                    isAttendanceChecked = false;
+                    activities.push(activity);
+                }
+            });
+            return activities;
         }
         if (data.role === Roles.STUDENT) {
             // filter all the activities related to student

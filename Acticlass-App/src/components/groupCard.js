@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { RESULTS } from 'react-native-permissions';
 import {
   Menu,
   MenuOption,
@@ -22,8 +23,11 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import { colors } from '../common/colors';
 import { PubSubEvents, ROLES } from '../common/constants';
 import { navRef } from '../navigation/navRef';
+import PermissionManager from '../services/PermissionManager';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
+import locationService from '../services/locationService';
+import socketService from '../services/socketService';
 import EditGroup from './editGroup';
 
 const StudentOptions = ['Leader Board', 'Group Info', 'Leave Group'];
@@ -52,12 +56,69 @@ const GroupCard = ({ navigation, item }) => {
   const refRBSheet = React.createRef();
   const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
-  const handleCardPress = () => {
-    //TODO: check if location is enabled, if not, show a snackbar.
-    navRef.current.dispatch(
-      StackActions.push('GroupScreen', {
-        group: item,
-      }))
+  const handleCardPress = async () => {
+    PermissionManager.requestLocationPermission().then((result) => {
+      if (result === RESULTS.GRANTED) {
+        if (authService.getRole() === ROLES.STUDENT) {
+          socketService.getGroupStatus({ groupId: item.id }, (res) => {
+            if (res.err) {
+              Snackbar.show({
+                text: res.err,
+                duration: Snackbar.LENGTH_SHORT,
+                backgroundColor: colors.danger,
+              });
+              return;
+            }
+            if (!res.isActive) {
+              Snackbar.show({
+                text: 'Group is inactive. Please wait for the teacher to start the session.',
+                duration: Snackbar.LENGTH_SHORT,
+                backgroundColor: colors.danger,
+              });
+              return;
+            }
+            if (!res.location) {
+              Snackbar.show({
+                text: 'Group session has not started yet.',
+                duration: Snackbar.LENGTH_SHORT,
+                backgroundColor: colors.danger,
+              });
+              return;
+            }
+            locationService.getCurrentLocation((err, location) => {
+              if (err)
+                return;
+              let dist = locationService.distance(location, res.location);
+              console.log('Distance: ', dist, 'Radius: ', item.radius, 'Location: ', location, 'Group Location: ', res.location);
+              if (dist > item.radius) {
+                Snackbar.show({
+                  text: 'You are not in the group radius.',
+                  duration: Snackbar.LENGTH_SHORT,
+                  backgroundColor: colors.danger,
+                });
+                return;
+              } else {
+                navRef.current.dispatch(
+                  StackActions.push('GroupScreen', {
+                    group: item,
+                  }));
+              }
+            });
+          });
+        } else {
+          navRef.current.dispatch(
+            StackActions.push('GroupScreen', {
+              group: item,
+            }));
+        }
+      } else {
+        Snackbar.show({
+          text: 'Location permission is required to start the session.',
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
+        });
+      }
+    });
   }
   const handleOnMore = index => {
 

@@ -1,7 +1,7 @@
 
-import PermissionManager from './PermissionManager';
+import Geolocation from 'react-native-geolocation-service';
 import { RESULTS } from 'react-native-permissions';
-var Geolocation = require('geolocation')
+import PermissionManager from './PermissionManager';
 var geodist = require('geodist');
 
 class locationService {
@@ -14,16 +14,6 @@ class locationService {
         locationService.instance = this;
     }
 
-    init() {
-        console.log(this.tag, 'Initializing location service...');
-        Geolocation.setRNConfiguration({
-            skipPermissionRequests: false,
-            authorizationLevel: 'whenInUse',
-        });
-        console.log(this.tag, 'Location service initialized. ✅');
-
-    }
-
     /**
      * @private
      * @param {Function} cb 
@@ -31,7 +21,7 @@ class locationService {
     withPermission(cb) {
         PermissionManager.requestLocationPermission().then(res => {
             if (res === RESULTS.GRANTED) {
-                if(cb) cb();
+                if (cb) cb();
             }
         });
     }
@@ -43,47 +33,49 @@ class locationService {
      * 
      */
     getCurrentLocation(cb) {
-        this.withPermission(()=>{
+        this.withPermission(() => {
             Geolocation.getCurrentPosition(
                 position => {
                     const { latitude, longitude } = position.coords;
-                    console.log(this.tag,`Current location: ${latitude}, ${longitude}`);
+                    console.log(this.tag, `Current location: ${latitude}, ${longitude}`);
                     if (cb != null) {
-                        cb(null, { lat:latitude, long:longitude });
+                        cb(null, { lat: latitude, long: longitude });
                     }
                 },
                 error => {
-                    console.error(thsi.tag,`Error getting current location: ${error.message}`);
+                    console.error(this.tag, `Error getting current location: ${error.message}`);
                     if (cb != null) {
                         cb(error, null);
                     }
-                }
+                },
+                { enableHighAccuracy: true }
             );
         })
     }
 
     /**
      * @param {location1:{lat:Number,long:Number},location2:{lat:Number,long:Number}} 
+     * @returns {Number} distance in meters
      */
-    distance(location1,location2){
-        return geodist(location1,location2,{exact:true,unit:'meters'});
+    distance(location1, location2) {
+        return geodist(location1, location2, { exact: true, unit: 'meters' });
     }
 
     /**
      * @param {Function} cb
      * @param {location:{lat:Number,long:Number}} 
      * */
-    getDistanceFrom(location,cb){
-        this.getCurrentLocation((err,res)=>{
-            if(err){
+    getDistanceFrom(location, cb) {
+        this.getCurrentLocation((err, res) => {
+            if (err) {
                 console.log(err);
-                cb(err,null);
-            }else{
-                if(cb) cb(null,dis(res,location));                
+                cb(err, null);
+            } else {
+                if (cb) cb(null, dis(res, location));
             }
         })
     }
-    
+
 }
 export default instance = new locationService();
 

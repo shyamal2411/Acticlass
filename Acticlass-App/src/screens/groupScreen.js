@@ -10,6 +10,7 @@ import { colors } from '../common/colors';
 import Navbar from '../components/navBar';
 
 import { FlatList } from 'react-native-gesture-handler';
+import Snackbar from 'react-native-snackbar';
 import AntDesignIcon from 'react-native-vector-icons/Ionicons';
 import { ACTIVITY_TYPES, PubSubEvents, ROLES } from '../common/constants';
 import AttendanceRewardCard from '../components/attendanceReward';
@@ -18,6 +19,7 @@ import RequestApproveCard from '../components/requestapproveCard';
 import RequestDeclineCard from '../components/requestdeclineCard';
 import ActivityParser from '../services/activityParser';
 import authService from '../services/authService';
+import locationService from '../services/locationService';
 import socketService from '../services/socketService';
 
 const GroupScreen = ({ navigation, route }) => {
@@ -63,6 +65,7 @@ const GroupScreen = ({ navigation, route }) => {
       tokens.push(PubSub.subscribe(event, getActivities));
     });
 
+    // leave session when group is deleted
     tokens.push(PubSub.subscribe(PubSubEvents.OnSessionDeleted, (data) => {
       if (authService.getRole() == ROLES.STUDENT) {
         socketService.leaveSession({ groupId: group.id });
@@ -73,6 +76,27 @@ const GroupScreen = ({ navigation, route }) => {
       navigation.goBack();
     }));
 
+    // leave session when out of range
+    tokens.push(PubSub.subscribe(PubSubEvents.OnAttendanceRequested, (msg, data) => {
+      locationService.getCurrentLocation((err, location) => {
+        if (err)
+          return;
+        let dist = locationService.distance(location, data.location);
+        if (dist > group.radius) {
+          Snackbar.show({
+            text: 'You are not in the group radius.',
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.danger,
+          });
+          socketService.leaveSession({ groupId: group.id });
+          navigation.goBack();
+        } else {
+          // mark attendance
+          socketService.markAttendance({ groupId: data.groupId, points: group.attendanceReward });
+        }
+      });
+    }))
+
     return () => {
       tokens.forEach((token) => {
         PubSub.unsubscribe(token);
@@ -80,16 +104,19 @@ const GroupScreen = ({ navigation, route }) => {
     }
   }, []);
 
-  const handleSubmit = () => {
+  const handleSession = () => {
     if (isSessionStarted) {
       socketService.endSession({ groupId: group.id }, (res) => {
         setIsSessionStarted(false);
         setSessionBtnText('Start');
       });
     } else {
-      socketService.startSession({ groupId: group.id }, (res) => {
-        setIsSessionStarted(true);
-        setSessionBtnText('End');
+      locationService.getCurrentLocation((err, location) => {
+        if (err) return;
+        socketService.startSession({ groupId: group.id, location }, (res) => {
+          setIsSessionStarted(true);
+          setSessionBtnText('End');
+        });
       });
     }
   }
@@ -124,7 +151,7 @@ const GroupScreen = ({ navigation, route }) => {
         </Text>
         <TouchableOpacity
           style={[styles.button]}
-          onPress={handleSubmit}>
+          onPress={handleSession}>
           <Text style={styles.buttonText}>{sessionBtnText}</Text>
         </TouchableOpacity>
       </View>)}

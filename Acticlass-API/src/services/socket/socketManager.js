@@ -129,7 +129,7 @@ class SocketManager {
                     return cb({ err: "Invalid location" });
                 }
                 // Send location to all students to check attendance if they are in range of teacher location
-                this.io.to(data.groupId).emit(SOCKET_EVENTS.CHECK_ATTENDANCE, { groupId: data.groupId, location: data.location });
+                socket.to(data.groupId).emit(SOCKET_EVENTS.CHECK_ATTENDANCE, { groupId: data.groupId, location: data.location });
             });
         }
 

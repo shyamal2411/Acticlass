@@ -40,6 +40,7 @@ const PubSubEvents = {
   OnRequestAccepted: 'OnRequestAccepted',
   OnRequestRejected: 'OnRequestRejected',
   OnPointsUpdated: 'OnPointsUpdated',
+  OnAttendanceRequested: 'OnAttendanceRequested',
 }
 
 
