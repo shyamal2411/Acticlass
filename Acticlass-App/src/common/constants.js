@@ -94,7 +94,7 @@ const IntroSliderCarousel = [
     key: 'one',
     title: 'Connect, Collaborate, Conquer',
     text: 'Groups for every subject. Foster engagement and support. Learning, shared.',
-    image: require('../assets/HomeScreen.png'),
+    image: require('../assets/homeScreen.png'),
   },
   {
     key: 'two',

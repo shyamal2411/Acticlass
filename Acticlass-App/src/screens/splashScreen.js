@@ -20,7 +20,6 @@ const SplashScreen = ({navigation}) => {
     setTimeout(() => {
       if (isFirstTime) {
         mmkv.set(IS_FIRST_TIME, false);
-        // console.log(mmkv.getBoolean(IS_FIRST_TIME));
         navigation.navigate('Intro');
       } else {
         const token = mmkv.getString(AUTH_TOKEN);

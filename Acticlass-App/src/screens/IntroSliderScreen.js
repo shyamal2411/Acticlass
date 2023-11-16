@@ -5,7 +5,7 @@ import {colors} from '../common/colors';
 import {AUTH_TOKEN, IS_FROM_RESET, USER} from '../common/constants';
 import authService from '../services/authService';
 import {mmkv} from '../utils/MMKV';
-import IntroSliderCarousel from '../common/constants';
+import {IntroSliderCarousel} from '../common/constants';
 
 const IntroSliderScreen = ({navigation}) => {
   _renderItem = ({item}) => {
@@ -21,6 +21,7 @@ const IntroSliderScreen = ({navigation}) => {
   };
 
   _onDone = () => {
+    console.log('Done clicked');
     const token = mmkv.getString(AUTH_TOKEN);
     const user = mmkv.getObject(USER);
     const isFromResetPW = mmkv.getBoolean(IS_FROM_RESET) || false;
