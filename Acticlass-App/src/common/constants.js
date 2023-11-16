@@ -94,19 +94,19 @@ const IntroSliderCarousel = [
     key: 'one',
     title: 'Connect, Collaborate, Conquer',
     text: 'Groups for every subject. Foster engagement and support. Learning, shared.',
-    image: require('../assets/homeScreen.png'),
+    image: '../assets/homeScreen.png',
   },
   {
     key: 'two',
     title: 'Smart Activities Tracking',
     text: 'Effortless attendance. Precision in your hands. Track activities based on location and class schedule.',
-    image: require('../assets/activitiesScreen.png'),
+    image: '../assets/activitiesScreen.png',
   },
   {
     key: 'three',
     title: 'Leaderboard for groups',
     text: 'Compete, earn, and climb. Turn learning into a friendly competition with Reward points. Who will be on the top?',
-    image: require('../assets/leaderboard.png'),
+    image: '../assets/leaderboard.png',
   },
 ];
 
