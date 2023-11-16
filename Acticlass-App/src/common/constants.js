@@ -8,10 +8,12 @@ const MMKV_STORE_NAME = 'Acticlass_MMKV_Store';
 const MMKV_ENC_KEY = 'Acticlass_MMKV_ENC_KEY';
 
 // Auth Token
+export const AUTH_TOKEN = 'Acticlass_AUTH_TOKEN';
+export const IS_FROM_RESET = 'Acticlass_AUTH_IS_FROM_RESET';
+export const USER = 'Acticlass_USER';
 
-const AUTH_TOKEN = "Acticlass_AUTH_TOKEN";
-const IS_FROM_RESET = "Acticlass_AUTH_IS_FROM_RESET";
-const USER = "Acticlass_USER";
+// Landing Page
+const IS_FIRST_TIME = 'Acticlass_IS_FIRST_TIME';
 
 const ATTENDANCE_FREQUENCY = ['0', '15', '30', '60'];
 
@@ -41,8 +43,7 @@ const PubSubEvents = {
   OnRequestRejected: 'OnRequestRejected',
   OnPointsUpdated: 'OnPointsUpdated',
   OnAttendanceRequested: 'OnAttendanceRequested',
-}
-
+};
 
 const ACTIVITY_TYPES = {
   SESSION_STARTED: 'SessionStarted',
@@ -53,18 +54,17 @@ const ACTIVITY_TYPES = {
   REQUEST_ACCEPTED: 'RequestAccepted',
   REQUEST_REJECTED: 'RequestRejected',
   ATTENDANCE: 'Attendance',
-}
+};
 
 // Socket events
 const SOCKET_EVENTS = {
-
   //Auth
   CONNECTED: 'connect',
   DISCONNECT: 'disconnect',
   ERROR: 'error',
   CONNECTION_ERROR: 'connect_error',
 
-  // outgoing events (client -> server)  
+  // outgoing events (client -> server)
   START_SESSION: 'StartSession',
   JOIN_SESSION: 'JoinSession',
   LEAVE_SESSION: 'LeaveSession',
@@ -87,7 +87,28 @@ const SOCKET_EVENTS = {
   ON_POINTS_UPDATED: 'pointsUpdated',
   ON_LOCATION_REQUEST: 'locationRequest',
   ON_CHECK_ATTENDANCE: 'checkAttendance',
-}
+};
+
+const IntroSliderCarousel = [
+  {
+    key: 'one',
+    title: 'Connect, Collaborate, Conquer',
+    text: 'Groups for every subject. Foster engagement and support. Learning, shared.',
+    image: require('../assets/HomeScreen.png'),
+  },
+  {
+    key: 'two',
+    title: 'Smart Activities Tracking',
+    text: 'Effortless attendance. Precision in your hands. Track activities based on location and class schedule.',
+    image: require('../assets/activitiesScreen.png'),
+  },
+  {
+    key: 'three',
+    title: 'Leaderboard for groups',
+    text: 'Compete, earn, and climb. Turn learning into a friendly competition with Reward points. Who will be on the top?',
+    image: require('../assets/leaderboard.png'),
+  },
+];
 
 module.exports = {
   ROLES,
@@ -99,5 +120,7 @@ module.exports = {
   ATTENDANCE_FREQUENCY,
   PubSubEvents,
   SOCKET_EVENTS,
-  ACTIVITY_TYPES
-}
+  ACTIVITY_TYPES,
+  IS_FIRST_TIME,
+  IntroSliderCarousel,
+};

@@ -1,12 +1,9 @@
 import React, {useState} from 'react';
 import {
-  ScrollView,
   View,
   StyleSheet,
   Text,
   TextInput,
-  Pressable,
-  Button,
   TouchableOpacity,
   SafeAreaView,
   KeyboardAvoidingView,
@@ -20,8 +17,6 @@ import {ATTENDANCE_FREQUENCY, PubSubEvents} from '../common/constants';
 import {groupCreation} from '../common/validationSchemas';
 import groupServices from '../services/groupServices';
 import {toNumber, toString} from 'lodash';
-import {Console} from 'console';
-import Snackbar from 'react-native-snackbar';
 
 const EditGroup = ({group, cb}) => {
   handleClickOnUpdate = values => {

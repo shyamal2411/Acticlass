@@ -1,4 +1,4 @@
-import { StackActions } from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 import randomColor from 'randomcolor';
 import React from 'react';
 import {
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { RESULTS } from 'react-native-permissions';
+import {RESULTS} from 'react-native-permissions';
 import {
   Menu,
   MenuOption,
@@ -20,9 +20,9 @@ import {
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Snackbar from 'react-native-snackbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import { colors } from '../common/colors';
-import { PubSubEvents, ROLES } from '../common/constants';
-import { navRef } from '../navigation/navRef';
+import {colors} from '../common/colors';
+import {PubSubEvents, ROLES} from '../common/constants';
+import {navRef} from '../navigation/navRef';
 import PermissionManager from '../services/PermissionManager';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
@@ -52,15 +52,16 @@ const groupNameInitials = groupName => {
   return groupName[0][0];
 };
 
-const GroupCard = ({ navigation, item }) => {
+const GroupCard = ({navigation, item}) => {
   const refRBSheet = React.createRef();
-  const options = authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
+  const options =
+    authService.getRole() == ROLES.STUDENT ? StudentOptions : TeacherOptions;
 
   const handleCardPress = async () => {
-    PermissionManager.requestLocationPermission().then((result) => {
+    PermissionManager.requestLocationPermission().then(result => {
       if (result === RESULTS.GRANTED) {
         if (authService.getRole() === ROLES.STUDENT) {
-          socketService.getGroupStatus({ groupId: item.id }, (res) => {
+          socketService.getGroupStatus({groupId: item.id}, res => {
             if (res.err) {
               Snackbar.show({
                 text: res.err,
@@ -86,10 +87,18 @@ const GroupCard = ({ navigation, item }) => {
               return;
             }
             locationService.getCurrentLocation((err, location) => {
-              if (err)
-                return;
+              if (err) return;
               let dist = locationService.distance(location, res.location);
-              console.log('Distance: ', dist, 'Radius: ', item.radius, 'Location: ', location, 'Group Location: ', res.location);
+              console.log(
+                'Distance: ',
+                dist,
+                'Radius: ',
+                item.radius,
+                'Location: ',
+                location,
+                'Group Location: ',
+                res.location,
+              );
               if (dist > item.radius) {
                 Snackbar.show({
                   text: 'You are not in the group radius.',
@@ -101,7 +110,8 @@ const GroupCard = ({ navigation, item }) => {
                 navRef.current.dispatch(
                   StackActions.push('GroupScreen', {
                     group: item,
-                  }));
+                  }),
+                );
               }
             });
           });
@@ -109,7 +119,8 @@ const GroupCard = ({ navigation, item }) => {
           navRef.current.dispatch(
             StackActions.push('GroupScreen', {
               group: item,
-            }));
+            }),
+          );
         }
       } else {
         Snackbar.show({
@@ -119,13 +130,12 @@ const GroupCard = ({ navigation, item }) => {
         });
       }
     });
-  }
+  };
   const handleOnMore = index => {
-
     switch (options[index]) {
       case 'Leader Board':
         navRef.current.dispatch(
-          StackActions.push('LeaderBoard', { groupId: item.id }),
+          StackActions.push('LeaderBoard', {groupId: item.id}),
         );
         break;
       case 'Group Info':
@@ -171,7 +181,7 @@ const GroupCard = ({ navigation, item }) => {
             {
               text: 'Yes',
               onPress: () => {
-                groupServices.deleteGroup({ groupId: item.id }, (err, res) => {
+                groupServices.deleteGroup({groupId: item.id}, (err, res) => {
                   if (err) {
                     Snackbar.show({
                       text: err.msg,
@@ -190,9 +200,9 @@ const GroupCard = ({ navigation, item }) => {
               },
               style: 'cancel',
             },
-            { text: 'Cancel', onPress: () => { } },
+            {text: 'Cancel', onPress: () => {}},
           ],
-          { cancelable: true },
+          {cancelable: true},
         );
         break;
       case 'Edit group':
@@ -208,7 +218,7 @@ const GroupCard = ({ navigation, item }) => {
           styles.container,
           {
             shadowColor: colors.placeholder,
-            shadowOffset: { width: 0, height: 8 },
+            shadowOffset: {width: 0, height: 8},
             shadowOpacity: 0.5,
             shadowRadius: 3.84,
             elevation: 5,
@@ -276,10 +286,10 @@ const GroupCard = ({ navigation, item }) => {
                 }}>
                 {item.name}
               </Text>
-              <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
+              <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
                 Passing Points: {item.passingPoints}
               </Text>
-              <Text style={{ fontSize: 14, color: colors.black, marginLeft: 16 }}>
+              <Text style={{fontSize: 14, color: colors.black, marginLeft: 16}}>
                 Radius: {item.radius}
               </Text>
             </View>
@@ -303,7 +313,7 @@ const GroupCard = ({ navigation, item }) => {
                   {options.map((option, index) => (
                     <MenuOption
                       key={index}
-                      customStyles={{ optionText: styles.menuText }}
+                      customStyles={{optionText: styles.menuText}}
                       text={option}
                       onSelect={() => handleOnMore(index)}
                     />
@@ -367,10 +377,10 @@ const GroupCard = ({ navigation, item }) => {
                 </View>
               )}
             </View>
-          </View >
-        </View >
-      </View >
-    </TouchableOpacity >
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
