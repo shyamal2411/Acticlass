@@ -26,8 +26,16 @@ const getActivities = async (req, res) => {
       .populate("group")
       .then((activities) => {
         const response = activities.filter((activity) => {
-          activity.triggerBy === user._id ||
-            activity.triggerBy === activity.group.createdBy;
+          return (
+            activity.triggerBy._id.equals(user._id) ||
+            (activity.triggerBy._id.equals(activity.group.createdBy) &&
+              activity?.triggerFor?.triggerBy.equals(user._id)) ||
+            (activity.triggerBy._id.equals(activity.group.createdBy) &&
+              [
+                ACTIVITY_TYPES.SESSION_ENDED,
+                ACTIVITY_TYPES.SESSION_STARTED,
+              ].includes(activity.type))
+          );
         });
         return res.status(200).json({ response });
       });
@@ -53,6 +61,7 @@ const getActivitiesByGroupAndRange = async (req, res) => {
   let end = new Date(endDate);
   end.setHours(23, 59, 59, 999);
   if (user.role === Roles.STUDENT) {
+    console.log("dadadad", user._id);
     const activities = await ActivitySchema.find({
       group: groupId,
       timestamp: {
@@ -66,8 +75,16 @@ const getActivitiesByGroupAndRange = async (req, res) => {
       .populate("group")
       .then((activities) => {
         const response = activities.filter((activity) => {
-          activity.triggerBy === user._id ||
-            activity.triggerBy === activity.group.createdBy;
+          return (
+            activity.triggerBy._id.equals(user._id) ||
+            (activity.triggerBy._id.equals(activity.group.createdBy) &&
+              activity?.triggerFor?.triggerBy.equals(user._id)) ||
+            (activity.triggerBy._id.equals(activity.group.createdBy) &&
+              [
+                ACTIVITY_TYPES.SESSION_ENDED,
+                ACTIVITY_TYPES.SESSION_STARTED,
+              ].includes(activity.type))
+          );
         });
         return res.status(200).json({ response });
       });
