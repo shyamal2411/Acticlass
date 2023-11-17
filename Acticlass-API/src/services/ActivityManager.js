@@ -402,6 +402,7 @@ class ActivityManager {
                 group: data.groupId,
                 triggerBy: data.userId,
                 triggerFor: data.requestId,
+                points: data.points,
             }).then((activity) => {
                 this.addActivity(data.groupId, activity);
                 this.updateUserPointBucket({ groupId: data.groupId, userId: request.triggerBy, points: data.points, type: data.type });
