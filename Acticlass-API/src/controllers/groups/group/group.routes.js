@@ -12,5 +12,6 @@ router.delete('/delete/:id', controller.deleteGroupById);
 router.post('/join/:id', controller.joinGroupById);
 router.post('/leave/:id', controller.leaveGroupById);
 router.post('/kick/:id', controller.kickUserById);
+router.post('/get-member-details', controller.getMemberDetails);
 
 module.exports = router;

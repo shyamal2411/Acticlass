@@ -321,6 +321,27 @@ const getGroupMembers = async (req, res) => {
     });
 }
 
+const getMemberDetails = async (req, res) => {
+    const { userId, groupId } = req.body;
+    if (!groupId || isEmpty(groupId)) {
+        return res.status(400).json({ msg: 'Group id is required.' });
+    }
+    if (!userId || isEmpty(userId)) {
+        return res.status(400).json({ msg: 'User id is required.' });
+    }
+    PointBucketSchema.findOne({ user: userId, group: groupId }).populate('user').then((pointBucket) => {
+        if (!pointBucket) {
+            return res.status(404).json({ msg: 'Group not found.' });
+        }
+        const { user, points } = pointBucket;
+        const { _id, name, email, role, institute } = user;
+        return res.status(200).json({ member: { id: _id, name, email, role, institute, points } });
+    }).catch((error) => {
+        console.error("Error getting group member details: ", error);
+        return res.status(500).json({ msg: 'Something went wrong.' });
+    });
+}
+
 // Export the controller functions
 module.exports = {
     createGroup,
@@ -331,5 +352,6 @@ module.exports = {
     deleteGroupById,
     joinGroupById,
     leaveGroupById,
+    getMemberDetails,
     kickUserById
 };

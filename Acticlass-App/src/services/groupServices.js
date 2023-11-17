@@ -270,6 +270,33 @@ class groupService {
         }
       });
   }
+
+
+  /**
+   * 
+   * @param {{groupId:String,userId:String}} data 
+   * @param {Function} cb 
+   */
+  getMemberDetails({ groupId, userId }, cb) {
+    api({ url: `${endpoints.getMemberDetails}`, method: 'POST', data: { groupId, userId } })
+      .then(res => {
+        console.log(
+          this.tag,
+          '[getMemberDetails]',
+          'Member details retrieved successfully! ✅',
+        );
+        if (cb != null) {
+          cb(null, res);
+        }
+      })
+      .catch(err => {
+        console.error(this.tag, '[getMemberDetails]', err);
+        if (cb != null) {
+          cb(err, null);
+        }
+      });
+  }
+
 }
 
 
