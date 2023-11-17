@@ -1,11 +1,15 @@
 import React from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
-import { colors } from '../common/colors';
+import {StyleSheet, Text, View} from 'react-native';
+import {colors} from '../common/colors';
 
-const RequestApproveCard = ({ item }) => {
+const RequestApproveCard = ({item}) => {
   return (
-    <View style={[styles.row, item.isMine ? { flexDirection: 'row-reverse' } : { flexDirection: 'row' }]}>
+    <View
+      style={[
+        styles.row,
+        item.isMine ? {flexDirection: 'row-reverse'} : {flexDirection: 'row'},
+      ]}>
       <View style={styles.container}>
         <Text style={styles.text}>Request Approved ✅</Text>
         <Text style={styles.text_points}>+{item.points} points!</Text>
