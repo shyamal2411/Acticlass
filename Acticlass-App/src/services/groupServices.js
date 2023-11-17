@@ -274,11 +274,11 @@ class groupService {
 
   /**
    * 
-   * @param {{groupId:String,userId:String}} data 
+   * @param {{activityId}} data 
    * @param {Function} cb 
    */
-  getMemberDetails({ groupId, userId }, cb) {
-    api({ url: `${endpoints.getMemberDetails}`, method: 'POST', data: { groupId, userId } })
+  getMemberDetails({ activityId }, cb) {
+    api({ url: `${endpoints.getMemberDetails}`, method: 'POST', data: { activityId } })
       .then(res => {
         console.log(
           this.tag,
