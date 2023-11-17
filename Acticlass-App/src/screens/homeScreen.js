@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation }) => {
     refreshGroups();
     const tokens = [];
     const events = [PubSubEvents.ONAppComesToForeground, PubSubEvents.OnGroupCreated, PubSubEvents.OnGroupUpdated, PubSubEvents.OnGroupDeleted,
-    PubSubEvents.OnGroupJoined, PubSubEvents.OnGroupLeft];
+    PubSubEvents.OnGroupJoined, PubSubEvents.OnGroupLeft, PubSubEvents.OnPointsUpdated];
     events.forEach(event => {
       tokens.push(PubSub.subscribe(event, refreshGroups));
     });
