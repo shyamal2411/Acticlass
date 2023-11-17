@@ -170,6 +170,8 @@ const changePassword = async (req, res) => {
     });
 }
 
+//Function to change the password
+
 
 // Function to delete a user's profile
 const deleteProfile = async (req, res) => {
