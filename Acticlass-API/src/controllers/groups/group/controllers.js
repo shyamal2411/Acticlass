@@ -1,6 +1,6 @@
 const { isEmpty } = require("lodash");
 const { Roles, DEFAULT_RADIUS, ATTENDANCE_FREQUENCY } = require("../../../common/constants");
-const { GroupSchema, PointBucketSchema } = require("../../../database");
+const { GroupSchema, PointBucketSchema, ActivitySchema } = require("../../../database");
 
 
 const createGroup = async (req, res) => {
@@ -322,22 +322,29 @@ const getGroupMembers = async (req, res) => {
 }
 
 const getMemberDetails = async (req, res) => {
-    const { userId, groupId } = req.body;
-    if (!groupId || isEmpty(groupId)) {
-        return res.status(400).json({ msg: 'Group id is required.' });
+    const { activityId } = req.body;
+    if (!activityId || isEmpty(activityId)) {
+        return res.status(400).json({ msg: 'Activity id is required.' });
     }
-    if (!userId || isEmpty(userId)) {
-        return res.status(400).json({ msg: 'User id is required.' });
-    }
-    PointBucketSchema.findOne({ user: userId, group: groupId }).populate('user').then((pointBucket) => {
-        if (!pointBucket) {
-            return res.status(404).json({ msg: 'Group not found.' });
+    ActivitySchema.findOne({ _id: activityId }).then((activity) => {
+        if (!activity) {
+            return res.status(404).json({ msg: 'Activity not found.' });
         }
-        const { user, points } = pointBucket;
-        const { _id, name, email, role, institute } = user;
-        return res.status(200).json({ member: { id: _id, name, email, role, institute, points } });
+
+        PointBucketSchema.findOne({ user: activity.triggerBy, group: activity.group }).populate('user').then((pointBucket) => {
+            if (!pointBucket) {
+                return res.status(404).json({ msg: 'Group not found.' });
+            }
+            const { user, points } = pointBucket;
+            const { _id, name, email, role, institute } = user;
+            return res.status(200).json({ id: _id, name, email, role, institute, points });
+        }).catch((error) => {
+            console.error("Error getting group member details: ", error);
+            return res.status(500).json({ msg: 'Something went wrong.' });
+        });
+
     }).catch((error) => {
-        console.error("Error getting group member details: ", error);
+        console.error("Error getting member details: ", error);
         return res.status(500).json({ msg: 'Something went wrong.' });
     });
 }
