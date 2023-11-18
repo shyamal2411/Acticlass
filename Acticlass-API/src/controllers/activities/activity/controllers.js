@@ -1,108 +1,97 @@
-const { isEmpty } = require("lodash");
+const { isEmpty, sortBy, cloneDeep } = require("lodash");
 const { Roles, ACTIVITY_TYPES } = require("../../../common/constants");
-const { ActivitySchema } = require("../../../database");
+const { ActivitySchema, UserSchema } = require("../../../database");
+const moment = require("moment");
 
 const getActivities = async (req, res) => {
   const user = req.user;
-  const date = req.params.date ? req.params.date : new Date();
-  const startDateTime = new Date(date);
-  startDateTime.setHours(0, 0, 0, 0);
-  const endDateTime = new Date(date);
-  endDateTime.setHours(23, 59, 59, 999);
+  let { groupId, startDate, endDate } = req.body;
 
-  if (user.role === Roles.TEACHER) {
-    const response = await ActivitySchema.find({
-      timestamp: { $gte: startDateTime, $lte: endDateTime },
-    })
-      .populate("triggerBy")
-      .populate("triggerFor");
-    res.status(200).json({ response });
-  } else if (user.role === Roles.STUDENT) {
-    await ActivitySchema.find({
-      timestamp: { $gte: startDateTime, $lte: endDateTime },
-    })
-      .populate("triggerBy")
-      .populate("triggerFor")
-      .populate("group")
-      .then((activities) => {
-        const response = activities.filter((activity) => {
-          return (
-            activity.triggerBy._id.equals(user._id) ||
-            (activity.triggerBy._id.equals(activity.group.createdBy) &&
-              activity?.triggerFor?.triggerBy.equals(user._id)) ||
-            (activity.triggerBy._id.equals(activity.group.createdBy) &&
-              [
-                ACTIVITY_TYPES.SESSION_ENDED,
-                ACTIVITY_TYPES.SESSION_STARTED,
-              ].includes(activity.type))
-          );
-        });
-        return res.status(200).json({ response });
-      });
+  if (!groupId || isEmpty(groupId)) {
+    return res.status(400).json({ msg: "Group id is required." });
   }
-};
 
-const getActivitiesByGroupAndRange = async (req, res) => {
-  const user = req.user;
-  const { groupId, startDate, endDate } = req.params;
-  if (startDate > endDate)
-    return res
-      .status(400)
-      .json({ message: "Start date must be before end date" });
   if (!startDate || !endDate)
     return res
       .status(400)
       .json({ message: "Start date and end date must be provided" });
-  if (!groupId || isEmpty(groupId)) {
-    return res.status(400).json({ msg: "Group id is required." });
+
+  startDate = moment(startDate).startOf("day").toDate();
+  endDate = moment(endDate).endOf("day").toDate();
+  if (startDate > endDate) {
+    return res
+      .status(400)
+      .json({ message: "Start date must be before end date" });
   }
-  let start = new Date(startDate);
-  start.setHours(0, 0, 0, 0);
-  let end = new Date(endDate);
-  end.setHours(23, 59, 59, 999);
-  if (user.role === Roles.STUDENT) {
-    console.log("dadadad", user._id);
-    const activities = await ActivitySchema.find({
-      group: groupId,
-      timestamp: {
-        $gte: start,
-        $lte: end,
-      },
-      triggerBy: user._id,
-    })
-      .populate("triggerBy")
-      .populate("triggerFor")
-      .populate("group")
-      .then((activities) => {
-        const response = activities.filter((activity) => {
+
+  ActivitySchema.find({
+    group: groupId,
+    timestamp: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+    type: {
+      $in: [
+        ACTIVITY_TYPES.REQUEST_ACCEPTED,
+        ACTIVITY_TYPES.REQUEST_REJECTED,
+        ACTIVITY_TYPES.ATTENDANCE,
+      ],
+    },
+  })
+    .populate("triggerFor")
+    .then(async (activities) => {
+      if (!activities || isEmpty(activities)) {
+        return res.status(200).json({ activities: [] });
+      }
+      let result = sortBy(activities);
+
+      if (user.role == Roles.TEACHER) {
+        let filterdData = [];
+        let userIds = [];
+        for (const activity of result) {
+          if (activity.triggerFor) {
+            let uid = activity.triggerFor.triggerBy.toString();
+            userIds.push(uid);
+          }
+          filterdData.push(cloneDeep(activity));
+        }
+
+        UserSchema.find({ _id: { $in: userIds } })
+          .then((users) => {
+            if (!users) {
+              return res.status(200).json({ activities: filterdData });
+            }
+            let results = [];
+            for (let activity of filterdData) {
+              for (let user of users) {
+                if (activity.triggerFor) {
+                  activity.triggerFor.triggerBy = user;
+                }
+              }
+            }
+
+            return res.status(200).json({ activities: filterdData });
+          })
+          .catch((err) => {
+            console.error("Error getActivities: ", err);
+            return res.status(500).json({ msg: "Something went wrong." });
+          });
+      } else {
+        result = result.filter((activity) => {
           return (
-            activity.triggerBy._id.equals(user._id) ||
-            (activity.triggerBy._id.equals(activity.group.createdBy) &&
-              activity?.triggerFor?.triggerBy.equals(user._id)) ||
-            (activity.triggerBy._id.equals(activity.group.createdBy) &&
-              [
-                ACTIVITY_TYPES.SESSION_ENDED,
-                ACTIVITY_TYPES.SESSION_STARTED,
-              ].includes(activity.type))
+            activity.triggerBy.equals(user._id) ||
+            activity.triggerFor?.triggerBy.equals(user._id)
           );
         });
-        return res.status(200).json({ response });
-      });
-  } else if (user.role === Roles.TEACHER) {
-    const response = await ActivitySchema.find({
-      group: groupId,
-      timestamp: {
-        $gte: start,
-        $lte: end,
-      },
+        return res.status(200).json({ activities: result });
+      }
     })
-      .populate("triggerBy")
-      .populate("triggerFor");
-    res.status(200).json({ response });
-  }
+    .catch((err) => {
+      console.error("Error getActivities: ", err);
+      return res.status(500).json({ msg: "Something went wrong." });
+    });
 };
 
 module.exports = {
   getActivities,
-  getActivitiesByGroupAndRange,
 };
