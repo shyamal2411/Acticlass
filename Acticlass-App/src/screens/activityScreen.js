@@ -1,23 +1,26 @@
 import React, {useEffect} from 'react';
 import {
-  View,
-  Text,
-  Switch,
-  StyleSheet,
-  TouchableOpacity,
   Dimensions,
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {colors} from '../common/colors';
-import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import authService from '../services/authService';
-import FeatherIcon from 'react-native-vector-icons/Feather';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {colors} from '../common/colors';
+import ActivityScreenMain from '../components/activityBarStats';
 import CsvReportDownloadSheet from '../components/csvReportDownloadSheet';
+import Navbar from '../components/navBar';
+import RewardCard from '../components/rewardCard';
+import activitiesData from '../mock/groupActivitiesData';
 import groupServices from '../services/groupServices';
+
 const ActivityScreen = () => {
   const [isEnabled, setIsEnabled] = React.useState(false);
   const refRBSheet = React.createRef();
-
+  const logsForTheDay = activitiesData; // used Mocked data
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const [groups, setGroups] = React.useState([]);
@@ -35,10 +38,45 @@ const ActivityScreen = () => {
     refRBSheet.current.open();
   };
 
+  const renderLogPortion = () => {
+    return (
+      <View style={styles.bottomContent}>
+        {logsForTheDay.length > 0 ? (
+          <FlatList
+            style={{width: '100%'}}
+            data={logsForTheDay}
+            renderItem={({item}) => <RewardCard log={item} />}
+          />
+        ) : (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: '600',
+                color: colors.placeholder,
+              }}>
+              No Activity.
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  const renderBarPortion = () => {
+    return (
+      <View style={styles.topContent}>
+        <ActivityScreenMain />
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={{color: colors.black}}>Activity Screen</Text>
-
+      <Navbar title={'Activities'} />
+      {renderBarPortion()}
+      {renderLogPortion()}
       <View style={styles.fab}>
         <TouchableOpacity
           style={{
@@ -53,7 +91,6 @@ const ActivityScreen = () => {
           <MaterialIcon name="download" size={32} color={colors.white} />
         </TouchableOpacity>
       </View>
-
       <RBSheet
         ref={refRBSheet}
         closeOnDragDown={true}
@@ -110,6 +147,19 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 44,
     bottom: 8,
+  },
+  bottomContent: {
+    flex: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  topContent: {
+    flex: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+    width: '100%',
   },
 });
 
