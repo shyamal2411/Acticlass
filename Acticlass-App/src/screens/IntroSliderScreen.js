@@ -13,7 +13,7 @@ const IntroSliderScreen = ({navigation}) => {
       <View style={styles.slide}>
         <View sytle={styles.container}>
           <Text style={styles.title}>{item.title}</Text>
-          <Image source={item.image} style={styles.image} />
+          <Image source={item.image()} style={styles.image} />
           <Text style={styles.text}>{item.text}</Text>
         </View>
       </View>
@@ -21,7 +21,6 @@ const IntroSliderScreen = ({navigation}) => {
   };
 
   _onDone = () => {
-    console.log('Done clicked');
     const token = mmkv.getString(AUTH_TOKEN);
     const user = mmkv.getObject(USER);
     const isFromResetPW = mmkv.getBoolean(IS_FROM_RESET) || false;
@@ -42,6 +41,7 @@ const IntroSliderScreen = ({navigation}) => {
       data={IntroSliderCarousel}
       renderItem={this._renderItem}
       renderDoneButton={this._renderDoneButton}
+      onDone={this._onDone}
     />
   );
 };
