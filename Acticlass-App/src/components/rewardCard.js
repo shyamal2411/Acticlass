@@ -15,8 +15,9 @@ const RewardCard = ({log}) => {
     const hours = dateFromTimestamp.getHours();
     const minutes = dateFromTimestamp.getMinutes();
     const amPM = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12;
-    return `${formattedHours}:${minutes} ${amPM}`;
+    const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
+    const formattedMinutes = minutes.toString().padStart(2, '0');
+    return `${formattedHours}:${formattedMinutes} ${amPM}`;
   };
 
   const getDescriptionForLog = () => {
