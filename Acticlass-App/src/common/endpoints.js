@@ -18,5 +18,8 @@ export const endpoints = {
   joinGroup: baseUrl + '/groups/join',
   leaveGroup: baseUrl + '/groups/leave',
   kickUser: baseUrl + '/groups/kick',
-  getMemberDetails: baseUrl + '/groups/get-member-details'
+  getMemberDetails: baseUrl + '/groups/get-member-details',
+
+  //Activity
+  getActivities: baseUrl + '/activities/get-activities',
 };
