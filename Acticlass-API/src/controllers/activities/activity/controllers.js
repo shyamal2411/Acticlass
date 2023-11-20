@@ -2,6 +2,18 @@ const { isEmpty, sortBy, cloneDeep } = require("lodash");
 const { Roles, ACTIVITY_TYPES } = require("../../../common/constants");
 const { ActivitySchema, UserSchema } = require("../../../database");
 const moment = require("moment");
+const activity = require("../../../database/schema/activity");
+
+const parseActivity = (activity) => {
+  return {
+    type: activity.type,
+    triggerFor: activity.triggerFor,
+    triggerBy: activity.triggerBy,
+    timestamp: activity.timestamp,
+    points: activity.points
+  }
+}
+
 
 const getActivities = async (req, res) => {
   const user = req.user;
@@ -38,7 +50,14 @@ const getActivities = async (req, res) => {
       ],
     },
   })
-    .populate("triggerFor")
+    .populate({
+      path: "triggerFor",
+      populate: {
+        path: "triggerBy",
+        select: "name email",
+      },
+      select: "type timestamp points triggerBy",
+    })
     .then(async (activities) => {
       if (!activities || isEmpty(activities)) {
         return res.status(200).json({ activities: [] });
@@ -46,43 +65,20 @@ const getActivities = async (req, res) => {
       let result = sortBy(activities);
 
       if (user.role == Roles.TEACHER) {
-        let filterdData = [];
-        let userIds = [];
+        let filteredData = [];
         for (const activity of result) {
-          if (activity.triggerFor) {
-            let uid = activity.triggerFor.triggerBy.toString();
-            userIds.push(uid);
-          }
-          filterdData.push(cloneDeep(activity));
+          filteredData.push(parseActivity(activity));
         }
-
-        UserSchema.find({ _id: { $in: userIds } })
-          .then((users) => {
-            if (!users) {
-              return res.status(200).json({ activities: filterdData });
-            }
-            let results = [];
-            for (let activity of filterdData) {
-              for (let user of users) {
-                if (activity.triggerFor) {
-                  activity.triggerFor.triggerBy = user;
-                }
-              }
-            }
-
-            return res.status(200).json({ activities: filterdData });
-          })
-          .catch((err) => {
-            console.error("Error getActivities: ", err);
-            return res.status(500).json({ msg: "Something went wrong." });
-          });
+        return res.status(200).json({ activities: filteredData });
       } else {
         result = result.filter((activity) => {
           return (
             activity.triggerBy.equals(user._id) ||
-            activity.triggerFor?.triggerBy.equals(user._id)
+            activity.triggerFor?.triggerBy._id.equals(user._id)
           );
         });
+        result = result.map((activity) => parseActivity(activity));
+        console.log("res: ", result);
         return res.status(200).json({ activities: result });
       }
     })

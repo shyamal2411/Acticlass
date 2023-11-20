@@ -1,6 +1,6 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {colors} from '../common/colors';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors } from '../common/colors';
 import {
   AUTH_TOKEN,
   IS_FIRST_TIME,
@@ -8,9 +8,9 @@ import {
   USER,
 } from '../common/constants';
 import authService from '../services/authService';
-import {mmkv} from '../utils/MMKV';
+import { mmkv } from '../utils/MMKV';
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     let isFirstTime = mmkv.getBoolean(IS_FIRST_TIME);
     if (isFirstTime === undefined) {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   appName: {
     textShadowColor: 'rgba(0, 0, 0, 0.25))',
-    textShadowOffset: {width: -10, height: 10},
+    textShadowOffset: { width: -10, height: 10 },
     textShadowRadius: 10,
     fontSize: 72,
     fontWeight: 'bold',
