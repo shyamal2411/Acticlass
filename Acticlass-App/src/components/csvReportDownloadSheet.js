@@ -1,32 +1,22 @@
-import React, {useState} from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { isEmpty } from 'lodash';
+import React, { useState } from 'react';
 import {
-  ScrollView,
-  View,
   StyleSheet,
   Text,
-  TextInput,
-  Pressable,
-  Button,
   TouchableOpacity,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Dimensions,
+  View
 } from 'react-native';
-import {colors} from '../common/colors';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import SelectDropdown from 'react-native-select-dropdown';
-import FeatherIcon from 'react-native-vector-icons/Feather';
-import {Console} from 'console';
-import {forEach, isEmpty} from 'lodash';
 import Snackbar from 'react-native-snackbar';
+import FeatherIcon from 'react-native-vector-icons/Feather';
+import { colors } from '../common/colors';
 
-const CsvReportDownloadSheet = ({groups, cb}) => {
-  const groupIdNameJson = groups.map(item => {
-    return {id: item.id, groupName: item.name};
-  });
-  const groupIdtoName = {};
+const CsvReportDownloadSheet = ({ groups, cb }) => {
+  const groupNames = groups.map(item => item.name);
+  const groupIdToName = {};
   groups.forEach(item => {
-    groupIdtoName[item.name] = item.id;
+    groupIdToName[item.name] = item.id;
   });
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
@@ -38,11 +28,11 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
   const [endDate, setEndDate] = useState(endingDate);
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState({});
+  const [selectedGroup, setSelectedGroup] = useState(groupNames[0]);
 
   const handleDownload = () => {
     console.log(
-      groupIdtoName[selectedGroup],
+      groupIdToName[selectedGroup],
       selectedGroup,
       startDate,
       endingDate,
@@ -96,7 +86,7 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
     <View style={styles.container}>
       <Text style={styles.title}>CSV Report</Text>
 
-      <View style={{paddingHorizontal: 40}}>
+      <View style={{ paddingHorizontal: 40 }}>
         <Text style={styles.inputTitle}>Group</Text>
         <View>
           <SelectDropdown
@@ -109,6 +99,7 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
                 />
               );
             }}
+            defaultValueByIndex={0}
             dropdownIconPosition="right"
             buttonStyle={{
               backgroundColor: 'white',
@@ -136,13 +127,13 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
               fontSize: 16,
             }}
             defaultButtonText="Select Group"
-            data={groupIdNameJson.map(item => item.groupName)}
+            data={groupNames}
             onSelect={handleSelectGroup}
           />
         </View>
       </View>
 
-      <View style={{paddingHorizontal: 40, marginTop: 12}}>
+      <View style={{ paddingHorizontal: 40, marginTop: 12 }}>
         <Text style={styles.inputTitle}>Start Date</Text>
         <TouchableOpacity style={styles.input} onPress={showStartDate}>
           <Text
@@ -160,7 +151,7 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
         )}
       </View>
 
-      <View style={{paddingHorizontal: 40, marginTop: 10}}>
+      <View style={{ paddingHorizontal: 40, marginTop: 10 }}>
         <Text style={styles.inputTitle}>End Date</Text>
         <TouchableOpacity style={styles.input} onPress={showEndDate}>
           <Text
@@ -177,7 +168,7 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
         )}
       </View>
 
-      <View style={{paddingHorizontal: 40}}>
+      <View style={{ paddingHorizontal: 40 }}>
         <TouchableOpacity style={styles.button} onPress={handleDownload}>
           <Text style={styles.buttonText}>Download</Text>
         </TouchableOpacity>
@@ -205,7 +196,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
 
-  dateValule: {fontSize: 16, color: 'black', marginTop: 12},
+  dateValule: { fontSize: 16, color: 'black', marginTop: 12 },
   inputTitle: {
     fontSize: 16,
     color: 'black',
