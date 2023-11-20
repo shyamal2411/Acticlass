@@ -86,7 +86,7 @@ const ActivityScreen = () => {
 
   const renderCsvReportDownloadSheet = () => {
     return (
-      <View style={{ flex: 1, width: "100%", backgroundColor: colors.secondary }}>
+      <View style={{ flex: 1, width: "100%" }}>
         <View style={{ paddingHorizontal: 16, backgroundColor: colors.secondary }}>
           <SelectDropdown
             renderDropdownIcon={() => {

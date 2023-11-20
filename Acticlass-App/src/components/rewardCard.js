@@ -1,13 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
-import {colors} from '../common/colors';
-import {PubSubEvents, ROLES} from '../common/constants';
+import { StyleSheet, Text, View } from 'react-native';
+import { colors } from '../common/colors';
+import { ROLES } from '../common/constants';
 import authService from '../services/authService';
-import groupServices from '../services/groupServices';
-import Snackbar from 'react-native-snackbar';
-import {black} from 'color-name';
 
-const RewardCard = ({log}) => {
+const RewardCard = ({ log }) => {
   const isStudent = authService.getRole() == ROLES.STUDENT;
 
   const getFormattedTime = () => {
@@ -33,7 +30,7 @@ const RewardCard = ({log}) => {
           marginLeft: 16,
           height: '100%',
         }}>
-        <Text style={{color: colors.black, fontSize: 14, fontWeight: 600}}>
+        <Text style={{ color: colors.black, fontSize: 14, fontWeight: 600 }}>
           Rewards
         </Text>
         <View
@@ -96,7 +93,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     maxWidth: '100%',
     shadowColor: colors.placeholder,
-    shadowOffset: {width: 0, height: 8},
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 5,

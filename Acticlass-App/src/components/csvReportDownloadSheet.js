@@ -138,7 +138,7 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
         <TouchableOpacity style={styles.input} onPress={showStartDate}>
           <Text
             style={
-              styles.dateValule
+              styles.dateValue
             }>{`${startDate.toLocaleDateString()}`}</Text>
         </TouchableOpacity>
         {showStartPicker && (
@@ -155,7 +155,7 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
         <Text style={styles.inputTitle}>End Date</Text>
         <TouchableOpacity style={styles.input} onPress={showEndDate}>
           <Text
-            style={styles.dateValule}>{`${endDate.toLocaleDateString()}`}</Text>
+            style={styles.dateValue}>{`${endDate.toLocaleDateString()}`}</Text>
         </TouchableOpacity>
         {showEndPicker && (
           <DateTimePicker
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
 
-  dateValule: { fontSize: 16, color: 'black', marginTop: 12 },
+  dateValue: { fontSize: 16, color: 'black', marginTop: 12 },
   inputTitle: {
     fontSize: 16,
     color: 'black',
