@@ -1,14 +1,13 @@
 import React from 'react';
-import {StyleSheet, View, Text, Image} from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
-import {colors} from '../common/colors';
-import {AUTH_TOKEN, IS_FROM_RESET, USER} from '../common/constants';
+import { colors } from '../common/colors';
+import { AUTH_TOKEN, IS_FROM_RESET, IntroSliderCarousel, USER } from '../common/constants';
 import authService from '../services/authService';
-import {mmkv} from '../utils/MMKV';
-import {IntroSliderCarousel} from '../common/constants';
+import { mmkv } from '../utils/MMKV';
 
-const IntroSliderScreen = ({navigation}) => {
-  _renderItem = ({item}) => {
+const LandingScreen = ({ navigation }) => {
+  _renderItem = ({ item }) => {
     return (
       <View style={styles.slide}>
         <View sytle={styles.container}>
@@ -89,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default IntroSliderScreen;
+export default LandingScreen;

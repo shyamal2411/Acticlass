@@ -1,5 +1,6 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
+import LandingScreen from '../screens/landingScreen';
 import splashScreen from '../screens/splashScreen';
 import appStack from './appStack';
 import authStack from './authStack';
@@ -14,6 +15,7 @@ export const MainRoute = () => {
       }}
       initialRouteName="Splash">
       <Stack.Screen name="Splash" component={splashScreen} />
+      <Stack.Screen name="Intro" component={LandingScreen} />
       <Stack.Screen name="AuthStack" component={authStack} />
       <Stack.Screen name="AppStack" component={appStack} />
     </Stack.Navigator>
