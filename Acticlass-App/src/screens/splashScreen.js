@@ -8,6 +8,7 @@ import {
   USER,
 } from '../common/constants';
 import authService from '../services/authService';
+import socketService from '../services/socketService';
 import { mmkv } from '../utils/MMKV';
 
 const SplashScreen = ({ navigation }) => {
@@ -26,6 +27,7 @@ const SplashScreen = ({ navigation }) => {
         const user = mmkv.getObject(USER);
         const isFromResetPW = mmkv.getBoolean(IS_FROM_RESET) || false;
         if (token && user && !isFromResetPW) {
+          socketService.init();
           authService.setRole(user.role);
           navigation.replace('AppStack');
         } else {

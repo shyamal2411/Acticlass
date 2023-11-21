@@ -1,7 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import moment from 'moment';
 import React, { useState } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -12,64 +12,59 @@ import Snackbar from 'react-native-snackbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import RNFetchBlob from 'rn-fetch-blob';
 import { colors } from '../common/colors';
+import activityService from '../services/activityService';
 
 const CsvReportDownloadSheet = ({ groups, cb }) => {
   const groupNames = groups.map(item => item.name);
-  const groupIdToName = {};
-  groups.forEach(item => {
-    groupIdToName[item.name] = item.id;
-  });
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth();
-  const startingDate = new Date(currentYear, currentMonth, 1);
-  const endingDate = currentDate;
+  const currentDate = moment().toDate();
+  const startingDate = moment().startOf('month').toDate();
+  const endingDate = moment().toDate();
 
   const [startDate, setStartDate] = useState(startingDate);
   const [endDate, setEndDate] = useState(endingDate);
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(groupNames[0]);
-
-  const convertToCSV = (data) => {
-    // Implement logic to convert data to CSV format
-    // Example:
-    const csvRows = data.map((row) => row.join(',')); // Assuming 'data' is a 2D array representing rows and columns
-    return csvRows.join('\n');
-  };
-  const dataToGenerate = [
-    ['Name', 'Age', 'Email'],
-    ['John Doe', '30', 'john@example.com'],
-    ['Jane Smith', '25', 'jane@example.com'],
-  ];
+  const [selectedGroup, setSelectedGroup] = useState(groups[0]);
 
   const handleDownload = async () => {
-    console.log(
-      groupIdToName[selectedGroup],
-      selectedGroup,
-      startDate,
-      endingDate,
-    );
-    const csvData = convertToCSV(dataToGenerate);
-    const pathToWrite = `${RNFetchBlob.fs.dirs.DownloadDir}/data.csv`;
-    try {
-      // Download the temporary file to the Downloads directory
-      RNFetchBlob.fs.writeFile(pathToWrite, csvData, 'utf8').then(async () => {
-        console.log('File downloaded successfully!');
-        if (Platform.OS === 'android') {
-          await RNFetchBlob.android.actionViewIntent(pathToWrite, 'text/csv');
-        } else {
-          await RNFetchBlob.ios.openDocument(pathToWrite);
-        }
-      })
-        .catch((error) => {
-          console.log('Error downloading file:', error);
+    console.log(selectedGroup.id, selectedGroup, startDate, endingDate);
+    activityService.getActivitiesForCSV({ groupId: selectedGroup.id, startDate, endDate }, (err, res) => {
+      if (err) {
+        console.error(err);
+        Snackbar.show({
+          text: 'Error generating CSV file',
+          duration: Snackbar.LENGTH_SHORT,
+          backgroundColor: colors.danger,
         });
-
-      console.log('CSV file downloaded successfully!');
-    } catch (error) {
-      console.error('Error generating or downloading CSV file:', error);
-    }
+      } else {
+        activityService.generateAndDownloadCSV({ group: selectedGroup, data: res.data, columns: res.columns }, (err, path) => {
+          if (err) {
+            console.error(err);
+            Snackbar.show({
+              text: 'Error generating CSV file',
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.danger,
+            });
+          } else {
+            console.log('File downloaded successfully!', path);
+            Snackbar.show({
+              text: 'CSV file downloaded successfully!',
+              duration: Snackbar.LENGTH_SHORT,
+              backgroundColor: colors.success,
+              action: {
+                text: 'Open', textColor: 'white', onPress: () => {
+                  if (Platform.OS === 'android') {
+                    RNFetchBlob.android.actionViewIntent(path, 'text/csv');
+                  } else {
+                    RNFetchBlob.ios.openDocument(path);
+                  }
+                }
+              }
+            });
+          }
+        });
+      }
+    });
   };
 
   const handleStartDateChange = (event, selectedDate) => {
@@ -109,7 +104,7 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
   };
 
   const handleSelectGroup = (selectedItem, index) => {
-    setSelectedGroup(selectedItem);
+    setSelectedGroup(groups[index]);
   };
 
   return (

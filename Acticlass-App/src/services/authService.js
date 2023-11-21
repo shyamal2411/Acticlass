@@ -188,6 +188,10 @@ class AuthService {
     }
 
 
+    /**
+     * 
+     * @returns {String} userId
+     */
     getUserId() {
         const user = mmkv.getObject(USER);
         if (user)
