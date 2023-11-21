@@ -1,25 +1,44 @@
+import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { colors } from '../common/colors';
-import { ROLES } from '../common/constants';
+import { ACTIVITY_TYPES, ROLES } from '../common/constants';
 import authService from '../services/authService';
 
-const RewardCard = ({ log }) => {
+const ActivityCard = ({ log }) => {
   const isStudent = authService.getRole() == ROLES.STUDENT;
 
   const getFormattedTime = () => {
-    dateFromTimestamp = new Date(log.timestamp);
-    const hours = dateFromTimestamp.getHours();
-    const minutes = dateFromTimestamp.getMinutes();
-    const amPM = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = (hours % 12 || 12).toString().padStart(2, '0');
-    const formattedMinutes = minutes.toString().padStart(2, '0');
-    return `${formattedHours}:${formattedMinutes} ${amPM}`;
+    return moment(log.timestamp).format('hh:mm A');
   };
 
   const getDescriptionForLog = () => {
-    return 'You received ' + log.points + ' Points!';
+    if (isStudent) {
+      if (log.type == ACTIVITY_TYPES.REQUEST_ACCEPTED || log.type == ACTIVITY_TYPES.ATTENDANCE) {
+        return 'You received ' + log.points + ' points!';
+      } else if (log.type == ACTIVITY_TYPES.REQUEST_REJECTED) {
+        return 'You lost ' + log.points + ' points!';
+      }
+    } else {
+      if (log.type == ACTIVITY_TYPES.REQUEST_ACCEPTED) {
+        return 'You rewarded ' + log.points + ' points to ' + log.triggerFor.triggerBy.name + '!';
+      } else if (log.type == ACTIVITY_TYPES.REQUEST_REJECTED) {
+        return 'You penalized ' + log.points + ' points to ' + log.triggerFor.triggerBy.name + '!';
+      } else if (log.type == ACTIVITY_TYPES.ATTENDANCE) {
+        return log.triggerBy.name + ' received ' + log.points + ' points!';
+      }
+    }
+    return log.points + ' points';
   };
+
+  const getTitle = () => {
+    if (log.type == ACTIVITY_TYPES.REQUEST_ACCEPTED) {
+      return "Reward";
+    } else if (log.type == ACTIVITY_TYPES.REQUEST_REJECTED) {
+      return "Penalty";
+    }
+    return "Attendance";
+  }
 
   return (
     <View style={styles.rectangle}>
@@ -31,7 +50,7 @@ const RewardCard = ({ log }) => {
           height: '100%',
         }}>
         <Text style={{ color: colors.black, fontSize: 14, fontWeight: 600 }}>
-          Rewards
+          {getTitle()}
         </Text>
         <View
           style={{
@@ -100,4 +119,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RewardCard;
+export default ActivityCard;

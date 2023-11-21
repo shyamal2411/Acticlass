@@ -102,7 +102,8 @@ class SocketService {
             }
         } else {
             const user = mmkv.getObject(USER);
-            this.socket = io(baseUrl,
+            this.socket = io(
+                baseUrl,
                 {
                     forceNew: true,
                     autoConnect: false,

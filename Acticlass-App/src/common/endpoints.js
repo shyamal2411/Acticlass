@@ -1,5 +1,8 @@
 export const baseUrl = 'http://172.17.2.145:8073';
 
+// export const baseUrl = 'http://localhost:3000';
+
+
 export const endpoints = {
   // Auth
   signIn: baseUrl + '/users/login',

@@ -11,6 +11,7 @@ const MMKV_ENC_KEY = 'Acticlass_MMKV_ENC_KEY';
 export const AUTH_TOKEN = 'Acticlass_AUTH_TOKEN';
 export const IS_FROM_RESET = 'Acticlass_AUTH_IS_FROM_RESET';
 export const USER = 'Acticlass_USER';
+export const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 // Landing Page
 const IS_FIRST_TIME = 'Acticlass_IS_FIRST_TIME';
@@ -118,6 +119,7 @@ module.exports = {
   IS_FROM_RESET,
   USER,
   ATTENDANCE_FREQUENCY,
+  DAYS_OF_WEEK,
   PubSubEvents,
   SOCKET_EVENTS,
   ACTIVITY_TYPES,

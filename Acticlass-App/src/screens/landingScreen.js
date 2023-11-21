@@ -24,6 +24,7 @@ const LandingScreen = ({ navigation }) => {
     const user = mmkv.getObject(USER);
     const isFromResetPW = mmkv.getBoolean(IS_FROM_RESET) || false;
     if (token && user && !isFromResetPW) {
+      socketService.init();
       authService.setRole(user.role);
       navigation.replace('AppStack');
     } else {
