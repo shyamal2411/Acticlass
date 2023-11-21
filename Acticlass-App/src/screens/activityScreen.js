@@ -5,28 +5,44 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-
-  View,
+  TouchableWithoutFeedback,
+  View
 } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import SelectDropdown from 'react-native-select-dropdown';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import MaterialIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { colors } from '../common/colors';
-import ActivityScreenMain from '../components/activityBarStats';
+import { DAYS_OF_WEEK } from '../common/constants';
+import ActivityCard from '../components/activityCard';
 import CsvReportDownloadSheet from '../components/csvReportDownloadSheet';
 import Navbar from '../components/navBar';
-import RewardCard from '../components/rewardCard';
-import activitiesData from '../mock/groupActivitiesData';
+import activityService from '../services/activityService';
 import groupServices from '../services/groupServices';
 
 
-const ActivityScreen = () => {
+const ActivityScreen = ({ navigation }) => {
   const refRBSheet = React.createRef();
-  const logsForTheDay = activitiesData; // used Mocked data  
-  const [selectedGroup, setSelectedGroup] = useState({});
+  const [selectedGroup, setSelectedGroup] = useState();
   const [groupNames, setGroupNames] = useState([]);
+  const [dayLogs, setDayLogs] = useState([]);
+  const [selectedBarIndex, setSelectedBarIndex] = useState(new Date().getDay());
+  const [weekStartDate, setWeekStartDate] = useState(() => {
+    const now = new Date();
+    return new Date(now.setDate(now.getDate() - now.getDay()));
+  });
+  const [weekEndDate, setWeekEndDate] = useState(() => {
+    const now = new Date();
+    return new Date(now.setDate(now.getDate() - now.getDay() + 6));
+  });
+  const [weekData, setWeekData] = useState({});
 
+  const getWeek = () => {
+    const firstDayOfWeek = new Date(weekStartDate);
+    const lastDayOfWeek = new Date(weekEndDate);
+    return `${firstDayOfWeek.toLocaleString('default', { month: 'short' })} ${firstDayOfWeek.getDate()} - ${lastDayOfWeek.toLocaleString('default', { month: 'short' })} ${lastDayOfWeek.getDate()}`;
+  }
 
   const [groups, setGroups] = useState([]);
 
@@ -36,28 +52,33 @@ const ActivityScreen = () => {
         console.error(err);
       } else {
         setGroups(res.groups);
-        setSelectedGroup(res.groups[0]);
         setGroupNames(res.groups.map((group) => group.name));
+        setSelectedGroup(res.groups[0]);
       }
     });
-  }, []);
+  }
+    , []);
+
+  useEffect(() => {
+    loadWeeklyActivities(weekStartDate, weekEndDate);
+  }, [selectedGroup]);
 
   const handleCsvDownloadClick = () => {
     refRBSheet.current.open();
   };
 
-  const handleSelectGroup = (index, item) => {
+  const handleSelectGroup = (item, index) => {
     setSelectedGroup(groups[index]);
   };
 
   const renderLogPortion = () => {
     return (
       <View style={styles.bottomContent}>
-        {logsForTheDay.length > 0 ? (
+        {dayLogs.length > 0 ? (
           <FlatList
             style={{ width: '100%' }}
-            data={logsForTheDay}
-            renderItem={({ item }) => <RewardCard log={item} />}
+            data={dayLogs}
+            renderItem={({ item }) => <ActivityCard log={item} />}
           />
         ) : (
           <View
@@ -76,10 +97,145 @@ const ActivityScreen = () => {
     );
   };
 
+  const loadWeeklyActivities = (startDate, endDate) => {
+    if (!selectedGroup || !selectedGroup.id) return;
+    activityService.getWeeklyActivities({ groupId: selectedGroup.id, startDate, endDate }, (err, res) => {
+      if (err) {
+        console.error(err);
+      } else {
+        for (let day of DAYS_OF_WEEK) {
+          if (res[day] == null) {
+            res[day] = [];
+          }
+        }
+        setWeekData(res);
+        if (selectedBarIndex != null) {
+          setDayLogs(res[DAYS_OF_WEEK[selectedBarIndex]])
+        }
+      }
+    });
+  };
+
+  const moveToPrevWeek = () => {
+    const newStartDate = new Date(weekStartDate);
+    const newEndDate = new Date(weekEndDate);
+    newStartDate.setDate(newStartDate.getDate() - 7);
+    newEndDate.setDate(newEndDate.getDate() - 7);
+    setWeekStartDate(newStartDate);
+    setWeekEndDate(newEndDate);
+    loadWeeklyActivities(newStartDate, newEndDate);
+  };
+
+  const moveToNextWeek = () => {
+    const newStartDate = new Date(weekStartDate);
+    const newEndDate = new Date(weekEndDate);
+    newStartDate.setDate(newStartDate.getDate() + 7);
+    newEndDate.setDate(newEndDate.getDate() + 7);
+    setWeekStartDate(newStartDate);
+    setWeekEndDate(newEndDate);
+    loadWeeklyActivities(newStartDate, newEndDate);
+  };
+
+  const onBarSelect = (index) => {
+    setSelectedBarIndex(index);
+    if (index != null) {
+      setDayLogs(weekData[DAYS_OF_WEEK[index]])
+    }
+  };
+
+  const norm = (value) => {
+    let inMin = 0;
+    let inMax = 0;
+    for (let day of DAYS_OF_WEEK) {
+      if (weekData[day] == null) {
+        weekData[day] = [];
+      }
+      inMin = Math.min(inMin, weekData[day].length);
+      inMax = Math.max(inMax, weekData[day].length);
+    }
+    return ((value - inMin)) / (inMax - inMin) || 0;
+  };
+
   const renderBarPortion = () => {
     return (
       <View style={styles.topContent}>
-        <ActivityScreenMain />
+        <View style={styles.header}>
+          <TouchableOpacity onPress={moveToPrevWeek}>
+            <Icon name="arrow-back-ios" style={styles.arrow} size={18} />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>{getWeek()}</Text>
+          <TouchableOpacity onPress={moveToNextWeek} >
+            <Icon name="arrow-forward-ios" style={styles.arrow} size={18} />
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{
+            height: 2,
+            backgroundColor: colors.inactive,
+          }}
+        />
+        <View style={{ flex: 1, flexDirection: 'row' }}>
+          {Object.keys(weekData).length > 0 && DAYS_OF_WEEK.map((day, index) => {
+            let data = weekData[day];
+            let barDate = new Date(weekStartDate);
+            barDate.setDate(barDate.getDate() + index);
+            let nData = norm(data.length);
+            return (
+              <View key={index} style={{ flex: 1, flexDirection: 'row' }}>
+                <TouchableWithoutFeedback
+                  style={{ flex: 1 }}
+                  onPress={() => onBarSelect(index)}>
+                  <View
+                    style={[
+                      { flex: 1 },
+                      selectedBarIndex == index && { backgroundColor: colors.placeholder },
+                    ]}>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontSize: 16,
+                        color: colors.black,
+                        marginTop: 12,
+                      }}>
+                      {day}
+                    </Text>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        fontSize: 16,
+                        color: colors.black,
+                        marginBottom: 12,
+                      }}>
+                      {barDate.getDate()}
+                    </Text>
+                    <View style={{ flex: 1, flexDirection: 'column-reverse' }}>
+                      <View
+                        style={{
+                          backgroundColor: colors.primary,
+                          flexGrow: nData,
+                        }}
+                      />
+                      <View
+                        style={{
+                          backgroundColor: colors.primary,
+                          flexShrink:
+                            1 - nData,
+                        }}
+                      />
+                    </View>
+                  </View>
+                </TouchableWithoutFeedback>
+                <View style={{ width: 2, backgroundColor: colors.inactive }} />
+              </View>
+            );
+          })}
+        </View>
+        <View
+          style={{
+            height: 2,
+            backgroundColor: colors.inactive,
+          }}
+        />
       </View>
     );
   };
@@ -88,7 +244,7 @@ const ActivityScreen = () => {
     return (
       <View style={{ flex: 1, width: "100%" }}>
         <View style={{ paddingHorizontal: 16, backgroundColor: colors.secondary }}>
-          <SelectDropdown
+          {selectedGroup && <SelectDropdown
             renderDropdownIcon={() => {
               return (
                 <FeatherIcon
@@ -126,9 +282,9 @@ const ActivityScreen = () => {
             }}
             defaultButtonText="Select Group"
             data={groupNames}
-            defaultValue={groupNames[0]}
+            defaultValue={selectedGroup.name}
             onSelect={handleSelectGroup}
-          />
+          />}
         </View>
         {renderBarPortion()}
         {renderLogPortion()}
@@ -220,10 +376,25 @@ const styles = StyleSheet.create({
   },
   topContent: {
     flex: 4,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#e0e0e0',
     width: '100%',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    backgroundColor: colors.secondary,
+  },
+  headerText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.black,
+  },
+  arrow: {
+    fontSize: 18,
+    color: colors.black,
   },
 });
 

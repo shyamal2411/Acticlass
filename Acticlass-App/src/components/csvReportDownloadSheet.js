@@ -1,7 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { isEmpty } from 'lodash';
 import React, { useState } from 'react';
 import {
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -10,6 +10,7 @@ import {
 import SelectDropdown from 'react-native-select-dropdown';
 import Snackbar from 'react-native-snackbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import RNFetchBlob from 'rn-fetch-blob';
 import { colors } from '../common/colors';
 
 const CsvReportDownloadSheet = ({ groups, cb }) => {
@@ -30,15 +31,44 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(groupNames[0]);
 
-  const handleDownload = () => {
+  const convertToCSV = (data) => {
+    // Implement logic to convert data to CSV format
+    // Example:
+    const csvRows = data.map((row) => row.join(',')); // Assuming 'data' is a 2D array representing rows and columns
+    return csvRows.join('\n');
+  };
+  const dataToGenerate = [
+    ['Name', 'Age', 'Email'],
+    ['John Doe', '30', 'john@example.com'],
+    ['Jane Smith', '25', 'jane@example.com'],
+  ];
+
+  const handleDownload = async () => {
     console.log(
       groupIdToName[selectedGroup],
       selectedGroup,
       startDate,
       endingDate,
     );
-    if (isEmpty(selectedGroup)) {
-      alert('Please Select Group');
+    const csvData = convertToCSV(dataToGenerate);
+    const pathToWrite = `${RNFetchBlob.fs.dirs.DownloadDir}/data.csv`;
+    try {
+      // Download the temporary file to the Downloads directory
+      RNFetchBlob.fs.writeFile(pathToWrite, csvData, 'utf8').then(async () => {
+        console.log('File downloaded successfully!');
+        if (Platform.OS === 'android') {
+          await RNFetchBlob.android.actionViewIntent(pathToWrite, 'text/csv');
+        } else {
+          await RNFetchBlob.ios.openDocument(pathToWrite);
+        }
+      })
+        .catch((error) => {
+          console.log('Error downloading file:', error);
+        });
+
+      console.log('CSV file downloaded successfully!');
+    } catch (error) {
+      console.error('Error generating or downloading CSV file:', error);
     }
   };
 
