@@ -58,6 +58,10 @@ const getActivities = async (req, res) => {
       },
       select: "type timestamp points triggerBy",
     })
+    .populate({
+      path: "triggerBy",
+      select: "name email",
+    })
     .then(async (activities) => {
       if (!activities || isEmpty(activities)) {
         return res.status(200).json({ activities: [] });
@@ -73,12 +77,11 @@ const getActivities = async (req, res) => {
       } else {
         result = result.filter((activity) => {
           return (
-            activity.triggerBy.equals(user._id) ||
+            activity.triggerBy._id.equals(user._id) ||
             activity.triggerFor?.triggerBy._id.equals(user._id)
           );
         });
         result = result.map((activity) => parseActivity(activity));
-        console.log("res: ", result);
         return res.status(200).json({ activities: result });
       }
     })
