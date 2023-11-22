@@ -149,8 +149,8 @@ const verifyResetPasswordCode = async (req, res) => {
     }
 }
 
-// Function to change a user's password
-const changePassword = async (req, res) => {
+// Function to reset a user's password
+const resetPassword = async (req, res) => {
     const { email, password } = req.body;
     if (!email || isEmpty(email)) {
         return res.status(400).json({ msg: 'Email is required!' });
@@ -171,7 +171,29 @@ const changePassword = async (req, res) => {
 }
 
 //Function to change the password
-
+const changePassword = async (req, res) => {
+    const user = req.user;
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || isEmpty(oldPassword)) {
+        return res.status(400).json({ msg: 'old Password is required!' });
+    }
+    if (!newPassword || isEmpty(newPassword)) {
+        return res.status(400).json({ msg: 'new Password is required!' });
+    }
+    UserSchema.findOne({ _id: user._id }).then((user) => {
+        if (!user) {
+            return res.status(400).json({ msg: 'User does not exist' });
+        }
+        if (!compare(oldPassword, user.password)) {
+            return res.status(400).json({ msg: 'Invalid old password' });
+        }
+        hash(newPassword).then(async (hashedPassword) => {
+            await UserSchema.updateOne({ _id: user._id }, { password: hashedPassword });
+            cache.del(email); // Delete the code from cache
+            return res.status(200).json({ msg: 'Password changed successfully' });
+        });
+    });
+}
 
 // Function to delete a user's profile
 const deleteProfile = async (req, res) => {
@@ -199,6 +221,7 @@ module.exports = {
     register,
     login,
     forgotPassword,
+    resetPassword,
     changePassword,
     verifyResetPasswordCode,
     deleteProfile

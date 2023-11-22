@@ -144,6 +144,20 @@ class AuthService {
         })
     }
 
+    changePassword({ oldPassword, newPassword }, cb) {
+        api({ url: endpoints.changePassword, method: "POST", data: { oldPassword, newPassword } }).then(res => {
+            console.log(this.tag, "[changePassword]", "Password changed! ✅");
+            if (cb != null) {
+                cb(null, res);
+            }
+        }).catch(err => {
+            console.error(this.tag, "[changePassword]", err);
+            if (cb != null) {
+                cb(err, null);
+            }
+        })
+    }
+
     /**
      * 
      * @param {'Teacher'|'Student'} role 

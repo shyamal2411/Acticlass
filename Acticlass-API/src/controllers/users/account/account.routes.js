@@ -10,7 +10,8 @@ router.post('/verify-code', controller.verifyResetPasswordCode);
 
 router.use(require('../../../middleware/index'));
 
-router.post('/reset-password', controller.changePassword);
+router.post('/reset-password', controller.resetPassword);
+router.post('/change-password', controller.changePassword);
 router.delete('/profile', controller.deleteProfile);
 
 module.exports = router;

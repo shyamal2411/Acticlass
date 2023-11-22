@@ -11,6 +11,8 @@ export const endpoints = {
   verifyCode: baseUrl + '/users/verify-code',
   resetPassword: baseUrl + '/users/reset-password',
   deleteProfile: baseUrl + '/users/profile',
+  changePassword: baseUrl + '/users/change-password',
+
   //Group
   createGroup: baseUrl + '/groups/create',
   getGroups: baseUrl + '/groups/get-all',
