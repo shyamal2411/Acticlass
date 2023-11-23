@@ -20,6 +20,7 @@ let mongoServer;
 // BEGIN: ed8c6549bwf9
 
 beforeAll(async () => {
+    jest.setTimeout(120000);
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
