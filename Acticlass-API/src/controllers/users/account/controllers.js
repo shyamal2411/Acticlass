@@ -189,7 +189,6 @@ const changePassword = async (req, res) => {
         }
         hash(newPassword).then(async (hashedPassword) => {
             await UserSchema.updateOne({ _id: user._id }, { password: hashedPassword });
-            cache.del(email); // Delete the code from cache
             return res.status(200).json({ msg: 'Password changed successfully' });
         });
     });
