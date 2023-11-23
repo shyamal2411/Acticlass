@@ -12,6 +12,10 @@ function storeResetPasswordCode(email, code) {
     cache.set(email, code, 300);
 }
 
+function getResetPasswordCode(email) {
+    return cache.get(email);
+}
+
 const generateToken = (user) => {
     const data = {
         id: user._id,
@@ -21,7 +25,7 @@ const generateToken = (user) => {
         institute: user.institute,
     }
     const token = jwt.sign({ data }, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
-    return token;
+    return { token, data };
 }
 
 
@@ -29,21 +33,20 @@ const generateToken = (user) => {
 // Function to create a new user account
 const register = async (req, res) => {
     const { name, email, institute, role, password } = req.body;
-
+    let msg = "";
     if (!name || isEmpty(name)) {
-        return res.status(400).json({ msg: 'Name is required!' });
+        msg = "Name is required!";
+    } else if (!email || isEmpty(email)) {
+        msg = "Email is required!";
+    } else if (!institute || isEmpty(institute)) {
+        msg = "Institute is required!";
+    } else if (!role || isEmpty(role) || !Object.values(Roles).includes(role)) {
+        msg = "Role is required!";
+    } else if (!password || isEmpty(password)) {
+        msg = "Password is required!";
     }
-    if (!email || isEmpty(email)) {
-        return res.status(400).json({ msg: 'Email is required!' });
-    }
-    if (!institute || isEmpty(institute)) {
-        return res.status(400).json({ msg: 'Institute is required!' });
-    }
-    if (!role || isEmpty(role) || !Object.values(Roles).includes(role)) {
-        return res.status(400).json({ msg: 'Role is required!' });
-    }
-    if (!password || isEmpty(password)) {
-        return res.status(400).json({ msg: 'Password is required!' });
+    if (!isEmpty(msg)) {
+        return res.status(400).json({ msg });
     }
 
     const u = await UserSchema.findOne({ email });
@@ -51,7 +54,7 @@ const register = async (req, res) => {
         return res.status(400).json({ msg: 'User already exists' });
     }
 
-    hash(password).then(async (hashedPassword) => {
+    await hash(password).then(async (hashedPassword) => {
         const data = {
             name,
             email,
@@ -63,36 +66,31 @@ const register = async (req, res) => {
         await user.save();
         data.id = user._id;
         delete data.password;
-        const token = generateToken(user);
+        const { token } = generateToken(user);
         return res.status(201).json({ user: data, token });
     });
 }
 
 // Function to log in an existing user
 const login = async (req, res) => {
-    // Implementation logic here
     const { email, password } = req.body;
+    let msg = "";
     if (!email || isEmpty(email)) {
-        return res.status(400).json({ msg: 'Email is required!' });
+        msg = "Email is required!";
+    } else if (!password || isEmpty(password)) {
+        msg = "Password is required!";
     }
-    if (!password || isEmpty(password)) {
-        return res.status(400).json({ msg: 'Password is required!' });
+    if (!isEmpty(msg)) {
+        return res.status(400).json({ msg });
     }
 
-    UserSchema.findOne({ email }).then((user) => {
+    await UserSchema.findOne({ email }).then(async (user) => {
         if (!user) {
             return res.status(400).json({ msg: 'User does not exist' });
         }
-        compare(password, user.password).then((match) => {
+        await compare(password, user.password).then((match) => {
             if (match) {
-                const data = {
-                    id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    role: user.role,
-                    institute: user.institute,
-                }
-                const token = generateToken(user);
+                const { token, data } = generateToken(user);
                 return res.status(200).json({ user: data, token });
             }
             return res.status(400).json({ msg: 'Invalid credentials' });
@@ -106,7 +104,7 @@ const forgotPassword = async (req, res) => {
     if (!email) {
         return res.status(400).json({ msg: 'Email is required!' });
     }
-    UserSchema.findOne({ email }).then((user) => {
+    await UserSchema.findOne({ email }).then((user) => {
         if (!user) {
             return res.status(400).json({ msg: 'User does not exist' });
         }
@@ -127,11 +125,13 @@ const forgotPassword = async (req, res) => {
 // Function to verify reset password code from cache
 const verifyResetPasswordCode = async (req, res) => {
     const { email, code } = req.body;
+    let msg = "";
     if (!email || isEmpty(email)) {
-        return res.status(400).json({ msg: 'Email is required!' });
-    }
-    if (!code || isNaN(code)) {
-        return res.status(400).json({ msg: 'Code is required!' });
+        msg = "Email is required!";
+    } else if (!code || isNaN(code)) {
+        msg = "Code is required!";
+    } else if (!isEmpty(msg)) {
+        return res.status(400).json({ msg });
     }
 
     const cachedCode = cache.get(email);
@@ -140,7 +140,7 @@ const verifyResetPasswordCode = async (req, res) => {
             if (!user) {
                 return res.status(400).json({ msg: 'User does not exist' });
             }
-            const token = generateToken(user);
+            const { token } = generateToken(user);
             cache.del(email); // Delete the code from cache
             return res.status(200).json({ token, msg: 'Code verified successfully' });
         });
@@ -152,17 +152,20 @@ const verifyResetPasswordCode = async (req, res) => {
 // Function to reset a user's password
 const resetPassword = async (req, res) => {
     const { email, password } = req.body;
+    let msg = "";
     if (!email || isEmpty(email)) {
-        return res.status(400).json({ msg: 'Email is required!' });
+        msg = "Email is required!";
+    } else if (!password || isEmpty(password)) {
+        msg = "Password is required!";
     }
-    if (!password || isEmpty(password)) {
-        return res.status(400).json({ msg: 'Password is required!' });
+    if (!isEmpty(msg)) {
+        return res.status(400).json({ msg });
     }
-    UserSchema.findOne({ email }).then((user) => {
+    await UserSchema.findOne({ email }).then(async (user) => {
         if (!user) {
             return res.status(400).json({ msg: 'User does not exist' });
         }
-        hash(password).then(async (hashedPassword) => {
+        await hash(password).then(async (hashedPassword) => {
             await UserSchema.updateOne({ email }, { password: hashedPassword });
             cache.del(email); // Delete the code from cache
             return res.status(200).json({ msg: 'Password changed successfully' });
@@ -174,22 +177,28 @@ const resetPassword = async (req, res) => {
 const changePassword = async (req, res) => {
     const user = req.user;
     const { oldPassword, newPassword } = req.body;
+    let msg = "";
     if (!oldPassword || isEmpty(oldPassword)) {
-        return res.status(400).json({ msg: 'old Password is required!' });
+        msg = "Old Password is required!";
+    } else if (!newPassword || isEmpty(newPassword)) {
+        msg = "New Password is required!";
     }
-    if (!newPassword || isEmpty(newPassword)) {
-        return res.status(400).json({ msg: 'new Password is required!' });
+    if (!isEmpty(msg)) {
+        return res.status(400).json({ msg });
     }
-    UserSchema.findOne({ _id: user._id }).then((user) => {
+
+    await UserSchema.findOne({ _id: user._id }).then(async (user) => {
         if (!user) {
             return res.status(400).json({ msg: 'User does not exist' });
         }
-        if (!compare(oldPassword, user.password)) {
-            return res.status(400).json({ msg: 'Invalid old password' });
-        }
-        hash(newPassword).then(async (hashedPassword) => {
-            await UserSchema.updateOne({ _id: user._id }, { password: hashedPassword });
-            return res.status(200).json({ msg: 'Password changed successfully' });
+        await compare(oldPassword, user.password).then(async (match) => {
+            if (!match) {
+                return res.status(400).json({ msg: 'Invalid old password' });
+            }
+            await hash(newPassword).then(async (hashedPassword) => {
+                await UserSchema.updateOne({ _id: user._id }, { password: hashedPassword });
+                return res.status(200).json({ msg: 'Password changed successfully' });
+            });
         });
     });
 }
@@ -200,14 +209,14 @@ const deleteProfile = async (req, res) => {
     if (!email) {
         return res.status(400).json({ msg: 'Email is required!' });
     }
-    UserSchema.deleteOne({ email }).then(async () => {
+    await UserSchema.deleteOne({ email }).then(async () => {
         if (role === Roles.STUDENT) {
-            PointBucketSchema.deleteMany({ user: _id }).then(() => {
+            await PointBucketSchema.deleteMany({ user: _id }).then(() => {
                 return res.status(200).json({ msg: 'User deleted successfully' });
             });
         } else if (role === Roles.TEACHER) {
             let ids = await GroupSchema.find({ createdBy: _id }).select('_id');
-            Promise.all([GroupSchema.deleteMany({ createdBy: _id }), PointBucketSchema.deleteMany({ group: { $in: ids } })]).then(() => {
+            await Promise.all([GroupSchema.deleteMany({ createdBy: _id }), PointBucketSchema.deleteMany({ group: { $in: ids } })]).then(() => {
                 return res.status(200).json({ msg: 'User deleted successfully' });
             });
         }
@@ -223,5 +232,6 @@ module.exports = {
     resetPassword,
     changePassword,
     verifyResetPasswordCode,
-    deleteProfile
+    deleteProfile,
+    getResetPasswordCode
 };
