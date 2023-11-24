@@ -1,20 +1,16 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Snackbar from 'react-native-snackbar';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 import RNFetchBlob from 'rn-fetch-blob';
-import { colors } from '../common/colors';
+import {colors} from '../common/colors';
 import activityService from '../services/activityService';
+import FileViewer from 'react-native-file-viewer';
 
-const CsvReportDownloadSheet = ({ groups, cb }) => {
+const CsvReportDownloadSheet = ({groups, cb}) => {
   const groupNames = groups.map(item => item.name);
   const currentDate = moment().toDate();
   const startingDate = moment().startOf('month').toDate();
@@ -28,43 +24,58 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
 
   const handleDownload = async () => {
     console.log(selectedGroup.id, selectedGroup, startDate, endingDate);
-    activityService.getActivitiesForCSV({ groupId: selectedGroup.id, startDate, endDate }, (err, res) => {
-      if (err) {
-        console.error(err);
-        Snackbar.show({
-          text: 'Error generating CSV file',
-          duration: Snackbar.LENGTH_SHORT,
-          backgroundColor: colors.danger,
-        });
-      } else {
-        activityService.generateAndDownloadCSV({ group: selectedGroup, data: res.data, columns: res.columns }, (err, path) => {
-          if (err) {
-            console.error(err);
-            Snackbar.show({
-              text: 'Error generating CSV file',
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.danger,
-            });
-          } else {
-            console.log('File downloaded successfully!', path);
-            Snackbar.show({
-              text: 'CSV file downloaded successfully!',
-              duration: Snackbar.LENGTH_SHORT,
-              backgroundColor: colors.success,
-              action: {
-                text: 'Open', textColor: 'white', onPress: () => {
-                  if (Platform.OS === 'android') {
-                    RNFetchBlob.android.actionViewIntent(path, 'text/csv');
-                  } else {
-                    RNFetchBlob.ios.openDocument(path);
-                  }
-                }
+    activityService.getActivitiesForCSV(
+      {groupId: selectedGroup.id, startDate, endDate},
+      (err, res) => {
+        if (err) {
+          console.error(err);
+          Snackbar.show({
+            text: 'Error generating CSV file',
+            duration: Snackbar.LENGTH_SHORT,
+            backgroundColor: colors.danger,
+          });
+        } else {
+          activityService.generateAndDownloadCSV(
+            {group: selectedGroup, data: res.data, columns: res.columns},
+            (err, path) => {
+              if (err) {
+                console.error(err);
+                Snackbar.show({
+                  text: 'Error generating CSV file',
+                  duration: Snackbar.LENGTH_SHORT,
+                  backgroundColor: colors.danger,
+                });
+              } else {
+                console.log('File downloaded successfully!', path);
+                Snackbar.show({
+                  text: 'CSV file downloaded successfully!',
+                  duration: Snackbar.LENGTH_SHORT,
+                  backgroundColor: colors.success,
+                  action: {
+                    text: 'Open',
+                    textColor: 'white',
+                    onPress: () => {
+                      if (Platform.OS === 'android') {
+                        RNFetchBlob.android.actionViewIntent(path, 'text/csv');
+                      } else {
+                        url = `file://${path}`;
+                        FileViewer.open(url)
+                          .then(() => {
+                            console.log('File opened successfully');
+                          })
+                          .catch(error => {
+                            console.error('Error opening file:', error);
+                          });
+                      }
+                    },
+                  },
+                });
               }
-            });
-          }
-        });
-      }
-    });
+            },
+          );
+        }
+      },
+    );
   };
 
   const handleStartDateChange = (event, selectedDate) => {
@@ -111,7 +122,7 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
     <View style={styles.container}>
       <Text style={styles.title}>CSV Report</Text>
 
-      <View style={{ paddingHorizontal: 40 }}>
+      <View style={{paddingHorizontal: 40}}>
         <Text style={styles.inputTitle}>Group</Text>
         <View>
           <SelectDropdown
@@ -158,7 +169,7 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
         </View>
       </View>
 
-      <View style={{ paddingHorizontal: 40, marginTop: 12 }}>
+      <View style={{paddingHorizontal: 40, marginTop: 12}}>
         <Text style={styles.inputTitle}>Start Date</Text>
         <TouchableOpacity style={styles.input} onPress={showStartDate}>
           <Text
@@ -176,7 +187,7 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
         )}
       </View>
 
-      <View style={{ paddingHorizontal: 40, marginTop: 10 }}>
+      <View style={{paddingHorizontal: 40, marginTop: 10}}>
         <Text style={styles.inputTitle}>End Date</Text>
         <TouchableOpacity style={styles.input} onPress={showEndDate}>
           <Text
@@ -193,7 +204,7 @@ const CsvReportDownloadSheet = ({ groups, cb }) => {
         )}
       </View>
 
-      <View style={{ paddingHorizontal: 40 }}>
+      <View style={{paddingHorizontal: 40}}>
         <TouchableOpacity style={styles.button} onPress={handleDownload}>
           <Text style={styles.buttonText}>Download</Text>
         </TouchableOpacity>
@@ -221,7 +232,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
 
-  dateValue: { fontSize: 16, color: 'black', marginTop: 12 },
+  dateValue: {fontSize: 16, color: 'black', marginTop: 12},
   inputTitle: {
     fontSize: 16,
     color: 'black',
