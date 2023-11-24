@@ -6,7 +6,7 @@ stages:
   - deploy
 
 variables:
-  NODE_IMAGE: "node:16.15.1"
+  NODE_IMAGE: 'node:16.15.1'
 
 include:
   - template: Code-Quality.gitlab-ci.yml
@@ -53,6 +53,7 @@ test_backend:
   script:
     - cd Acticlass-API
     - npm install
+    - npm install --save-dev mongodb-memory-server-global
     - npm test
 
 publish:
@@ -61,8 +62,8 @@ publish:
   tags:
     - acticlass-runner
   variables:
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: 'tcp://docker:2375'
   services:
     - docker:dind
   script:

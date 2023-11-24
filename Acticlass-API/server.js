@@ -26,3 +26,5 @@ server.listen(process.env.PORT, () => {
 })
 
 socketManager.init(server); // Socket.io connection
+
+module.exports = app;
