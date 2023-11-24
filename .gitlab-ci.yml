@@ -7,9 +7,6 @@ stages:
   - publish
   - deploy
 
-# variables:
-#   NODE_IMAGE: 'node:16.15.1'
-
 include:
   - template: Code-Quality.gitlab-ci.yml
 
@@ -21,7 +18,6 @@ cache:
 
 build_fronted:
   stage: build
-  # image: $NODE_IMAGE
   tags:
     - acticlass-runner
   script:
@@ -30,7 +26,6 @@ build_fronted:
 
 build_backend:
   stage: build
-  # image: $NODE_IMAGE
   tags:
     - acticlass-runner
   script:
@@ -39,7 +34,6 @@ build_backend:
 
 test_frontend:
   stage: test
-  # image: $NODE_IMAGE
   tags:
     - acticlass-runner
   script:
@@ -49,7 +43,6 @@ test_frontend:
 
 test_backend:
   stage: test
-  # image: $NODE_IMAGE
   tags:
     - acticlass-runner
   script:
