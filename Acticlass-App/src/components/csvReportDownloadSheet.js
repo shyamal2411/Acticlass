@@ -163,7 +163,7 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
           </View>
         </View>
 
-        <View style={{paddingHorizontal: 20, marginTop: 12}}>
+        <View style={{paddingHorizontal: 20, marginTop: 12, width: '100%'}}>
           <Text style={styles.inputTitle}>Start Date</Text>
           <TouchableOpacity style={styles.input} onPress={showStartDate}>
             <Text
@@ -181,7 +181,7 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
           )}
         </View>
 
-        <View style={{paddingHorizontal: 20, marginTop: 10}}>
+        <View style={{paddingHorizontal: 20, marginTop: 10, width: '100%'}}>
           <Text style={styles.inputTitle}>End Date</Text>
           <TouchableOpacity style={styles.input} onPress={showEndDate}>
             <Text
