@@ -1,6 +1,6 @@
+import React, {useState} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Snackbar from 'react-native-snackbar';
@@ -8,6 +8,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 import RNFetchBlob from 'rn-fetch-blob';
 import {colors} from '../common/colors';
 import activityService from '../services/activityService';
+import FileViewer from 'react-native-file-viewer';
 import {ScrollView} from 'react-native-gesture-handler';
 
 const CsvReportDownloadSheet = ({groups, cb}) => {
@@ -58,7 +59,14 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
                       if (Platform.OS === 'android') {
                         RNFetchBlob.android.actionViewIntent(path, 'text/csv');
                       } else {
-                        RNFetchBlob.ios.openDocument(path);
+                        url = `file://${path}`;
+                        FileViewer.open(url)
+                          .then(() => {
+                            console.log('File opened successfully');
+                          })
+                          .catch(error => {
+                            console.error('Error opening file:', error);
+                          });
                       }
                     },
                   },
