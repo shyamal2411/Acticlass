@@ -30,7 +30,6 @@ build_backend:
     - acticlass-runner
   script:
     - cd Acticlass-API
-    - npm install --save-dev mongodb-memory-server-global
     - npm install
 
 test_frontend:
@@ -46,10 +45,10 @@ test_backend:
   stage: test
   tags:
     - acticlass-runner
-  script:
+  before_script:
     - cd Acticlass-API
+  script:
     - npm install
-    - npm install --save-dev mongodb-memory-server-global
     - npm test
 
 publish:
