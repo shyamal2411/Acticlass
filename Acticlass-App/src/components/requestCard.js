@@ -38,22 +38,6 @@ const RequestCard = ({ item, group }) => {
     );
   };
 
-  const doNothing = () => { };
-  const renderDecline = () => {
-    //setIsVisible(false);
-    socketService.rejectRequest({
-      groupId: group.id,
-      requestId: item.id,
-      points: group.penalty,
-    }); // just for testing
-  };
-  const renderAccept = () => {
-    socketService.acceptRequest({
-      groupId: group.id,
-      requestId: item.id,
-      points: 100,
-    }); // just for testing
-  };
   return (
     <View>
       <RBSheet
