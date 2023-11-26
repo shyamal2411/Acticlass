@@ -175,8 +175,9 @@ Below is the list of Dependencies used in the project for development.
 
 - **Student:** <br> Students can join the group using a QR code scanner integrated with the app. Can also leave the group. 
 <p align='center'>
-<img src='Acticlass-App/src/assets/HomeScreen.png' alt='HomeScreen' height='400px' >                                       
+  <img src='Acticlass-App/src/assets/HomeScreen.png' alt='HomeScreen' height='400px' >
 </p>
+
 
 ### 3. Riser Requests and Custom Rewards
 
