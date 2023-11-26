@@ -1,4 +1,4 @@
-const { isEmpty, sortBy, cloneDeep } = require("lodash");
+const { isEmpty, sortBy, cloneDeep, isEqual } = require("lodash");
 const { Roles, ACTIVITY_TYPES } = require("../../../common/constants");
 const { ActivitySchema, UserSchema } = require("../../../database");
 const moment = require("moment");
@@ -18,15 +18,15 @@ const parseActivity = (activity) => {
 const getActivities = async (req, res) => {
   const user = req.user;
   let { groupId, startDate, endDate } = req.body;
-
+  let msg = "";
   if (!groupId || isEmpty(groupId)) {
-    return res.status(400).json({ msg: "Group id is required." });
+    msg = "Group id is required.";
+  } else if (!startDate || !endDate) {
+    msg = "Start date and end date must be provided";
   }
-
-  if (!startDate || !endDate)
-    return res
-      .status(400)
-      .json({ message: "Start date and end date must be provided" });
+  if (msg) {
+    return res.status(400).json({ message: msg });
+  }
 
   startDate = moment(startDate).startOf("day").toDate();
   endDate = moment(endDate).endOf("day").toDate();
@@ -36,7 +36,7 @@ const getActivities = async (req, res) => {
       .json({ message: "Start date must be before end date" });
   }
 
-  ActivitySchema.find({
+  await ActivitySchema.find({
     group: groupId,
     timestamp: {
       $gte: startDate,
@@ -62,7 +62,8 @@ const getActivities = async (req, res) => {
       path: "triggerBy",
       select: "name email",
     })
-    .then(async (activities) => {
+    .then((activities) => {
+
       if (!activities || isEmpty(activities)) {
         return res.status(200).json({ activities: [] });
       }
@@ -77,8 +78,8 @@ const getActivities = async (req, res) => {
       } else {
         result = result.filter((activity) => {
           return (
-            activity.triggerBy._id.equals(user._id) ||
-            activity.triggerFor?.triggerBy._id.equals(user._id)
+            isEqual(activity.triggerBy._id, user._id) ||
+            isEqual(activity.triggerFor?.triggerBy._id, user._id)
           );
         });
         result = result.map((activity) => parseActivity(activity));
