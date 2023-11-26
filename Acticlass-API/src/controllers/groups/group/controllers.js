@@ -29,14 +29,18 @@ const createGroup = async (req, res) => {
     });
 };
 
+const parseGroupResponse = (group, extraData = {}) => {
+    const { _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } = group;
+    return { id: _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty, ...extraData };
+}
+
 const getGroups = async (req, res) => {
     const user = req.user;
     if (user.role === Roles.TEACHER) {
         await GroupSchema.find({ createdBy: user._id })
             .then((groups) => {
                 const groupsData = groups.map((group) => {
-                    const { _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } = group;
-                    return { id: _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty };
+                    return parseGroupResponse(group);
                 });
                 return res.status(200).json({ groups: groupsData });
             }).catch((error) => {
@@ -49,8 +53,7 @@ const getGroups = async (req, res) => {
             .then((pointBuckets) => {
                 const groupsData = pointBuckets.map((pointBucket) => {
                     const { group, points } = pointBucket;
-                    const { _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } = group;
-                    return { id: _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty, points };
+                    return parseGroupResponse(group, { points });
                 });
                 return res.status(200).json({ groups: groupsData });
             }).catch((error) => {
@@ -73,8 +76,7 @@ const getGroupById = async (req, res) => {
                     return res.status(404).json({ msg: 'Group not found.' });
                 }
                 const { group, points } = pointBucket;
-                const { _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } = group;
-                return res.status(200).json({ group: { id: _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty, points } });
+                return res.status(200).json({ group: { ...parseGroupResponse(group), points } });
             }).catch((error) => {
                 console.error("Error getting a group: ", error);
                 return res.status(500).json({ msg: 'Something went wrong.' });
@@ -86,8 +88,7 @@ const getGroupById = async (req, res) => {
                 if (!group) {
                     return res.status(404).json({ msg: 'Group not found.' });
                 }
-                const { _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } = group;
-                return res.status(200).json({ group: { id: _id, name, institute, createdBy, radius, passingPoints, attendanceFrequency, attendanceReward, penalty } });
+                return res.status(200).json({ group: parseGroupResponse(group) });
             }).catch((error) => {
                 console.error("Error getting a group: ", error);
                 return res.status(500).json({ msg: 'Something went wrong.' });
