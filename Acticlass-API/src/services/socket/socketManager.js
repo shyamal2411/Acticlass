@@ -35,7 +35,6 @@ class SocketManager {
 
         this.io.on('connection', (socket) => {
             console.log(this.tag, socket.userId, ' user connected 👍');
-            //TODO: handle disconnect for both teacher and student            
             socket.on(SOCKET_EVENTS.DISCONNECT, () => {
                 if (socket.role === Roles.TEACHER) {
                     ActivityManager.getStartedSessions({ userId: socket.userId, role: socket.role }).forEach((groupId) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import {
   BackHandler,
   Platform,
@@ -11,8 +11,8 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {colors} from '../common/colors';
-import {navRef} from '../navigation/navRef';
+import { colors } from '../common/colors';
+import { navRef } from '../navigation/navRef';
 
 const Navbar = ({
   prefixIcon,
@@ -38,12 +38,11 @@ const Navbar = ({
       <SafeAreaView style={styles.navbar}>
         <TouchableOpacity
           onPress={onBackPress}
-          style={{width: '28', height: '28'}}>
+          style={{ width: '28', height: '28' }}>
           {prefixIcon ? (
             <Icon name="arrow-back-ios" style={styles.navIcon} size={28} />
           ) : (
-            <View style={{width: '28', height: '28'}}>
-              {/* //TODO: add initials of the user */}
+            <View style={{ width: '28', height: '28' }}>
             </View>
           )}
         </TouchableOpacity>
@@ -51,7 +50,7 @@ const Navbar = ({
       </SafeAreaView>
     );
   } else {
-    return <View style={{marginTop: 35}}></View>;
+    return <View style={{ marginTop: 35 }}></View>;
   }
 };
 

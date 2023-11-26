@@ -1,15 +1,14 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, Alert} from 'react-native';
-import {colors} from '../common/colors';
-import {PubSubEvents, ROLES} from '../common/constants';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Snackbar from 'react-native-snackbar';
+import { colors } from '../common/colors';
+import { PubSubEvents, ROLES } from '../common/constants';
 import authService from '../services/authService';
 import groupServices from '../services/groupServices';
-import Snackbar from 'react-native-snackbar';
 
-const StudentCard = ({navigation, item, groupId}) => {
+const StudentCard = ({ navigation, item, groupId }) => {
   const isStudent = authService.getRole() == ROLES.STUDENT;
   const handleRemove = () => {
-    //TODO: remove student from group
     console.log('remove student');
     Alert.alert(
       'Remove Student',
@@ -19,7 +18,7 @@ const StudentCard = ({navigation, item, groupId}) => {
           text: 'Yes',
           onPress: () => {
             groupServices.kickUser(
-              {userId: item.id, groupId: groupId},
+              { userId: item.id, groupId: groupId },
               (err, res) => {
                 if (err) {
                   Snackbar.show({
@@ -40,9 +39,9 @@ const StudentCard = ({navigation, item, groupId}) => {
           },
           style: 'cancel',
         },
-        {text: 'Cancel', onPress: () => {}},
+        { text: 'Cancel', onPress: () => { } },
       ],
-      {cancelable: true},
+      { cancelable: true },
     );
   };
 
@@ -66,7 +65,7 @@ const StudentCard = ({navigation, item, groupId}) => {
             justifyContent: 'center',
             borderRadius: 25,
           }}>
-          <Text style={{fontSize: 16}}>{item.index}</Text>
+          <Text style={{ fontSize: 16 }}>{item.index}</Text>
         </View>
       </View>
       <View
@@ -83,7 +82,7 @@ const StudentCard = ({navigation, item, groupId}) => {
             marginVertical: 16,
             flexDirection: 'column',
           }}>
-          <Text style={{fontSize: 14, fontWeight: '400', color: colors.black}}>
+          <Text style={{ fontSize: 14, fontWeight: '400', color: colors.black }}>
             {item.name}
           </Text>
           <Text
@@ -156,7 +155,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     maxWidth: '100%',
     shadowColor: colors.placeholder,
-    shadowOffset: {width: 0, height: 8},
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.5,
     shadowRadius: 3.84,
     elevation: 5,
