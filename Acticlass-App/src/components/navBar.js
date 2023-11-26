@@ -1,17 +1,18 @@
 import React from 'react';
 
-import { useEffect } from 'react';
+import {useEffect} from 'react';
 import {
   BackHandler,
+  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { colors } from '../common/colors';
-import { navRef } from '../navigation/navRef';
+import {colors} from '../common/colors';
+import {navRef} from '../navigation/navRef';
 
 const Navbar = ({
   prefixIcon,
@@ -25,7 +26,6 @@ const Navbar = ({
     return true;
   },
 }) => {
-
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', onBackPress);
     return () => {
@@ -33,20 +33,26 @@ const Navbar = ({
     };
   });
 
-  return (
-    <SafeAreaView style={styles.navbar}>
-      <TouchableOpacity onPress={onBackPress} style={{ width: '28', height: '28' }}>
-        {prefixIcon ? (
-          <Icon name="arrow-back-ios" style={styles.navIcon} size={28} />
-        ) : (
-          <View style={{ width: '28', height: '28' }}>
-            {/* //TODO: add initials of the user */}
-          </View>
-        )}
-      </TouchableOpacity>
-      <Text style={styles.navbarText}>{title}</Text>
-    </SafeAreaView>
-  );
+  if (Platform.OS === 'android') {
+    return (
+      <SafeAreaView style={styles.navbar}>
+        <TouchableOpacity
+          onPress={onBackPress}
+          style={{width: '28', height: '28'}}>
+          {prefixIcon ? (
+            <Icon name="arrow-back-ios" style={styles.navIcon} size={28} />
+          ) : (
+            <View style={{width: '28', height: '28'}}>
+              {/* //TODO: add initials of the user */}
+            </View>
+          )}
+        </TouchableOpacity>
+        <Text style={styles.navbarText}>{title}</Text>
+      </SafeAreaView>
+    );
+  } else {
+    return <View style={{marginTop: 35}}></View>;
+  }
 };
 
 const styles = StyleSheet.create({
