@@ -236,7 +236,7 @@ On the activity screen, the student will be able to see all his/her activities, 
 - **Features:**
   Features like signing in, signing up, delete account and forgot password are included. I forgot password the user gets a verification code to their email Which is valid for 5 minutes and can reset their password.
 
-      <p align='center'>
+    <p align='center'>
   <img src='Acticlass-App/src/assets/accountSettings.png' alt='accountSettings' height='400px' >
   <img src='Acticlass-App/src/assets/changePassword.png' alt='changePassword' height='400px' >
 
