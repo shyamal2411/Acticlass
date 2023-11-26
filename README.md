@@ -274,5 +274,5 @@ On the activity screen, the student will be able to see all his/her activities, 
 | Vishaka Vinod                    | vs235403@dal.ca |
 
 > Under the Supervison of
- [Dr. Tushar Sharma](https://tusharma.in/) (Professor)
+ [Dr. Tushar Sharma](https://tusharma.in/) (Professor),
  [Mootez Saad](https://www.linkedin.com/in/mootez-saad-118aa2151) (Head Teaching Assitant)
