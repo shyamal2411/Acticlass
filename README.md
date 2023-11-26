@@ -170,8 +170,8 @@ Below is the list of Dependencies used in the project for development.
 
 - **Compatibility:** The app is compatible both on Android and iOS devices.
   <p align='center'>
-  <img src='Acticlass-App/src/assets/androidScreen.png' alt='HomeScreen' height='400px' >
-  <img src='Acticlass-App/src/assets/iosScreen.png' alt='HomeScreen' height='400px' >
+  <img src='Acticlass-App/src/assets/androidScreen.png' alt='androidScreen' height='400px' >
+  <img src='Acticlass-App/src/assets/iosScreen.png' alt='iosScreen' height='400px' >
 
 </p>
 
@@ -206,7 +206,7 @@ Below is the list of Dependencies used in the project for development.
   The student must be in the geofence range that is set by the teacher to join the session, if the student moves out of the geofence, the student automatically gets disconnected from the session.
 
     <p align='center'>
-  <img src='Acticlass-App/src/assets/locationRequest.png' alt='HomeScreen' height='400px' >
+  <img src='Acticlass-App/src/assets/locationRequest.png' alt='locationRequest' height='400px' >
 </p>
 
 ### 6. Activity Screen
@@ -226,8 +226,8 @@ On the activity screen, the student will be able to see all his/her activities, 
 - **Both Teacher and Student:**
   Both teacher and student have the option to download all their activities on the activity screen as a report with a CSV file type.
     <p align='center'>
-  <img src='Acticlass-App/src/assets/csvDownload.png' alt='HomeScreen' height='400px' >
-  <img src='Acticlass-App/src/assets/csvReport.png' alt='HomeScreen' height='400px' >
+  <img src='Acticlass-App/src/assets/csvDownload.png' alt='csvDownload' height='400px' >
+  <img src='Acticlass-App/src/assets/csvReport.png' alt='csvReport' height='400px' >
 
 </p>
 
@@ -235,6 +235,12 @@ On the activity screen, the student will be able to see all his/her activities, 
 
 - **Features:**
   Features like signing in, signing up, delete account and forgot password are included. I forgot password the user gets a verification code to their email Which is valid for 5 minutes and can reset their password.
+
+      <p align='center'>
+  <img src='Acticlass-App/src/assets/accountSettings.png' alt='accountSettings' height='400px' >
+  <img src='Acticlass-App/src/assets/changePassword.png' alt='changePassword' height='400px' >
+
+</p>
 
 ### 9. Leaderboard
 
