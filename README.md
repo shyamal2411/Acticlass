@@ -172,6 +172,7 @@ Below is the list of Dependencies used in the project for development.
   <p align='center'>
   <img src='Acticlass-App/src/assets/androidScreen.png' alt='HomeScreen' height='400px' >
   <img src='Acticlass-App/src/assets/iosScreen.png' alt='HomeScreen' height='400px' >
+
 </p>
 
 ### 2. Group Creation and Management
@@ -204,6 +205,10 @@ Below is the list of Dependencies used in the project for development.
 - **Student:**
   The student must be in the geofence range that is set by the teacher to join the session, if the student moves out of the geofence, the student automatically gets disconnected from the session.
 
+    <p align='center'>
+  <img src='Acticlass-App/src/assets/locationRequest.png' alt='HomeScreen' height='400px' >
+</p>
+
 ### 6. Activity Screen
 
 - **Teacher:**
@@ -220,6 +225,11 @@ On the activity screen, the student will be able to see all his/her activities, 
 
 - **Both Teacher and Student:**
   Both teacher and student have the option to download all their activities on the activity screen as a report with a CSV file type.
+    <p align='center'>
+  <img src='Acticlass-App/src/assets/csvDownload.png' alt='HomeScreen' height='400px' >
+  <img src='Acticlass-App/src/assets/csvReport.png' alt='HomeScreen' height='400px' >
+
+</p>
 
 ### 8. Account Management
 
