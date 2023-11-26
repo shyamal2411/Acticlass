@@ -169,6 +169,10 @@ Below is the list of Dependencies used in the project for development.
 ### 1. Cross-Platform Compatibility
 
 - **Compatibility:** The app is compatible both on Android and iOS devices.
+  <p align='center'>
+  <img src='Acticlass-App/src/assets/androidScreen.png' alt='HomeScreen' height='400px' >
+  <img src='Acticlass-App/src/assets/iosScreen.png' alt='HomeScreen' height='400px' >
+</p>
 
 ### 2. Group Creation and Management
 - **Teacher:**  <br>The user with the teacher role can create, configure, and delete the group. Teachers can also remove a user from the group. If the session of groups is active for more than 6 hours the session automatically ends. 
@@ -227,7 +231,7 @@ On the activity screen, the student will be able to see all his/her activities, 
 - **Access:**
   Any user can access the leaderboard of the group that is part of, where the user will be able to see a list of students in descending order of the points they have earned.
 
-<p align='center'>
+  <p align='center'>
   <img src='Acticlass-App/src/assets/leaderboard.png' alt='LeaderBoard' height='400'>
 </p>
 
