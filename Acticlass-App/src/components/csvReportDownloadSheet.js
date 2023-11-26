@@ -1,6 +1,6 @@
+import React, {useState} from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import Snackbar from 'react-native-snackbar';
@@ -9,6 +9,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import {colors} from '../common/colors';
 import activityService from '../services/activityService';
 import FileViewer from 'react-native-file-viewer';
+import {ScrollView} from 'react-native-gesture-handler';
 
 const CsvReportDownloadSheet = ({groups, cb}) => {
   const groupNames = groups.map(item => item.name);
@@ -119,97 +120,102 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>CSV Report</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.title}>CSV Report</Text>
 
-      <View style={{paddingHorizontal: 40}}>
-        <Text style={styles.inputTitle}>Group</Text>
-        <View>
-          <SelectDropdown
-            renderDropdownIcon={() => {
-              return (
-                <FeatherIcon
-                  name="chevron-down"
-                  size={24}
-                  color={colors.placeholder}
-                />
-              );
-            }}
-            defaultValueByIndex={0}
-            dropdownIconPosition="right"
-            buttonStyle={{
-              backgroundColor: 'white',
-              width: '100%',
-              fontSize: 16,
-              borderColor: '#ccc',
-              borderWidth: 1,
-              borderRadius: 4,
-              marginTop: 4,
-              height: 48,
-            }}
-            buttonTextStyle={{
-              textAlign: 'left',
-              color: 'black',
-              fontSize: 16,
-            }}
-            dropdownStyle={{
-              borderColor: '#ccc',
-              borderWidth: 1,
-              borderRadius: 4,
-            }}
-            rowTextStyle={{
-              textAlign: 'left',
-              color: 'black',
-              fontSize: 16,
-            }}
-            defaultButtonText="Select Group"
-            data={groupNames}
-            onSelect={handleSelectGroup}
-          />
+        <View style={{width: '100%', paddingHorizontal: 20, marginTop: 10}}>
+          <Text style={styles.inputTitle}>Group</Text>
+          <View>
+            <SelectDropdown
+              renderDropdownIcon={() => {
+                return (
+                  <FeatherIcon
+                    name="chevron-down"
+                    size={24}
+                    color={colors.placeholder}
+                  />
+                );
+              }}
+              defaultValueByIndex={0}
+              dropdownIconPosition="right"
+              buttonStyle={{
+                backgroundColor: 'white',
+                width: '100%',
+                fontSize: 16,
+                borderColor: '#ccc',
+                borderWidth: 1,
+                borderRadius: 4,
+                marginTop: 4,
+                height: 48,
+              }}
+              buttonTextStyle={{
+                textAlign: 'left',
+                color: 'black',
+                fontSize: 16,
+              }}
+              dropdownStyle={{
+                borderColor: '#ccc',
+                borderWidth: 1,
+                borderRadius: 4,
+              }}
+              rowTextStyle={{
+                textAlign: 'left',
+                color: 'black',
+                fontSize: 16,
+              }}
+              defaultButtonText="Select Group"
+              data={groupNames}
+              onSelect={handleSelectGroup}
+            />
+          </View>
+        </View>
+
+        <View style={{paddingHorizontal: 20, marginTop: 12, width: '100%'}}>
+          <Text style={styles.inputTitle}>Start Date</Text>
+          <TouchableOpacity style={styles.input} onPress={showStartDate}>
+            <Text
+              style={
+                styles.dateValue
+              }>{`${startDate.toLocaleDateString()}`}</Text>
+          </TouchableOpacity>
+          {showStartPicker && (
+            <DateTimePicker
+              value={startDate}
+              mode="date"
+              display="default"
+              onChange={handleStartDateChange}
+              maximumDate={currentDate}
+            />
+          )}
+        </View>
+
+        <View style={{paddingHorizontal: 20, marginTop: 10, width: '100%'}}>
+          <Text style={styles.inputTitle}>End Date</Text>
+          <TouchableOpacity style={styles.input} onPress={showEndDate}>
+            <Text
+              style={
+                styles.dateValue
+              }>{`${endDate.toLocaleDateString()}`}</Text>
+          </TouchableOpacity>
+          {showEndPicker && (
+            <DateTimePicker
+              value={endDate}
+              mode="date"
+              display="default"
+              onChange={handleEndDateChange}
+              maximumDate={currentDate}
+            />
+          )}
+        </View>
+
+        <View style={{paddingHorizontal: 20}}>
+          <TouchableOpacity style={styles.button} onPress={handleDownload}>
+            <Text style={styles.buttonText}>Download</Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-      <View style={{paddingHorizontal: 40, marginTop: 12}}>
-        <Text style={styles.inputTitle}>Start Date</Text>
-        <TouchableOpacity style={styles.input} onPress={showStartDate}>
-          <Text
-            style={
-              styles.dateValue
-            }>{`${startDate.toLocaleDateString()}`}</Text>
-        </TouchableOpacity>
-        {showStartPicker && (
-          <DateTimePicker
-            value={startDate}
-            mode="date"
-            display="default"
-            onChange={handleStartDateChange}
-          />
-        )}
-      </View>
-
-      <View style={{paddingHorizontal: 40, marginTop: 10}}>
-        <Text style={styles.inputTitle}>End Date</Text>
-        <TouchableOpacity style={styles.input} onPress={showEndDate}>
-          <Text
-            style={styles.dateValue}>{`${endDate.toLocaleDateString()}`}</Text>
-        </TouchableOpacity>
-        {showEndPicker && (
-          <DateTimePicker
-            value={endDate}
-            mode="date"
-            display="default"
-            onChange={handleEndDateChange}
-            maximumDate={currentDate}
-          />
-        )}
-      </View>
-
-      <View style={{paddingHorizontal: 40}}>
-        <TouchableOpacity style={styles.button} onPress={handleDownload}>
-          <Text style={styles.buttonText}>Download</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -232,12 +238,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
 
-  dateValue: {fontSize: 16, color: 'black', marginTop: 12},
+  dateValue: {
+    fontSize: 16,
+    color: 'black',
+    marginTop: 12,
+  },
+
   inputTitle: {
     fontSize: 16,
     color: 'black',
     marginLeft: 4,
   },
+
   input: {
     backgroundColor: 'white',
     fontSize: 16,
@@ -258,6 +270,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 22,
+    paddingHorizontal: 20,
   },
 
   buttonText: {

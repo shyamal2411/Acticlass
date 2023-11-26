@@ -598,7 +598,6 @@ class ActivityManager {
         const location = this.sessionLocation.get(groupId);
         return { isActive: true, location, activities };
     }
-
 }
 
 
