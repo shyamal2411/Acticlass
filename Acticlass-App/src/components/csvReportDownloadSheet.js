@@ -185,6 +185,7 @@ const CsvReportDownloadSheet = ({groups, cb}) => {
               mode="date"
               display="default"
               onChange={handleStartDateChange}
+              maximumDate={currentDate}
             />
           )}
         </View>
