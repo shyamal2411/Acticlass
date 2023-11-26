@@ -174,6 +174,7 @@ Below is the list of Dependencies used in the project for development.
 - **Teacher:**  <br>The user with the teacher role can create, configure, and delete the group. Teachers can also remove a user from the group. If the session of groups is active for more than 6 hours the session automatically ends. 
 
 - **Student:** <br> Students can join the group using a QR code scanner integrated with the app. Can also leave the group. 
+
 <p align='center'>
   <img src='Acticlass-App/src/assets/HomeScreen.png' alt='HomeScreen' height='400px' >
 </p>
