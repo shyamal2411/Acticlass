@@ -8,25 +8,6 @@ A mobile application designed to make more interactive participation in class be
 
 > **Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup).
 
-### Deployment
-
-To deploy the Acticlass server locally, Open a terminal in the [_Acticlass-API_](Acticlass-API/) directory of the Acticlass app.
-
-- Run the following command:
-
-  ```bash
-  # installing reqired packages
-  npm install
-
-  # using npm
-  npm start
-
-  # OR using Yarn
-  yarn start
-  ```
-
-Congratulations! You have successfully deployed the Acticlass server.
-
 ### Build
 
 #### Step 1: Start the Metro Server
@@ -75,6 +56,25 @@ This is one way to run your app — you can also run it directly from within And
 ### Congratulations! :tada:
 
 You've successfully deployed Acticlass App. :partying_face:
+
+### Deployment
+
+To deploy the Acticlass server locally, Open a terminal in the [_Acticlass-API_](Acticlass-API/) directory of the Acticlass app.
+
+- Run the following command:
+
+  ```bash
+  # installing reqired packages
+  npm install
+
+  # using npm
+  npm start
+
+  # OR using Yarn
+  yarn start
+  ```
+
+Congratulations! You have successfully deployed the Acticlass server.
 
 ## Dependencies
 
@@ -169,6 +169,9 @@ Below is the list of Dependencies used in the project for development.
 ### 1. Cross-Platform Compatibility
 
 - **Compatibility:** The app is compatible both on Android and iOS devices.
+
+---
+
   <p align='center'>
   <img src='Acticlass-App/src/assets/androidScreen.png' alt='androidScreen' height='400px' >
   <img src='Acticlass-App/src/assets/iosScreen.png' alt='iosScreen' height='400px' >
@@ -176,14 +179,16 @@ Below is the list of Dependencies used in the project for development.
 </p>
 
 ### 2. Group Creation and Management
-- **Teacher:**  <br>The user with the teacher role can create, configure, and delete the group. Teachers can also remove a user from the group. If the session of groups is active for more than 6 hours the session automatically ends. 
 
-- **Student:** <br> Students can join the group using a QR code scanner integrated with the app. Can also leave the group. 
+- **Teacher:** <br>The user with the teacher role can create, configure, and delete the group. Teachers can also remove a user from the group. If the session of groups is active for more than 6 hours the session automatically ends.
+
+- **Student:** <br> Students can join the group using a QR code scanner integrated with the app. Can also leave the group.
+
+---
 
   <p align='center'>
   <img src='Acticlass-App/src/assets/HomeScreen.png' alt='HomeScreen' height='400px' >
 </p>
-
 
 ### 3. Riser Requests and Custom Rewards
 
@@ -193,9 +198,13 @@ Below is the list of Dependencies used in the project for development.
 - **Teacher:**
   In the session, the teacher can approve or decline the request raised by the student. While approving the reward, the teacher can customize the reward value with suggested values or with a custom input accordingly. If the teacher does not approve or reject the request of the student for more than 5 minutes the request will automatically get rejected and the student will be penalized.
 
+---
+
 ### 4. Attendance Tracking
 
 - **Feature:** The app checks whether the student is active in the group or not in particular intervals, where the interval is the attendance frequency set when the user with role teacher group configured or created the group. The student will be awarded points that are set by the teacher for attendance.
+
+---
 
 ### 5. Geofencing Feature
 
@@ -205,9 +214,11 @@ Below is the list of Dependencies used in the project for development.
 - **Student:**
   The student must be in the geofence range that is set by the teacher to join the session, if the student moves out of the geofence, the student automatically gets disconnected from the session.
 
-    <p align='center'>
-  <img src='Acticlass-App/src/assets/locationRequest.png' alt='locationRequest' height='400px' >
-</p>
+---
+
+  <p align='center'>
+    <img src='Acticlass-App/src/assets/locationRequest.png' alt='locationRequest' height='400px' >
+  </p>
 
 ### 6. Activity Screen
 
@@ -215,7 +226,9 @@ Below is the list of Dependencies used in the project for development.
   On the activity screen, the teacher will be able to select any particular group that the teacher is a part of. The stats are displayed in the form of bar graphs for an entire week and can be selected for any day of the week to get the activities as a list of that particular day, which holds attendance, rewards and penalties for every student.
 
 - **Student:**
-On the activity screen, the student will be able to see all his/her activities, such as attendance rewards and penalties for any week and group that the student is part of. The list of activities is displayed for any particular day selected in the week.
+  On the activity screen, the student will be able to see all his/her activities, such as attendance rewards and penalties for any week and group that the student is part of. The list of activities is displayed for any particular day selected in the week.
+
+---
 
   <p align='center'>
   <img src='Acticlass-App/src/assets/activitiesScreen.png' alt='ActivityScreen' height='400'>
@@ -245,7 +258,7 @@ On the activity screen, the student will be able to see all his/her activities, 
 ### 9. Leaderboard
 
 - **Access:**
-  Any user can access the leaderboard of the group that is part of, where the user will be able to see a list of students in descending order of the points they have earned.
+Any user can access the leaderboard of the group that is part of, where the user will be able to see a list of students in descending order of the points they have earned.
 
   <p align='center'>
   <img src='Acticlass-App/src/assets/leaderboard.png' alt='LeaderBoard' height='400'>
@@ -274,5 +287,5 @@ On the activity screen, the student will be able to see all his/her activities, 
 | Vishaka Vinod                    | vs235403@dal.ca |
 
 > Under the Supervison of
- [Dr. Tushar Sharma](https://tusharma.in/) (Professor),
- [Mootez Saad](https://www.linkedin.com/in/mootez-saad-118aa2151) (Head Teaching Assitant)
+> [Dr. Tushar Sharma](https://tusharma.in/) (Professor),
+> [Mootez Saad](https://www.linkedin.com/in/mootez-saad-118aa2151) (Head Teaching Assitant)
