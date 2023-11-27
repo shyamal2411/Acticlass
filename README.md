@@ -251,11 +251,12 @@ npm test
 
 ### 1. Cross-Platform Compatibility
 
-- **Compatibility:** Acticlass application is compatible with both Android devices and iOS devices. 
+- **Compatibility:** The app is compatible with both on Android and iOS devices.
 
-  <p align='center' style='margin-top: 20px;'>
-  <img src='Acticlass-App/src/assets/androidScreen.png' alt='androidScreen' height='400px' >
-  <img src='Acticlass-App/src/assets/iosScreen.png' alt='iosScreen' height='400px' >
+  <p align='center' style='margin-top: 30px;'>
+  <img src='imgs/signup.png' alt='androidScreen' height='400px' style="margin-right:30px">
+  <img src='Acticlass-App/src/assets/iosScreen.png' alt='androidScreen' height='400px' style="margin-right:30px">
+
   </p>
 
 ---
@@ -264,7 +265,7 @@ npm test
 
 - **Teacher:** <br>The user with the teacher role have the ability to can create and delete the group, along with a configuriton menu where the gropu properties such as name, radius, passing points, attendance frequency(in minutes), attendance Reward, False Request Penalty. Teachers can also remove a user from the group. If the session of groups is active for more than 6 hours the session will be consider as inactive/timeout as result the session automatically ends.
 
-- **Student:** <br> Students can join the group using a QR code scanner integrated with the app, which is acessible . Can also leave the group.
+- **Student:** <br> Students can join the group using a QR code scanner integrated with the app. They can also leave the group.
 
   <p align='center'>
   <img src='Acticlass-App/src/assets/HomeScreen.png' alt='HomeScreen' height='400px' >
@@ -276,8 +277,7 @@ npm test
 ### 3. Raise Requests and Custom Rewards
 
 - **Student:**
-   The users with student role will have the option to raise after joining the session, which is available at the bottom right of the application screen. 
-
+  The student can raise a request for a reward while in the sesssion and professor gets the request for the reward, if they want to approve, the student gets the point otherwise professor can give penalty to the student for false request.
 
 - **Teacher:**
   In the session, the user with the teacher role will have the ability to approve or decline the request raised by the student. When approved the reward, the teacher will be given an option to customize the reward value with suggested values or with a custom input accordingly. In case if teacher not approving or rejecting the request raised by the student for more than 5 minutes, the request will automatically get rejected and the student will be penalized with the marks that are set in the group configuration for the penalty.
@@ -300,7 +300,7 @@ npm test
 
 
   <p align='center' style='margin-top:20px'>
-    <img src='Acticlass-App/src/assets/locationRequest.png' alt='locationRequest' height='400px' >
+    <img src='imgs/location.png' alt='locationRequest' height='400px' >
   </p>
 
 ---
@@ -316,7 +316,7 @@ On the activity screen of the Acticlass application, the student will be able to
 
 
   <p align='center' style='margin-top:20px'>
-  <img src='Acticlass-App/src/assets/activitiesScreen.png' alt='ActivityScreen' height='400'>
+  <img src='imgs/activityscreen.png' alt='ActivityScreen' height='400' style='margin-right: 30px'>
 </p>
 
 ---
@@ -326,8 +326,8 @@ On the activity screen of the Acticlass application, the student will be able to
 - **Both Teacher and Student:**
    Users with both teacher and student roles have the option to download all their activities on the activity screen as a report with a CSV file type. This option is available at the bottom right of the	the activity screen on click a bottom sheet will pop up, where the user needs to select group for the dropdown menu along with both start and end dates from when to when the user needs the report. And then click the download button to download the report. The report will be downloaded will be of ‘csv’ file type.
     <p align='center' style='margin-top:20px'>
-  <img src='Acticlass-App/src/assets/csvDownload.png' alt='csvDownload' height='400px' >
-  <img src='Acticlass-App/src/assets/csvReport.png' alt='csvReport' height='400px' >
+  <img src='imgs/csvreport.png' alt='csvDownload' height='400px' style='margin-right: 30px'>
+  <img src='imgs/csvdownload.png' alt='csvReport' height='400px' >
 
 </p>
 
@@ -339,8 +339,8 @@ On the activity screen of the Acticlass application, the student will be able to
   Features like signing in, signing up, deleting account and forgot password are available for any user of the Acticlass application. For the ‘forgot password’ feature the user gets a verification code to the email after entering their email. The verification code is valid only for 5 minutes and can reset their password, after 5 minutes the verification code will not be valid.
 
     <p align='center' style='margin-top:20px'>
-  <img src='Acticlass-App/src/assets/accountSettings.png' alt='accountSettings' height='400px' >
-  <img src='Acticlass-App/src/assets/changePassword.png' alt='changePassword' height='400px' >
+  <img src='imgs/settings.png' alt='accountSettings' height='400px' style="margin-right:30px">
+  <img src='imgs/updatepassword.png' alt='changePassword' height='400px' >
 
 </p>
 
@@ -352,7 +352,7 @@ On the activity screen of the Acticlass application, the student will be able to
 Any user of the acticlass have the access to the leaderboard for any number of groups that the user is part of, where the user will be able to see a list of students in descending order of the points they have earned and can also see points that each user have earned and their email id. For the user with teacher role will also have the option available on every student card of the leaderboard to remove the student for the group.
 
   <p align='center' style='margin-top:20px'>
-  <img src='Acticlass-App/src/assets/leaderboard.png' alt='LeaderBoard' height='400'>
+  <img src='imgs/leaderboard.png' alt='LeaderBoard' height='400'>
 </p>
 
 ---
