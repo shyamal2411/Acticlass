@@ -73,7 +73,7 @@ SMTP_PASSWORD=
 
 ### Run
 
-To start the application use the bellow code.
+To start the application use the below code.
 
 ```bash
 # Start node server
@@ -129,7 +129,7 @@ You can find the `DockerFile` for the project [here](./Dockerfile).
 
 ---
 
-## Fronted (React-Native App)
+# Fronted (React-Native App)
 
 ### Setup
 
@@ -217,6 +217,8 @@ Below are dependencies that are being used in React Native app:
    npx run ios
    ```
 
+> **Note:** For ios you have to do `pod install` in ios directory to set up the necessary dependencies.
+
 ## Test Cases with Jest
 
 ### Setup Jest
@@ -271,7 +273,7 @@ npm test
 
 ---
 
-### 3. Rise Requests and Custom Rewards
+### 3. Raise Requests and Custom Rewards
 
 - **Student:**
    The users with student role will have the option to raise after joining the session, which is available at the bottom right of the application screen. 
