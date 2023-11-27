@@ -129,7 +129,7 @@ You can find the `DockerFile` for the project [here](./Dockerfile).
 
 ---
 
-## Fronted (React-Native App)
+# Fronted (React-Native App)
 
 ### Setup
 
