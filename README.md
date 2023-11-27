@@ -1,6 +1,6 @@
-<p align="center">
-  <img src="./Acticlass-App/ios/Acticlass/Images.xcassets/AppIcon.appiconset/114.png" alt="Acticlass Logo">
-</p>
+<center>
+<img src="./Acticlass-App/ios/Acticlass/Images.xcassets/AppIcon.appiconset/114.png" alt="Acticlass Logo">
+</center>
 
 <div style="text-align: center">
 
