@@ -73,7 +73,7 @@ SMTP_PASSWORD=
 
 ### Run
 
-To start the application use the bellow code.
+To start the application use the below code.
 
 ```bash
 # Start node server
@@ -217,6 +217,8 @@ Below are dependencies that are being used in React Native app:
    npx run ios
    ```
 
+> **Note:** For ios you have to do `pod install` in ios directory to set up the necessary dependencies.
+
 ## Test Cases with Jest
 
 ### Setup Jest
@@ -270,7 +272,7 @@ npm test
 
 ---
 
-### 3. Rise Requests and Custom Rewards
+### 3. Raise Requests and Custom Rewards
 
 - **Student:**
   The student can raise a request for a reward when is in a session.
