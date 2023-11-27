@@ -1,31 +1,26 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 import {
+  Dimensions,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
 } from 'react-native';
-import {colors} from '../common/colors';
-import {ROLES} from '../common/constants';
-import authService from '../services/authService';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { colors } from '../common/colors';
+import { ROLES } from '../common/constants';
+import authService from '../services/authService';
 import RewardRequestSheet from './rewardRequestSheet';
-import RequestDeclineCard from './requestdeclineCard';
-import RequestApproveCard from './requestapproveCard';
 
-const RequestCard = ({item, group}) => {
+const RequestCard = ({ item, group }) => {
   const refRBSheet = React.createRef();
   const [isVisibleDecline, setIsVisibleDecline] = useState(false);
   const [isVisibleAccept, setIsVisibleAccept] = useState(false);
   const [isButtonClickable, setIsButtonClickable] = useState(false);
   const handleRequest = () => {
     if (authService.getRole() === ROLES.TEACHER) {
-      //TODO: handle request
       refRBSheet.current.open();
-      // socketService.acceptRequest({ groupId: group.id, requestId: item.id, points: 100 }); // just for testing
-      // socketService.rejectRequest({ groupId: group.id, requestId: item.id, points: group.penalty }); // just for testing
     }
   };
 
@@ -34,7 +29,7 @@ const RequestCard = ({item, group}) => {
       <View
         style={[
           styles.row,
-          item.isMine ? {flexDirection: 'row-reverse'} : {flexDirection: 'row'},
+          item.isMine ? { flexDirection: 'row-reverse' } : { flexDirection: 'row' },
         ]}>
         <View style={styles.container}>
           <Text style={styles.text}>Raised a Request ✋</Text>
@@ -43,22 +38,6 @@ const RequestCard = ({item, group}) => {
     );
   };
 
-  const doNothing = () => {};
-  const renderDecline = () => {
-    //setIsVisible(false);
-    socketService.rejectRequest({
-      groupId: group.id,
-      requestId: item.id,
-      points: group.penalty,
-    }); // just for testing
-  };
-  const renderAccept = () => {
-    socketService.acceptRequest({
-      groupId: group.id,
-      requestId: item.id,
-      points: 100,
-    }); // just for testing
-  };
   return (
     <View>
       <RBSheet

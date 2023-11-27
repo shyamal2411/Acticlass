@@ -6,10 +6,11 @@ const { scheduleJob } = require("node-schedule");
 
 class ActivityManager {
     tag = "[ActivityManager]";
+    SESSION_TIMEOUT = 60 * 60 * 6; // 6 hours
 
     constructor() {
         this.pendingRequests = new NodeCache();
-        this.sessions = new NodeCache({ stdTTL: 60 * 60 * 6, checkperiod: 60 * 60 * 6, delayedDelete: true });
+        this.sessions = new NodeCache({ stdTTL: this.SESSION_TIMEOUT, checkperiod: this.SESSION_TIMEOUT, delayedDelete: true });
         // end session after 6 hours of inactivity.
         this.sessions.on("expired", (key, value) => {
             console.log(this.tag, "Session expired", key, value);
@@ -103,24 +104,20 @@ class ActivityManager {
      * @param {Function} cb 
      */
     startSession(data, cb) {
+        let msg = "";
         if (data.role !== Roles.TEACHER) {
+            msg = "Only teacher can start session";
             console.log(this.tag, "Only teacher can start session");
-            if (cb) {
-                cb({ message: "Only teacher can start session" });
-            }
-            return;
-        }
-        if (this.sessions.has(data.groupId)) {
+        } else if (this.sessions.has(data.groupId)) {
+            msg = "Session already exists";
             console.log(this.tag, data.groupId, "Session already exists");
-            if (cb) {
-                cb({ message: "Session already exists" });
-            }
-            return;
-        }
-        if (!data.location) {
+        } else if (!data.location) {
+            msg = "Location is required";
             console.log(this.tag, data.groupId, "Location is required");
+        }
+        if (msg) {
             if (cb) {
-                cb({ message: "Location is required" });
+                cb({ message: msg });
             }
             return;
         }
@@ -352,41 +349,31 @@ class ActivityManager {
     * @param {Function} cb     
     */
     handleRequest(data, cb) {
+        let msg = ""
         if (data.role !== Roles.TEACHER) {
+            msg = "Only teacher can approve/reject request";
             console.log(this.tag, "Only teacher can approve/reject request");
-            if (cb) {
-                cb({ message: "Only teacher can approve/reject request" });
-            }
-            return;
-        }
-        if (!data.type) {
+        } else if (!data.type) {
+            msg = "Request type is required";
             console.log(this.tag, "Request type is required");
-            if (cb) {
-                cb({ message: "Request type is required" });
-            }
-            return;
-        }
-        if (data.type !== ACTIVITY_TYPES.REQUEST_ACCEPTED && data.type !== ACTIVITY_TYPES.REQUEST_REJECTED) {
+        } else if (data.type !== ACTIVITY_TYPES.REQUEST_ACCEPTED && data.type !== ACTIVITY_TYPES.REQUEST_REJECTED) {
+            msg = "Request type is invalid";
             console.log(this.tag, "Request type is invalid");
-            if (cb) {
-                cb({ message: "Request type is invalid" });
-            }
-            return;
-        }
-        if (!data.points) {
+        } else if (!data.points) {
+            msg = "Request points is required";
             console.log(this.tag, "Request points is required");
-            if (cb) {
-                cb({ message: "Request points is required" });
-            }
-            return;
-        }
-        if (!data.requestId) {
+        } else if (!data.requestId) {
+            msg = "Request ID is required";
             console.log(this.tag, "Request ID is required");
+            return;
+        }
+        if (msg) {
             if (cb) {
-                cb({ message: "Request ID is required" });
+                cb({ message: msg });
             }
             return;
         }
+
         const session = this.sessions.get(data.groupId);
         if (!session) {
             console.log(this.tag, "Session does not exist");
@@ -598,7 +585,6 @@ class ActivityManager {
         const location = this.sessionLocation.get(groupId);
         return { isActive: true, location, activities };
     }
-
 }
 
 
