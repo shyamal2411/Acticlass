@@ -1,12 +1,12 @@
 {
     "client": "Thunder Client",
-    "environmentName": "prod",
-    "dateExported": "2023-10-19T13:52:57.738Z",
+    "environmentName": "dev",
+    "dateExported": "2023-11-26T21:19:00.384Z",
     "version": "1.0",
     "variables": [
         {
             "name": "Base_URL",
-            "value": "http://172.17.2.145:8073"
+            "value": "http://localhost:3000"
         }
     ]
 }

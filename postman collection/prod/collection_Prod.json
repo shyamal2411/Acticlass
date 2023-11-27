@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "Prod",
-    "dateExported": "2023-10-19T13:53:08.602Z",
+    "dateExported": "2023-11-26T21:18:50.421Z",
     "version": "1.1",
     "folders": [
         {
@@ -48,12 +48,12 @@
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-10-19T13:40:55.796Z",
-            "modified": "2023-10-19T13:44:40.422Z",
+            "modified": "2023-11-07T00:36:20.155Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\":\"test3@gmail.com\",\n  \"password\":\"Test@123\"\n}",
+                "raw": "{\n  \"email\":\"sgp@dal.ca\",\n  \"password\":\"Test@123\"\n}",
                 "form": []
             },
             "tests": []
@@ -146,17 +146,17 @@
             "method": "POST",
             "sortNum": 80000,
             "created": "2023-10-19T13:40:55.801Z",
-            "modified": "2023-10-19T13:46:09.243Z",
+            "modified": "2023-10-23T22:41:27.649Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{ \n  \"name\":\"G2\",\n  \"institute\":\"Dalhousie University\", \n  \"radius\":50,\n  \"passingPoints\": 15,\n  \"attendanceFrequency\" : 0,\n  \"attendanceReward\": 0, \n  \"penalty\" : 0\n} ",
+                "raw": "{ \n  \"name\":\"Test Group\",\n  \"radius\":50,\n  \"passingPoints\": 15,\n  \"attendanceFrequency\" : 0,\n  \"attendanceReward\": 0, \n  \"penalty\" : 0\n} ",
                 "form": []
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMTMyOTc0MjMwMzg5YmIxYTZlZTRlIiwibmFtZSI6IlQzIiwiZW1haWwiOiJ0ZXN0M0BnbWFpbC5jb20iLCJyb2xlIjoiU3R1ZGVudCIsImluc3RpdHV0ZSI6IkRhbCJ9LCJpYXQiOjE2OTc3MjMwODIsImV4cCI6MTY5ODMyNzg4Mn0.kPgy5N8d7lRj0XNcTxbFjS5zGnR2V29DlLznGOfmJ0o"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMGE0MGY0MGZkNTVkMjIyNmY0ZDUwIiwibmFtZSI6IlQxIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJUZWFjaGVyIiwiaW5zdGl0dXRlIjoiRGFsIn0sImlhdCI6MTY5NzgzNjA3OSwiZXhwIjoxNjk4NDQwODc5fQ.dGKtSSKWQ7A8Ya1uxTrI0lAMOvv09od5K8Lxv46gQGI"
             },
             "tests": []
         },
@@ -169,12 +169,12 @@
             "method": "GET",
             "sortNum": 100000,
             "created": "2023-10-19T13:40:55.802Z",
-            "modified": "2023-10-19T13:47:03.511Z",
+            "modified": "2023-11-07T00:36:33.873Z",
             "headers": [],
             "params": [],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMTMyOTc0MjMwMzg5YmIxYTZlZTRlIiwibmFtZSI6IlQzIiwiZW1haWwiOiJ0ZXN0M0BnbWFpbC5jb20iLCJyb2xlIjoiU3R1ZGVudCIsImluc3RpdHV0ZSI6IkRhbCJ9LCJpYXQiOjE2OTc3MjMwODIsImV4cCI6MTY5ODMyNzg4Mn0.kPgy5N8d7lRj0XNcTxbFjS5zGnR2V29DlLznGOfmJ0o"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjU0OTdlNGU3OTAzMTA1ODhhZjBiNTk1IiwibmFtZSI6IlNoeWFtYWwiLCJlbWFpbCI6InNncEBkYWwuY2EiLCJyb2xlIjoiVGVhY2hlciIsImluc3RpdHV0ZSI6IkRhbGhvdXNpZVx0In0sImlhdCI6MTY5OTMxNzM4MCwiZXhwIjoxNjk5OTIyMTgwfQ.igAqm4JBuQCp1F07BDV1Njgrb9etJ_484FahIwAJdbg"
             },
             "tests": []
         },
@@ -183,16 +183,16 @@
             "colId": "e01e1829-1946-40e1-9d72-32859f1e2d84",
             "containerId": "b3582c28-6c38-41ba-b19f-a131851b9aa3",
             "name": "Get by ID",
-            "url": "/groups/get/6530a63bb374ee7de40178ee",
+            "url": "/groups/get/6532ec6009dde82d8f7d9c8d",
             "method": "GET",
             "sortNum": 110000,
             "created": "2023-10-19T13:40:55.803Z",
-            "modified": "2023-10-19T13:48:45.799Z",
+            "modified": "2023-10-20T21:10:00.962Z",
             "headers": [],
             "params": [],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMTMyOTc0MjMwMzg5YmIxYTZlZTRlIiwibmFtZSI6IlQzIiwiZW1haWwiOiJ0ZXN0M0BnbWFpbC5jb20iLCJyb2xlIjoiU3R1ZGVudCIsImluc3RpdHV0ZSI6IkRhbCJ9LCJpYXQiOjE2OTc3MjMwODIsImV4cCI6MTY5ODMyNzg4Mn0.kPgy5N8d7lRj0XNcTxbFjS5zGnR2V29DlLznGOfmJ0o"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMGE0MGY0MGZkNTVkMjIyNmY0ZDUwIiwibmFtZSI6IlQxIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJUZWFjaGVyIiwiaW5zdGl0dXRlIjoiRGFsIn0sImlhdCI6MTY5NzgzNjA3OSwiZXhwIjoxNjk4NDQwODc5fQ.dGKtSSKWQ7A8Ya1uxTrI0lAMOvv09od5K8Lxv46gQGI"
             },
             "tests": []
         },
@@ -201,16 +201,16 @@
             "colId": "e01e1829-1946-40e1-9d72-32859f1e2d84",
             "containerId": "b3582c28-6c38-41ba-b19f-a131851b9aa3",
             "name": "Join",
-            "url": "/groups/join/6530a63bb374ee7de40178ee",
+            "url": "/groups/join/6532ec6009dde82d8f7d9c8d",
             "method": "POST",
             "sortNum": 110000,
             "created": "2023-10-19T13:40:55.804Z",
-            "modified": "2023-10-19T13:47:59.089Z",
+            "modified": "2023-10-20T21:11:01.351Z",
             "headers": [],
             "params": [],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMTMyOTc0MjMwMzg5YmIxYTZlZTRlIiwibmFtZSI6IlQzIiwiZW1haWwiOiJ0ZXN0M0BnbWFpbC5jb20iLCJyb2xlIjoiU3R1ZGVudCIsImluc3RpdHV0ZSI6IkRhbCJ9LCJpYXQiOjE2OTc3MjMwODIsImV4cCI6MTY5ODMyNzg4Mn0.kPgy5N8d7lRj0XNcTxbFjS5zGnR2V29DlLznGOfmJ0o"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMGE2MTFiMzc0ZWU3ZGU0MDE3OGU5IiwibmFtZSI6IlQyIiwiZW1haWwiOiJ0ZXN0MUBnbWFpbC5jb20iLCJyb2xlIjoiU3R1ZGVudCIsImluc3RpdHV0ZSI6IkRhbCJ9LCJpYXQiOjE2OTc4MzYyMzIsImV4cCI6MTY5ODQ0MTAzMn0.GexrlGQ0NLYftzPH7xgeAEPAyW3l8GezE9noIJpIX1s"
             },
             "tests": []
         },
@@ -219,16 +219,16 @@
             "colId": "e01e1829-1946-40e1-9d72-32859f1e2d84",
             "containerId": "b3582c28-6c38-41ba-b19f-a131851b9aa3",
             "name": "Get members",
-            "url": "/groups/get-members/6530a63bb374ee7de40178ee",
+            "url": "/groups/get-members/65497ff4790310588af0b59a",
             "method": "GET",
             "sortNum": 115000,
             "created": "2023-10-19T13:40:55.805Z",
-            "modified": "2023-10-19T13:40:55.805Z",
+            "modified": "2023-11-07T00:36:55.187Z",
             "headers": [],
             "params": [],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjUzMGE2MTFiMzc0ZWU3ZGU0MDE3OGU5IiwibmFtZSI6IlQyIiwiZW1haWwiOiJ0ZXN0MUBnbWFpbC5jb20iLCJyb2xlIjoiU3R1ZGVudCIsImluc3RpdHV0ZSI6IkRhbCJ9LCJpYXQiOjE2OTc2ODc3ODgsImV4cCI6MTY5ODI5MjU4OH0.HhOFI2lonG9xD7cJx18LhUcaVAvRGiI48ALxijir2pg"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoiNjU0OTdlNGU3OTAzMTA1ODhhZjBiNTk1IiwibmFtZSI6IlNoeWFtYWwiLCJlbWFpbCI6InNncEBkYWwuY2EiLCJyb2xlIjoiVGVhY2hlciIsImluc3RpdHV0ZSI6IkRhbGhvdXNpZVx0In0sImlhdCI6MTY5OTMxNzM4MCwiZXhwIjoxNjk5OTIyMTgwfQ.igAqm4JBuQCp1F07BDV1Njgrb9etJ_484FahIwAJdbg"
             },
             "tests": []
         },
@@ -241,12 +241,12 @@
             "method": "POST",
             "sortNum": 120000,
             "created": "2023-10-19T13:40:55.806Z",
-            "modified": "2023-10-19T13:40:55.806Z",
+            "modified": "2023-10-23T22:41:34.735Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{ \n  \"institute\":\"Dalhousie\", \n  \"radius\":50,\n  \"passingPoints\": 150,\n  \"attendanceFrequency\" : 15,\n  \"attendanceReward\": 0, \n  \"penalty\" : 0\n} ",
+                "raw": "{ \n  \"radius\":50,\n  \"passingPoints\": 150,\n  \"attendanceFrequency\" : 15,\n  \"attendanceReward\": 0, \n  \"penalty\" : 0\n} ",
                 "form": []
             },
             "auth": {
