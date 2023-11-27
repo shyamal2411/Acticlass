@@ -43,8 +43,14 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>Acticlass requires access to your phone’s camera.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Acticlass requires access to your phone’s camera.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Acticlass requires access to your phone’s camera.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Acticlass requires access to your phone's location to track the attendance.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Acticlass requires full access to your phone's location for enhanced functionality.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
