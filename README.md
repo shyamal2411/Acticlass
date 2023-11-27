@@ -12,7 +12,7 @@
 
 Acticlass aims to enhance classroom interactivity through a versatile application. Teachers can create groups and facilitate student participation via QR codes. Gamification elements reward engagement, and students earn points by attending classes. Teachers control access based on physical presence. A leaderboard and CSV reports offer insights for an engaging learning experience.
 
-[![pipeline](https://img.shields.io/badge/pipeline-passed-green)](https://img.shields.io/badge/pipeline-passed-green) [![test](https://img.shields.io/badge/test-passed-green)](https://img.shields.io/badge/test-pending-yellow) [![coverage](https://img.shields.io/badge/coverage->90%-blue)](https://img.shields.io/badge/coverage->90%-blue)
+[![pipeline](https://img.shields.io/badge/pipeline-passed-green)](https://img.shields.io/badge/pipeline-passed-green) [![test](https://img.shields.io/badge/test-passed-green)](https://img.shields.io/badge/test-passed-green) [![coverage](https://img.shields.io/badge/coverage->90%25-blue)](https://img.shields.io/badge/coverage->90%25-blue)
 
 ### Tech Stacks
 
