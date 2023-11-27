@@ -102,6 +102,17 @@ npm jest --coverage --verbose
 npm test
 ```
 
+### Code Coverage Report
+
+<img src="./imgs/BE-code-coverage.png">
+
+### Test APIs With Postman
+
+Here is the `dev` and `prod` collections for all the APIs. you can download the collections and `env` here.
+
+1.  Production [collection](./postman%20collection/prod/collection_Prod.json) and [env](./postman%20collection/prod/environment_prod.json).
+2.  Development [collection](./postman%20collection/dev/collection_Dev.json.json) and [env](./postman%20collection/dev/collection_Dev.json).
+
 ### GitLab CI/CD Pipeline Configuration
 
 GitLab CI/CD allows automating the testing, building, and deployment processes for Node.js projects using a `.gitlab-ci.yml` file in the repository root. Here's an example configuration:
@@ -228,6 +239,10 @@ npm jest --coverage --verbose
 npm test
 ```
 
+### Code Coverage Report
+
+<img src="./imgs/FE-code-coverage.png">
+
 ---
 
 # Features :star2:
@@ -255,7 +270,7 @@ npm test
 
 ---
 
-### 3. Riser Requests and Custom Rewards
+### 3. Rise Requests and Custom Rewards
 
 - **Student:**
   The student can raise a request for a reward when is in a session.
@@ -356,6 +371,8 @@ Any user can access the leaderboard of the group that is part of, where the user
 | Samit Mhatre                     | sm904139@dal.ca |
 | Suyash Jhawer                    | sy326775@dal.ca |
 | Vishaka Vinod                    | vs235403@dal.ca |
+
+---
 
 > Under the Supervison of
 > [Dr. Tushar Sharma](https://tusharma.in/) (Professor),
