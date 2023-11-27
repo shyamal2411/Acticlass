@@ -268,9 +268,8 @@ npm test
 - **Student:** <br> Students can join the group using a QR code scanner integrated with the app. They can also leave the group.
 
   <p align='center'>
-  <img src='Acticlass-App/src/assets/HomeScreen.png' alt='HomeScreen' height='400px' >
+  <img src='imgs/home.png' alt='HomeScreen' height='400px' >
 </p>
-
 
 ---
 
@@ -298,7 +297,6 @@ npm test
 - **Student:**
   The application will check for the location permission and if not, app will request the device location permission after which student must be in the geofence range that is set by the teacher to join the session. If the student moves out of the geofence, the student automatically gets disconnected from the session and will only be able to join back into the session when the student gets back into the geofence set by the teacher.
 
-
   <p align='center' style='margin-top:20px'>
     <img src='imgs/location.png' alt='locationRequest' height='400px' >
   </p>
@@ -308,12 +306,10 @@ npm test
 ### 6. Activity Screen
 
 - **Teacher:**
-  On the activity screen of the Acticlass application, the teacher will be able to select any particular group that the teacher is a part of and the activity screen displays stats in the form of bar graphs for an entire week and can be selected for any day of the week to get the activities as a list of that particular day, which holds attendance, rewards and penalties activities of every student in that group. The user will be able to navigate through previous and next week above the stats. 
+  On the activity screen of the Acticlass application, the teacher will be able to select any particular group that the teacher is a part of and the activity screen displays stats in the form of bar graphs for an entire week and can be selected for any day of the week to get the activities as a list of that particular day, which holds attendance, rewards and penalties activities of every student in that group. The user will be able to navigate through previous and next week above the stats.
 
 - **Student:**
-On the activity screen of the Acticlass application, the student will be able to see all his/her activities, such as attendance rewards and penalties for any week and selected group in the group dropdown menu that the student is part of. The list of activities is displayed for any particular day selected in the week as a list of activities. The user will be able to navigate through previous and next week above the stats. 
-
-
+On the activity screen of the Acticlass application, the student will be able to see all his/her activities, such as attendance rewards and penalties for any week and selected group in the group dropdown menu that the student is part of. The list of activities is displayed for any particular day selected in the week as a list of activities. The user will be able to navigate through previous and next week above the stats.
 
   <p align='center' style='margin-top:20px'>
   <img src='imgs/activityscreen.png' alt='ActivityScreen' height='400' style='margin-right: 30px'>
@@ -324,7 +320,7 @@ On the activity screen of the Acticlass application, the student will be able to
 ### 7. CSV Reporting Download
 
 - **Both Teacher and Student:**
-   Users with both teacher and student roles have the option to download all their activities on the activity screen as a report with a CSV file type. This option is available at the bottom right of the	the activity screen on click a bottom sheet will pop up, where the user needs to select group for the dropdown menu along with both start and end dates from when to when the user needs the report. And then click the download button to download the report. The report will be downloaded will be of ‘csv’ file type.
+  Users with both teacher and student roles have the option to download all their activities on the activity screen as a report with a CSV file type. This option is available at the bottom right of the the activity screen on click a bottom sheet will pop up, where the user needs to select group for the dropdown menu along with both start and end dates from when to when the user needs the report. And then click the download button to download the report. The report will be downloaded will be of ‘csv’ file type.
     <p align='center' style='margin-top:20px'>
   <img src='imgs/csvreport.png' alt='csvDownload' height='400px' style='margin-right: 30px'>
   <img src='imgs/csvdownload.png' alt='csvReport' height='400px' >
