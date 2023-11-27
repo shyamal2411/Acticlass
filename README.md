@@ -108,6 +108,8 @@ GitLab CI/CD allows automating the testing, building, and deployment processes f
 
 You can find the GitLab CI/CD configuration file for this project [here](./.gitlab-ci.yml).
 
+<img src="./imgs/pipeline.png">
+
 ### Docker Setup
 
 Docker provides a method to publish and deploy the server code onto a virtual machine (VM).
